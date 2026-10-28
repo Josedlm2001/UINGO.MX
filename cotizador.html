@@ -773,12 +773,23 @@
         return;
     }
 
-    // Helper para formatear direcciones de manera limpia y flexible
+    // Helper inteligente para forzar el municipio y estado correcto de la región
     const formatAddress = (text) => {
-        let clean = text.toLowerCase();
-        if (clean === 'colima' || clean === 'colima colima') {
-            return 'Colima Centro, Mexico';
+        let clean = text.toLowerCase().trim();
+        
+        if (clean.includes('colima')) {
+            return 'Colima, Colima, Mexico';
         }
+        if (clean.includes('guadalajara') || clean.includes('gdl')) {
+            return 'Guadalajara, Jalisco, Mexico';
+        }
+        if (clean.includes('manzanillo')) {
+            return 'Manzanillo, Colima, Mexico';
+        }
+        if (clean.includes('tecomán') || clean.includes('tecoman')) {
+            return 'Tecomán, Colima, Mexico';
+        }
+        
         if (!clean.includes('mexico') && !clean.includes('méxico')) {
             return `${text}, Mexico`;
         }
@@ -791,12 +802,11 @@
     // Mostramos estado de carga
     showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
 
-    // Límite de tiempo estricto de 3.5 segundos para no hacer esperar al cliente
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
 
     try {
-        // 1. Buscamos origen y destino EN PARALELO para máxima velocidad
+        // 1. Buscamos origen y destino en paralelo
         const [resOrigin, resDest] = await Promise.all([
             fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, {
                 headers: { 'User-Agent': 'UINGO-Logistica-App' },
@@ -812,7 +822,7 @@
         const dataDest = await resDest.json();
 
         if (!dataOrigin || dataOrigin.length === 0 || !dataDest || dataDest.length === 0) {
-            throw new Error("Ubicación no localizada");
+            throw new Error("Ubicación no localizada con precisión");
         }
 
         const lat1 = parseFloat(dataOrigin[0].lat);
@@ -820,8 +830,8 @@
         const lat2 = parseFloat(dataDest[0].lat);
         const lon2 = parseFloat(dataDest[0].lon);
 
-        // 2. Consulta de ruta OSRM
-        const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`, {
+        // 2. Consulta de ruta real por carretera (OSRM)
+        const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lon2}?overview=full&geometries=geojson`, {
             signal: controller.signal
         });
         const dataRoute = await resRoute.json();
@@ -832,21 +842,18 @@
         if (dataRoute.routes && dataRoute.routes.length > 0) {
             const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
 
-            // Actualizar la barra deslizadora de distancia
             const distanceRange = document.getElementById('distanceRange');
             if (distanceRange) {
                 if (distanceKm > parseInt(distanceRange.max)) {
-                    distanceRange.max = Math.max(300, distanceKm);
+                    distanceRange.max = Math.max(400, distanceKm);
                 }
                 distanceRange.value = distanceKm;
                 
-                // Disparar recálculo de precios
                 if (typeof calculateQuote === 'function') {
                     calculateQuote();
                 }
             }
 
-            // Dibujar en el mapa
             if (window.routeLayer) map.removeLayer(window.routeLayer);
             if (window.markerOrigin) map.removeLayer(window.markerOrigin);
             if (window.markerDest) map.removeLayer(window.markerDest);
@@ -866,8 +873,6 @@
     } catch (error) {
         clearTimeout(timeoutId);
         closeModal();
-        
-        // Nota solicitada cuando no se logra o se agota el tiempo
         alert("Nota: Pon la distancia aproximada manualmente en la barra deslizadora de abajo.");
     }
 }
