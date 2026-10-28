@@ -773,7 +773,7 @@
         return;
     }
 
-    // 1. DICCIONARIO INSTANTÁNEO DE HUBS (Cero espera para ciudades principales)
+    // Diccionario instantáneo para ciudades principales de la región (Cero espera)
     const regionalHubs = {
         'colima': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
         'colima centro': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
@@ -794,7 +794,7 @@
     const originHub = findHub(originRaw);
     const destHub = findHub(destRaw);
 
-    // Si ambos son puntos conocidos de la región, ¡carga de inmediato sin buscar en servidores externos!
+    // Si ambos son puntos conocidos, calcula la ruta al instante sin bloquearse
     if (originHub && destHub) {
         try {
             const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${originHub.lon},${originHub.lat};${destHub.lon},${destHub.lat}?overview=full&geometries=geojson`);
@@ -821,15 +821,20 @@
                 window.markerOrigin = L.marker([originHub.lat, originHub.lon]).addTo(map).bindPopup(originHub.name).openPopup();
                 window.markerDest = L.marker([destHub.lat, destHub.lon]).addTo(map).bindPopup(destHub.name);
                 map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
-                return; // Proceso completado de forma instantánea
+                
+                if (typeof closeModal === 'function') closeModal();
+                return;
             }
         } catch (e) {
-            console.warn("Fallo menor en ruta rápida, usando método alternativo.");
+            console.warn("Ruta rápida omitida, usando respaldo.");
         }
     }
 
-    // 2. PARA OTRAS DIRECCIONES: Timeout súper agresivo de 2 segundos con respaldo manual
-    showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
+    // Respaldo general con límite de 2 segundos y cierre garantizado del modal
+    if (typeof showMessage === 'function') {
+        showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
+    }
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2000);
 
@@ -854,7 +859,7 @@
         const dataRoute = await resRoute.json();
 
         clearTimeout(timeoutId);
-        closeModal();
+        if (typeof closeModal === 'function') closeModal();
 
         if (dataRoute.routes && dataRoute.routes.length > 0) {
             const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
@@ -878,8 +883,9 @@
 
     } catch (error) {
         clearTimeout(timeoutId);
-        closeModal();
-        // Nota exacta solicitada que se muestra al instante si la red o el mapa demoran
+        if (typeof closeModal === 'function') closeModal();
+        
+        // Nota solicitada en caso de cualquier demora o fallo
         alert("Nota: Pon la distancia aproximada manualmente en la barra deslizadora de abajo.");
     }
 }
