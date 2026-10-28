@@ -773,38 +773,40 @@
         return;
     }
 
-    // Si el usuario no especificó país, aseguramos ", Mexico" para delimitar la búsqueda regional
+    // Aseguramos formato compatible para búsqueda en México
     const cleanOrigin = originText.toLowerCase().includes('mexico') || originText.toLowerCase().includes('méxico') 
         ? originText 
-        : `${originText}, Mexico`;
+        : `${originText}, Colima, Mexico`;
         
     const cleanDest = destText.toLowerCase().includes('mexico') || destText.toLowerCase().includes('méxico') 
         ? destText 
-        : `${destText}, Mexico`;
+        : `${destText}, Colima, Mexico`;
 
     // Mostramos aviso de carga
     showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
 
     try {
-        // 1. Buscamos coordenadas de Origen (Servidor público Nominatim)
+        // 1. Buscamos origen
         const resOrigin = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleanOrigin)}`, {
             headers: { 'User-Agent': 'UINGO-Logistica-App' }
         });
         const dataOrigin = await resOrigin.json();
 
-        // 2. Buscamos coordenadas de Destino
+        if (!dataOrigin || dataOrigin.length === 0) {
+            closeModal();
+            alert(`No se encontró el origen: "${originText}". Intenta escribir la dirección completa.`);
+            return;
+        }
+
+        // 2. Buscamos destino
         const resDest = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleanDest)}`, {
             headers: { 'User-Agent': 'UINGO-Logistica-App' }
         });
         const dataDest = await resDest.json();
 
-        if (!dataOrigin || dataOrigin.length === 0) {
-            alert(`No se encontró la ubicación de origen: "${originText}". Intenta agregar la ciudad (ej. "Centro, Tecomán" o "Providencia, Guadalajara").`);
-            return;
-        }
-
         if (!dataDest || dataDest.length === 0) {
-            alert(`No se encontró la ubicación de destino: "${destText}". Intenta agregar la ciudad (ej. "Las Hadas, Manzanillo" o "Zapopan, Jalisco").`);
+            closeModal();
+            alert(`No se encontró el destino: "${destText}". Intenta escribir la dirección completa.`);
             return;
         }
 
@@ -813,52 +815,49 @@
         const lat2 = parseFloat(dataDest[0].lat);
         const lon2 = parseFloat(dataDest[0].lon);
 
-        // 3. Consultamos la ruta en carretera (OSRM)
+        // 3. Solicitamos ruta OSRM
         const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`);
         const dataRoute = await resRoute.json();
 
+        // Cerramos el modal de carga inmediatamente antes de actualizar el mapa
+        closeModal();
+
         if (dataRoute.routes && dataRoute.routes.length > 0) {
-            // Distancia real en kilómetros por carretera
             const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
 
-            // Ajustamos el slider de distancia (si la distancia supera el límite del slider, ajustamos el valor máximo)
             const distanceRange = document.getElementById('distanceRange');
             if (distanceRange) {
                 if (distanceKm > parseInt(distanceRange.max)) {
                     distanceRange.max = Math.max(300, distanceKm);
                 }
                 distanceRange.value = distanceKm;
-                calculateQuote(); // Actualiza los precios en pantalla
+                calculateQuote(); // Actualiza el precio automáticamente
             }
 
-            // Limpiamos capas previas en el mapa
+            // Limpiamos capas previas
             if (window.routeLayer) map.removeLayer(window.routeLayer);
             if (window.markerOrigin) map.removeLayer(window.markerOrigin);
             if (window.markerDest) map.removeLayer(window.markerDest);
 
-            // Dibujamos el trazo azul de la autopista/carretera
-            const routeGeoJSON = dataRoute.routes[0].geometry;
-            window.routeLayer = L.geoJSON(routeGeoJSON, {
+            // Dibujamos la ruta en el mapa
+            window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
                 style: { color: '#0284c7', weight: 5, opacity: 0.85 }
             }).addTo(map);
 
-            // Colocamos marcadores
-            window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup(`<b>Origen:</b> ${dataOrigin[0].display_name.split(',')[0]}`).openPopup();
-            window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup(`<b>Destino:</b> ${dataDest[0].display_name.split(',')[0]}`);
+            window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("Origen").openPopup();
+            window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("Destino");
 
-            // Encuadramos el mapa para que se vea toda la ruta (de Colima a GDL, Manzanillo, etc.)
             map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
 
         } else {
-            throw new Error("No se encontró una ruta por carretera válida.");
+            alert("No se encontró una ruta por carretera disponible.");
         }
 
     } catch (error) {
-        console.error("Error al calcular la ruta:", error);
-        alert("No pudimos calcular la ruta automática. Puedes mover manualmente la barra de distancia (km) si lo deseas.");
-    } finally {
-        // Garantizamos que el modal SIEMPRE se cierre para no trabar la pantalla
+        // Garantizamos que el modal se cierre ante cualquier fallo de red
         closeModal();
+        console.error("Error en mapa:", error);
+        alert("El servicio de mapas tardó en responder. Puedes ajustar la distancia con la barra deslizadora manualmente si lo prefieres.");
     }
 }
 
