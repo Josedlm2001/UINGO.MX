@@ -252,84 +252,85 @@
     </div>
 </div>
 
-                <!-- Paso 2: Selección de Vehículo -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">2</span>
-                        <h3 class="text-lg font-bold text-slate-900">Selecciona el Tipo de Vehículo</h3>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Moto -->
-                        <div onclick="selectVehicle('moto')" id="card-moto" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between">
-                            <div>
-                                <div class="flex justify-between items-start mb-2">
-                                    <span class="p-2 bg-amber-100 text-amber-700 rounded-lg"><i class="fa-solid fa-motorcycle text-xl"></i></span>
-                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Ligero</span>
-                                </div>
-                                <h4 class="font-bold text-slate-900">Motocicleta</h4>
-                                <p class="text-xs text-slate-500 mt-1">Paquetes pequeños, documentos y mensajería rápida.</p>
-                            </div>
-                            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
-                                <span class="text-xs text-slate-400">Base hasta 7km</span>
-                                <span class="text-lg font-bold text-brand-600">$64 MXN</span>
-                            </div>
-                        </div>
-
-                        <!-- Carro -->
-                        <div onclick="selectVehicle('carro')" id="card-carro" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between">
-                            <div>
-                                <div class="flex justify-between items-start mb-2">
-                                    <span class="p-2 bg-blue-100 text-blue-700 rounded-lg"><i class="fa-solid fa-car text-xl"></i></span>
-                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Mediano</span>
-                                </div>
-                                <h4 class="font-bold text-slate-900">Automóvil</h4>
-                                <p class="text-xs text-slate-500 mt-1">Cajas medianas, compras y paquetería delicada.</p>
-                            </div>
-                            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
-                                <span class="text-xs text-slate-400">Base hasta 7km</span>
-                                <span class="text-lg font-bold text-brand-600">$126.12 MXN</span>
-                            </div>
-                        </div>
-<!-- Selección de Vehículos -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <!-- Camioneta 1.2 Tons -->
-    <div onclick="selectVehicle('camioneta')" id="card-camioneta" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
-        <div>
-            <div class="flex justify-between items-start mb-2">
-                <span class="p-2 bg-indigo-100 text-indigo-700 rounded-lg"><i class="fa-solid fa-truck-pickup text-xl"></i></span>
-                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Carga 1.2T</span>
-            </div>
-            <h4 class="font-bold text-slate-900">Camioneta (1.2 Toneladas)</h4>
-            <p class="text-xs text-slate-500 mt-1">Fletes medianos, muebles, electrodomésticos.</p>
-        </div>
-        <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
-            <span class="text-xs text-slate-400">Base hasta 7km desde</span>
-            <span class="text-lg font-bold text-blue-600">$400 MXN</span>
-        </div>
+               <!-- Paso 2: Selección de Vehículo -->
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+    <div class="flex items-center space-x-3 mb-4">
+        <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">2</span>
+        <h3 class="text-lg font-bold text-slate-900">Selecciona el Tipo de Vehículo</h3>
     </div>
 
-    <!-- Camión 3 Tons -->
-    <div onclick="selectVehicle('camion')" id="card-camion" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
-        <div>
-            <div class="flex justify-between items-start mb-2">
-                <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg"><i class="fa-solid fa-truck-moving text-xl"></i></span>
-                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Pesado 3T</span>
+    <!-- Cuadrícula unificada: 2 arriba (Moto/Carro), 2 abajo (Camioneta/Camión) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Moto -->
+        <div onclick="selectVehicle('moto')" id="card-moto" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
+            <div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="p-2 bg-amber-100 text-amber-700 rounded-lg"><i class="fa-solid fa-motorcycle text-xl"></i></span>
+                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Ligero</span>
+                </div>
+                <h4 class="font-bold text-slate-900">Motocicleta</h4>
+                <p class="text-xs text-slate-500 mt-1">Paquetes pequeños, documentos y mensajería rápida.</p>
             </div>
-            <h4 class="font-bold text-slate-900">Camión (3 Toneladas)</h4>
-            <p class="text-xs text-slate-500 mt-1">Mudanzas completas, mercancía pesada y tarimas.</p>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
+                <span class="text-xs text-slate-400">Base hasta 7km</span>
+                <span class="text-lg font-bold text-brand-600">$64 MXN</span>
+            </div>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
-            <span class="text-xs text-slate-400">Base hasta 7km desde</span>
-            <span class="text-lg font-bold text-blue-600">$1,300 MXN</span>
+
+        <!-- Carro -->
+        <div onclick="selectVehicle('carro')" id="card-carro" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
+            <div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="p-2 bg-blue-100 text-blue-700 rounded-lg"><i class="fa-solid fa-car text-xl"></i></span>
+                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Mediano</span>
+                </div>
+                <h4 class="font-bold text-slate-900">Automóvil</h4>
+                <p class="text-xs text-slate-500 mt-1">Cajas medianas, compras y paquetería delicada.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
+                <span class="text-xs text-slate-400">Base hasta 7km</span>
+                <span class="text-lg font-bold text-brand-600">$126.12 MXN</span>
+            </div>
+        </div>
+
+        <!-- Camioneta 1.2 Tons -->
+        <div onclick="selectVehicle('camioneta')" id="card-camioneta" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
+            <div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="p-2 bg-indigo-100 text-indigo-700 rounded-lg"><i class="fa-solid fa-truck-pickup text-xl"></i></span>
+                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Carga 1.2T</span>
+                </div>
+                <h4 class="font-bold text-slate-900">Camioneta (1.2 Toneladas)</h4>
+                <p class="text-xs text-slate-500 mt-1">Fletes medianos, muebles, electrodomésticos.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
+                <span class="text-xs text-slate-400">Base hasta 7km desde</span>
+                <span class="text-lg font-bold text-blue-600">$400 MXN</span>
+            </div>
+        </div>
+
+        <!-- Camión 3 Tons -->
+        <div onclick="selectVehicle('camion')" id="card-camion" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
+            <div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg"><i class="fa-solid fa-truck-moving text-xl"></i></span>
+                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Pesado 3T</span>
+                </div>
+                <h4 class="font-bold text-slate-900">Camión (3 Toneladas)</h4>
+                <p class="text-xs text-slate-500 mt-1">Mudanzas completas, mercancía pesada y tarimas.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
+                <span class="text-xs text-slate-400">Base hasta 7km desde</span>
+                <span class="text-lg font-bold text-blue-600">$1,300 MXN</span>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Paso 2: Tipo de Servicio (Regular vs Prioritario) - Oculto/Deshabilitado inicialmente -->
-<div id="serviceTypeContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 opacity-50 pointer-events-none transition-all">
+<!-- Modalidad de Servicio (Oculta por defecto con 'hidden') -->
+<div id="serviceTypeContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
     <div class="flex items-center space-x-3 mb-4">
-        <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">2</span>
+        <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">3</span>
         <div>
             <h3 class="text-lg font-bold text-slate-900">Modalidad de Servicio</h3>
             <p class="text-xs text-slate-500">Selecciona la velocidad de asignación requerida.</p>
@@ -359,11 +360,11 @@
     </div>
 </div>
 
-<!-- Paso 3: Cargadores Extras (Maniobra) -->
-<div id="helpersContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 opacity-50 pointer-events-none transition-all">
+<!-- Cargadores Extras (Oculto por defecto con 'hidden') -->
+<div id="helpersContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
     <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
-            <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">3</span>
+            <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">4</span>
             <div>
                 <h3 class="text-lg font-bold text-slate-900">Cargadores Extras (Maniobra)</h3>
                 <p class="text-xs text-slate-500">Disponible solo para Camioneta y Camión ($300 MXN c/u).</p>
@@ -400,7 +401,6 @@
         </div>
     </div>
 </div>
-
             <!-- Columna Derecha: Tarjeta de Resumen (4 Col) -->
             <div class="lg:col-span-4">
                 <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 sticky top-24">
@@ -662,22 +662,31 @@ async function saveProfile(event) {
         }
 
         function selectVehicle(type) {
-            selectedVehicle = type;
-            document.querySelectorAll('.vehicle-card').forEach(card => card.classList.remove('selected'));
-            
-            const activeCard = document.getElementById(`card-${type}`);
-            if (activeCard) activeCard.classList.add('selected');
+    // 1. Quitar estilos de selección a todas las tarjetas
+    document.querySelectorAll('.vehicle-card').forEach(card => {
+        card.classList.remove('border-blue-600', 'bg-blue-50/50');
+        card.classList.add('border-slate-200');
+    });
 
-            const rule = fleetRules[type];
-            const helpersContainer = document.getElementById('helpersContainer');
+    // 2. Resaltar la tarjeta seleccionada
+    const selectedCard = document.getElementById(`card-${type}`);
+    if (selectedCard) {
+        selectedCard.classList.remove('border-slate-200');
+        selectedCard.classList.add('border-blue-600', 'bg-blue-50/50');
+    }
 
-            if (rule.allowsHelpers) {
-                helpersContainer.classList.remove('opacity-50', 'pointer-events-none');
-            } else {
-                helpersContainer.classList.add('opacity-50', 'pointer-events-none');
-                extraHelpers = 0;
-                document.getElementById('helpersCount').innerText = '0';
-            }
+    // 3. Mostrar u ocultar Modalidad de Servicio y Cargadores Extras
+    const serviceContainer = document.getElementById('serviceTypeContainer');
+    const helpersContainer = document.getElementById('helpersContainer');
+
+    if (type === 'camioneta' || type === 'camion') {
+        serviceContainer.classList.remove('hidden');
+        helpersContainer.classList.remove('hidden');
+    } else {
+        serviceContainer.classList.add('hidden');
+        helpersContainer.classList.add('hidden');
+    }
+}
 
             calculateQuote();
         }
