@@ -417,8 +417,21 @@ Lineamientos Generales
 Al usar los servicios de UINGO, aceptas estos términos en su to
 
  </p>
-            <button onclick="cerrarModal('terminosModal')" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-xl">Entendido</button>
-        </div>
+            <!-- Tu botón actualizado con la función para mostrar el mensaje -->
+                            <button onclick="aceptarTerminos()" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-xl transition-all hover:bg-blue-700">Entendido</button>
+                            
+                            <!-- Cuadro flotante de confirmación (oculto por defecto) -->
+                            <div id="alertaTerminos" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-3 animate-fade-in">
+                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold">¡Listo!</p>
+                                    <p class="text-xs text-slate-300">Se aceptaron los términos y condiciones, muchas gracias por leer cuidadosamente.</p>
+                                </div>
+</div>
     </div>
 
     <!-- Modal Privacidad -->
@@ -516,6 +529,24 @@ Finalidades secundarias (no necesarias para el servicio)
             m.classList.add('opacity-0', 'pointer-events-none');
         }
          </script>
+
+<script>
+    function aceptarTerminos() {
+        // 1. Cierra tu modal de términos (tal como lo hacías antes)
+        if (typeof cerrarModal === 'function') {
+            cerrarModal('terminosModal');
+        }
+
+        // 2. Muestra el cuadro de confirmación en la pantalla
+        const alerta = document.getElementById('alertaTerminos');
+        alerta.classList.remove('hidden');
+
+        // 3. Hace que el cuadro desaparezca automáticamente después de 4 segundos
+        setTimeout(() => {
+            alerta.classList.add('hidden');
+        }, 4000);
+    }
+</script>
         
 </body>
 </html>
