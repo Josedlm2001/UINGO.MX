@@ -765,49 +765,54 @@
 }
 
         async function calculateRouteFromAddresses() {
-    const originText = document.getElementById('originInput').value.trim();
-    const destText = document.getElementById('destinationInput').value.trim();
+    let originRaw = document.getElementById('originInput').value.trim();
+    let destRaw = document.getElementById('destinationInput').value.trim();
 
-    if (!originText || !destText) {
+    if (!originRaw || !destRaw) {
         alert("Por favor ingresa tanto el punto de origen como el de destino.");
         return;
     }
 
-    // Aseguramos formato compatible para búsqueda en México
-    const cleanOrigin = originText.toLowerCase().includes('mexico') || originText.toLowerCase().includes('méxico') 
-        ? originText 
-        : `${originText}, Colima, Mexico`;
-        
-    const cleanDest = destText.toLowerCase().includes('mexico') || destText.toLowerCase().includes('méxico') 
-        ? destText 
-        : `${destText}, Colima, Mexico`;
+    // Helper para formatear direcciones de manera limpia y flexible
+    const formatAddress = (text) => {
+        let clean = text.toLowerCase();
+        if (clean === 'colima' || clean === 'colima colima') {
+            return 'Colima Centro, Mexico';
+        }
+        if (!clean.includes('mexico') && !clean.includes('méxico')) {
+            return `${text}, Mexico`;
+        }
+        return text;
+    };
 
-    // Mostramos aviso de carga
+    const cleanOrigin = formatAddress(originRaw);
+    const cleanDest = formatAddress(destRaw);
+
+    // Mostramos estado de carga
     showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
 
+    // Límite de tiempo estricto de 3.5 segundos para no hacer esperar al cliente
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3500);
+
     try {
-        // 1. Buscamos origen
-        const resOrigin = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleanOrigin)}`, {
-            headers: { 'User-Agent': 'UINGO-Logistica-App' }
-        });
+        // 1. Buscamos origen y destino EN PARALELO para máxima velocidad
+        const [resOrigin, resDest] = await Promise.all([
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, {
+                headers: { 'User-Agent': 'UINGO-Logistica-App' },
+                signal: controller.signal
+            }),
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, {
+                headers: { 'User-Agent': 'UINGO-Logistica-App' },
+                signal: controller.signal
+            })
+        ]);
+
         const dataOrigin = await resOrigin.json();
-
-        if (!dataOrigin || dataOrigin.length === 0) {
-            closeModal();
-            alert(`No se encontró el origen: "${originText}". Intenta escribir la dirección completa.`);
-            return;
-        }
-
-        // 2. Buscamos destino
-        const resDest = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleanDest)}`, {
-            headers: { 'User-Agent': 'UINGO-Logistica-App' }
-        });
         const dataDest = await resDest.json();
 
-        if (!dataDest || dataDest.length === 0) {
-            closeModal();
-            alert(`No se encontró el destino: "${destText}". Intenta escribir la dirección completa.`);
-            return;
+        if (!dataOrigin || dataOrigin.length === 0 || !dataDest || dataDest.length === 0) {
+            throw new Error("Ubicación no localizada");
         }
 
         const lat1 = parseFloat(dataOrigin[0].lat);
@@ -815,49 +820,55 @@
         const lat2 = parseFloat(dataDest[0].lat);
         const lon2 = parseFloat(dataDest[0].lon);
 
-        // 3. Solicitamos ruta OSRM
-        const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`);
+        // 2. Consulta de ruta OSRM
+        const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`, {
+            signal: controller.signal
+        });
         const dataRoute = await resRoute.json();
 
-        // Cerramos el modal de carga inmediatamente antes de actualizar el mapa
+        clearTimeout(timeoutId);
         closeModal();
 
         if (dataRoute.routes && dataRoute.routes.length > 0) {
             const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
 
+            // Actualizar la barra deslizadora de distancia
             const distanceRange = document.getElementById('distanceRange');
             if (distanceRange) {
                 if (distanceKm > parseInt(distanceRange.max)) {
                     distanceRange.max = Math.max(300, distanceKm);
                 }
                 distanceRange.value = distanceKm;
-                calculateQuote(); // Actualiza el precio automáticamente
+                
+                // Disparar recálculo de precios
+                if (typeof calculateQuote === 'function') {
+                    calculateQuote();
+                }
             }
 
-            // Limpiamos capas previas
+            // Dibujar en el mapa
             if (window.routeLayer) map.removeLayer(window.routeLayer);
             if (window.markerOrigin) map.removeLayer(window.markerOrigin);
             if (window.markerDest) map.removeLayer(window.markerDest);
 
-            // Dibujamos la ruta en el mapa
             window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
                 style: { color: '#0284c7', weight: 5, opacity: 0.85 }
             }).addTo(map);
 
-            window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("Origen").openPopup();
-            window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("Destino");
+            window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("<b>Origen:</b> " + dataOrigin[0].display_name.split(',')[0]).openPopup();
+            window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("<b>Destino:</b> " + dataDest[0].display_name.split(',')[0]);
 
             map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
-
         } else {
-            alert("No se encontró una ruta por carretera disponible.");
+            throw new Error("Ruta no encontrada");
         }
 
     } catch (error) {
-        // Garantizamos que el modal se cierre ante cualquier fallo de red
+        clearTimeout(timeoutId);
         closeModal();
-        console.error("Error en mapa:", error);
-        alert("El servicio de mapas tardó en responder. Puedes ajustar la distancia con la barra deslizadora manualmente si lo prefieres.");
+        
+        // Nota solicitada cuando no se logra o se agota el tiempo
+        alert("Nota: Pon la distancia aproximada manualmente en la barra deslizadora de abajo.");
     }
 }
 
