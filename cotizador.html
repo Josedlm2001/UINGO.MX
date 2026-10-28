@@ -765,75 +765,92 @@
 }
 
         async function calculateRouteFromAddresses() {
-    let originRaw = document.getElementById('originInput').value.trim();
-    let destRaw = document.getElementById('destinationInput').value.trim();
+    let originRaw = document.getElementById('originInput').value.trim().toLowerCase();
+    let destRaw = document.getElementById('destinationInput').value.trim().toLowerCase();
 
     if (!originRaw || !destRaw) {
         alert("Por favor ingresa tanto el punto de origen como el de destino.");
         return;
     }
 
-    // Helper inteligente para forzar el municipio y estado correcto de la región
-    const formatAddress = (text) => {
-        let clean = text.toLowerCase().trim();
-        
-        if (clean.includes('colima')) {
-            return 'Colima, Colima, Mexico';
-        }
-        if (clean.includes('guadalajara') || clean.includes('gdl')) {
-            return 'Guadalajara, Jalisco, Mexico';
-        }
-        if (clean.includes('manzanillo')) {
-            return 'Manzanillo, Colima, Mexico';
-        }
-        if (clean.includes('tecomán') || clean.includes('tecoman')) {
-            return 'Tecomán, Colima, Mexico';
-        }
-        
-        if (!clean.includes('mexico') && !clean.includes('méxico')) {
-            return `${text}, Mexico`;
-        }
-        return text;
+    // 1. DICCIONARIO INSTANTÁNEO DE HUBS (Cero espera para ciudades principales)
+    const regionalHubs = {
+        'colima': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
+        'colima centro': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
+        'manzanillo': { lat: 19.0522, lon: -104.3159, name: 'Manzanillo' },
+        'tecomán': { lat: 18.9171, lon: -103.8765, name: 'Tecomán' },
+        'tecoman': { lat: 18.9171, lon: -103.8765, name: 'Tecomán' },
+        'guadalajara': { lat: 20.6597, lon: -103.3496, name: 'Guadalajara' },
+        'gdl': { lat: 20.6597, lon: -103.3496, name: 'Guadalajara' },
+        'villa de álvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' },
+        'villa de alvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' }
     };
 
-    const cleanOrigin = formatAddress(originRaw);
-    const cleanDest = formatAddress(destRaw);
+    const findHub = (text) => {
+        const match = Object.keys(regionalHubs).find(key => text.includes(key));
+        return match ? regionalHubs[match] : null;
+    };
 
-    // Mostramos estado de carga
+    const originHub = findHub(originRaw);
+    const destHub = findHub(destRaw);
+
+    // Si ambos son puntos conocidos de la región, ¡carga de inmediato sin buscar en servidores externos!
+    if (originHub && destHub) {
+        try {
+            const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${originHub.lon},${originHub.lat};${destHub.lon},${destHub.lat}?overview=full&geometries=geojson`);
+            const dataRoute = await resRoute.json();
+
+            if (dataRoute.routes && dataRoute.routes.length > 0) {
+                const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
+
+                const distanceRange = document.getElementById('distanceRange');
+                if (distanceRange) {
+                    if (distanceKm > parseInt(distanceRange.max)) distanceRange.max = Math.max(400, distanceKm);
+                    distanceRange.value = distanceKm;
+                    if (typeof calculateQuote === 'function') calculateQuote();
+                }
+
+                if (window.routeLayer) map.removeLayer(window.routeLayer);
+                if (window.markerOrigin) map.removeLayer(window.markerOrigin);
+                if (window.markerDest) map.removeLayer(window.markerDest);
+
+                window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
+                    style: { color: '#0284c7', weight: 5, opacity: 0.85 }
+                }).addTo(map);
+
+                window.markerOrigin = L.marker([originHub.lat, originHub.lon]).addTo(map).bindPopup(originHub.name).openPopup();
+                window.markerDest = L.marker([destHub.lat, destHub.lon]).addTo(map).bindPopup(destHub.name);
+                map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
+                return; // Proceso completado de forma instantánea
+            }
+        } catch (e) {
+            console.warn("Fallo menor en ruta rápida, usando método alternativo.");
+        }
+    }
+
+    // 2. PARA OTRAS DIRECCIONES: Timeout súper agresivo de 2 segundos con respaldo manual
     showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
-
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
 
     try {
-        // 1. Buscamos origen y destino en paralelo
+        const cleanOrigin = `${originRaw}, Colima, Mexico`;
+        const cleanDest = `${destRaw}, Colima, Mexico`;
+
         const [resOrigin, resDest] = await Promise.all([
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, {
-                headers: { 'User-Agent': 'UINGO-Logistica-App' },
-                signal: controller.signal
-            }),
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, {
-                headers: { 'User-Agent': 'UINGO-Logistica-App' },
-                signal: controller.signal
-            })
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal }),
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal })
         ]);
 
         const dataOrigin = await resOrigin.json();
         const dataDest = await resDest.json();
 
-        if (!dataOrigin || dataOrigin.length === 0 || !dataDest || dataDest.length === 0) {
-            throw new Error("Ubicación no localizada con precisión");
-        }
+        if (!dataOrigin.length || !dataDest.length) throw new Error("No localizado");
 
-        const lat1 = parseFloat(dataOrigin[0].lat);
-        const lon1 = parseFloat(dataOrigin[0].lon);
-        const lat2 = parseFloat(dataDest[0].lat);
-        const lon2 = parseFloat(dataDest[0].lon);
+        const lat1 = parseFloat(dataOrigin[0].lat), lon1 = parseFloat(dataOrigin[0].lon);
+        const lat2 = parseFloat(dataDest[0].lat), lon2 = parseFloat(dataDest[0].lon);
 
-        // 2. Consulta de ruta real por carretera (OSRM)
-        const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lon2}?overview=full&geometries=geojson`, {
-            signal: controller.signal
-        });
+        const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`, { signal: controller.signal });
         const dataRoute = await resRoute.json();
 
         clearTimeout(timeoutId);
@@ -841,38 +858,28 @@
 
         if (dataRoute.routes && dataRoute.routes.length > 0) {
             const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
-
             const distanceRange = document.getElementById('distanceRange');
             if (distanceRange) {
-                if (distanceKm > parseInt(distanceRange.max)) {
-                    distanceRange.max = Math.max(400, distanceKm);
-                }
                 distanceRange.value = distanceKm;
-                
-                if (typeof calculateQuote === 'function') {
-                    calculateQuote();
-                }
+                if (typeof calculateQuote === 'function') calculateQuote();
             }
 
             if (window.routeLayer) map.removeLayer(window.routeLayer);
             if (window.markerOrigin) map.removeLayer(window.markerOrigin);
             if (window.markerDest) map.removeLayer(window.markerDest);
 
-            window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
-                style: { color: '#0284c7', weight: 5, opacity: 0.85 }
-            }).addTo(map);
-
-            window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("<b>Origen:</b> " + dataOrigin[0].display_name.split(',')[0]).openPopup();
-            window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("<b>Destino:</b> " + dataDest[0].display_name.split(',')[0]);
-
+            window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, { style: { color: '#0284c7', weight: 5, opacity: 0.85 } }).addTo(map);
+            window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("Origen").openPopup();
+            window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("Destino");
             map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
         } else {
-            throw new Error("Ruta no encontrada");
+            throw new Error("Ruta no trazable");
         }
 
     } catch (error) {
         clearTimeout(timeoutId);
         closeModal();
+        // Nota exacta solicitada que se muestra al instante si la red o el mapa demoran
         alert("Nota: Pon la distancia aproximada manualmente en la barra deslizadora de abajo.");
     }
 }
