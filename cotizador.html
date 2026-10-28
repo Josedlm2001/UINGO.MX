@@ -18,8 +18,8 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_bigBIqjdy-EfvKtxS349yA_RcKqFrOA';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -53,11 +53,6 @@
         .vehicle-card:hover {
             transform: translateY(-3px);
         }
-        .vehicle-card.selected {
-            border-color: #0284c7;
-            background-color: #f0f9ff;
-            box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.15), 0 4px 6px -2px rgba(2, 132, 199, 0.05);
-        }
         .page-view {
             transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
@@ -87,7 +82,6 @@
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-full flex flex-col justify-between">
-
     <!-- Header / Navbar -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -130,7 +124,6 @@
                 <h2 class="text-2xl font-bold text-slate-900">Configuración de Perfil</h2>
                 <p class="text-slate-500 text-sm mt-1">Ingresa tus datos de contacto para habilitar el cotizador en tiempo real y guardar tu historial en la plataforma UINGO.</p>
             </div>
-
             <form id="profileForm" onsubmit="saveProfile(event)" class="space-y-5">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Tipo de Usuario *</label>
@@ -151,7 +144,6 @@
                         </label>
                     </div>
                 </div>
-
                 <div>
                     <label for="fullName" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo o Razón Social *</label>
                     <div class="relative">
@@ -161,7 +153,6 @@
                         <input type="text" id="fullName" required placeholder="Ej. María González" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm outline-none transition">
                     </div>
                 </div>
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="userEmail" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Correo Electrónico *</label>
@@ -182,7 +173,6 @@
                         </div>
                     </div>
                 </div>
-
                 <button type="submit" id="btnSubmitProfile" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-sm">
                     <span>Guardar Perfil y Comenzar a Cotizar</span>
                     <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -197,210 +187,177 @@
             <div class="lg:col-span-8 space-y-6">
                 
                <!-- Paso 1: Ubicaciones y Distancia -->
-<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-    <div class="flex items-center space-x-3 mb-4">
-        <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">1</span>
-        <h3 class="text-lg font-bold text-slate-900">Ubicaciones y Distancia de Ruta</h3>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        <div>
-            <label for="originInput" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Punto de Recogida (Origen)</label>
-            <div class="relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-emerald-500">
-                    <i class="fa-solid fa-location-dot text-sm"></i>
-                </span>
-                <input type="text" id="originInput" placeholder="Ej. Av. Constitución #123, Colima" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
-            </div>
-        </div>
-
-        <div>
-            <label for="destinationInput" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Punto de Entrega (Destino)</label>
-            <div class="relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-rose-500">
-                    <i class="fa-solid fa-flag-checkered text-sm"></i>
-                </span>
-                <input type="text" id="destinationInput" placeholder="Ej. Centro, Villa de Álvarez" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
-            </div>
-        </div>
-    </div>
-
-    <!-- Botón para calcular ruta automática en el mapa -->
-    <button type="button" onclick="calculateRouteFromAddresses()" class="w-full mb-4 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-sm">
-        <i class="fa-solid fa-map-location-dot"></i>
-        <span>Calcular Ruta y Distancia en el Mapa</span>
-    </button>
-
-    <!-- Contenedor Visual del Mapa -->
-    <div id="uingoMap" class="w-full h-56 rounded-xl border border-slate-200 z-10 mb-4"></div>
-
-    <!-- Slider de Distancia -->
-    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-        <div class="flex justify-between items-center mb-2">
-            <label for="distanceRange" class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-route text-brand-600"></i> Distancia Estimada
-            </label>
-            <span class="text-lg font-extrabold text-brand-600"><span id="distanceValue">5</span> km</span>
-        </div>
-        <input type="range" id="distanceRange" min="1" max="300" value="5" oninput="calculateQuote()" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600">
-        <div class="flex justify-between text-[11px] text-slate-400 mt-1 font-medium">
-            <span>1 km (Local)</span>
-            <span>7 km (Base incluida)</span>
-            <span>50 km</span>
-            <span>300 km</span>
-        </div>
-    </div>
-</div>
-
-               <!-- Paso 2: Selección de Vehículo -->
-<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-    <div class="flex items-center space-x-3 mb-4">
-        <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">2</span>
-        <h3 class="text-lg font-bold text-slate-900">Selecciona el Tipo de Vehículo</h3>
-    </div>
-
-    <!-- Cuadrícula unificada: 2 arriba (Moto/Carro), 2 abajo (Camioneta/Camión) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <!-- Moto -->
-        <div onclick="selectVehicle('moto')" id="card-moto" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
-            <div>
-                <div class="flex justify-between items-start mb-2">
-                    <span class="p-2 bg-amber-100 text-amber-700 rounded-lg"><i class="fa-solid fa-motorcycle text-xl"></i></span>
-                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Ligero</span>
+               <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">1</span>
+                        <h3 class="text-lg font-bold text-slate-900">Ubicaciones y Distancia de Ruta</h3>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="originInput" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Punto de Recogida (Origen)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-emerald-500">
+                                    <i class="fa-solid fa-location-dot text-sm"></i>
+                                </span>
+                                <input type="text" id="originInput" placeholder="Ej. Av. Constitución #123, Colima" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="destinationInput" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Punto de Entrega (Destino)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-rose-500">
+                                    <i class="fa-solid fa-flag-checkered text-sm"></i>
+                                </span>
+                                <input type="text" id="destinationInput" placeholder="Ej. Centro, Villa de Álvarez" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Botón para calcular ruta automática en el mapa -->
+                    <button type="button" onclick="calculateRouteFromAddresses()" class="w-full mb-4 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-sm">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <span>Calcular Ruta y Distancia en el Mapa</span>
+                    </button>
+                    <!-- Contenedor Visual del Mapa -->
+                    <div id="uingoMap" class="w-full h-56 rounded-xl border border-slate-200 z-10 mb-4"></div>
+                    <!-- Slider de Distancia -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="distanceRange" class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-route text-brand-600"></i> Distancia Estimada
+                            </label>
+                            <span class="text-lg font-extrabold text-brand-600"><span id="distanceValue">5</span> km</span>
+                        </div>
+                        <input type="range" id="distanceRange" min="1" max="300" value="5" oninput="calculateQuote()" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600">
+                        <div class="flex justify-between text-[11px] text-slate-400 mt-1 font-medium">
+                            <span>1 km (Local)</span>
+                            <span>7 km (Base incluida)</span>
+                            <span>50 km</span>
+                            <span>300 km</span>
+                        </div>
+                    </div>
                 </div>
-                <h4 class="font-bold text-slate-900">Motocicleta</h4>
-                <p class="text-xs text-slate-500 mt-1">Paquetes pequeños, documentos y mensajería rápida.</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
-                <span class="text-xs text-slate-400">Base hasta 7km</span>
-                <span class="text-lg font-bold text-brand-600">$64 MXN</span>
-            </div>
-        </div>
 
-        <!-- Carro -->
-        <div onclick="selectVehicle('carro')" id="card-carro" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
-            <div>
-                <div class="flex justify-between items-start mb-2">
-                    <span class="p-2 bg-blue-100 text-blue-700 rounded-lg"><i class="fa-solid fa-car text-xl"></i></span>
-                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Mediano</span>
+                <!-- Paso 2: Selección de Vehículo -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">2</span>
+                        <h3 class="text-lg font-bold text-slate-900">Selecciona el Tipo de Vehículo</h3>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Moto -->
+                        <div onclick="selectVehicle('moto')" id="card-moto" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
+                            <div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="p-2 bg-amber-100 text-amber-700 rounded-lg"><i class="fa-solid fa-motorcycle text-xl"></i></span>
+                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Ligero</span>
+                                </div>
+                                <h4 class="font-bold text-slate-900">Motocicleta</h4>
+                                <p class="text-xs text-slate-500 mt-1">Paquetes pequeños, documentos y mensajería rápida.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
+                                <span class="text-xs text-slate-400">Base hasta 7km</span>
+                                <span class="text-lg font-bold text-brand-600">$64 MXN</span>
+                            </div>
+                        </div>
+                        <!-- Carro -->
+                        <div onclick="selectVehicle('carro')" id="card-carro" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
+                            <div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="p-2 bg-blue-100 text-blue-700 rounded-lg"><i class="fa-solid fa-car text-xl"></i></span>
+                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Mediano</span>
+                                </div>
+                                <h4 class="font-bold text-slate-900">Automóvil</h4>
+                                <p class="text-xs text-slate-500 mt-1">Cajas medianas, compras y paquetería delicada.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
+                                <span class="text-xs text-slate-400">Base hasta 7km</span>
+                                <span class="text-lg font-bold text-brand-600">$126.12 MXN</span>
+                            </div>
+                        </div>
+                        <!-- Camioneta 1.2 Tons -->
+                        <div onclick="selectVehicle('camioneta')" id="card-camioneta" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
+                            <div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="p-2 bg-indigo-100 text-indigo-700 rounded-lg"><i class="fa-solid fa-truck-pickup text-xl"></i></span>
+                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Carga 1.2T</span>
+                                </div>
+                                <h4 class="font-bold text-slate-900">Camioneta (1.2 Toneladas)</h4>
+                                <p class="text-xs text-slate-500 mt-1">Fletes medianos, muebles, electrodomésticos.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
+                                <span class="text-xs text-slate-400">Base hasta 7km desde</span>
+                                <span class="text-lg font-bold text-blue-600">$400 MXN</span>
+                            </div>
+                        </div>
+                        <!-- Camión 3 Tons -->
+                        <div onclick="selectVehicle('camion')" id="card-camion" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
+                            <div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg"><i class="fa-solid fa-truck-moving text-xl"></i></span>
+                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Pesado 3T</span>
+                                </div>
+                                <h4 class="font-bold text-slate-900">Camión (3 Toneladas)</h4>
+                                <p class="text-xs text-slate-500 mt-1">Mudanzas completas, mercancía pesada y tarimas.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
+                                <span class="text-xs text-slate-400">Base hasta 7km desde</span>
+                                <span class="text-lg font-bold text-blue-600">$1,300 MXN</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h4 class="font-bold text-slate-900">Automóvil</h4>
-                <p class="text-xs text-slate-500 mt-1">Cajas medianas, compras y paquetería delicada.</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
-                <span class="text-xs text-slate-400">Base hasta 7km</span>
-                <span class="text-lg font-bold text-brand-600">$126.12 MXN</span>
-            </div>
-        </div>
 
-        <!-- Camioneta 1.2 Tons -->
-        <div onclick="selectVehicle('camioneta')" id="card-camioneta" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
-            <div>
-                <div class="flex justify-between items-start mb-2">
-                    <span class="p-2 bg-indigo-100 text-indigo-700 rounded-lg"><i class="fa-solid fa-truck-pickup text-xl"></i></span>
-                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Carga 1.2T</span>
+                <!-- Modalidad de Servicio (Oculta por defecto con 'hidden') -->
+                <div id="serviceTypeContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">3</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">Modalidad de Servicio</h3>
+                            <p class="text-xs text-slate-500">Selecciona la velocidad de asignación requerida.</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Opción Regular -->
+                        <div onclick="selectServiceType('regular')" id="type-regular" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-blue-500 transition-all">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-slate-800">Regular</span>
+                                <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded">Programado</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-2">Agenda con anticipación tu servicio.</p>
+                            <span id="price-regular" class="text-sm font-bold text-blue-600">$0 MXN</span>
+                        </div>
+                        <!-- Opción Prioritario -->
+                        <div onclick="selectServiceType('prioritario')" id="type-prioritario" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-blue-500 transition-all">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-slate-800">Prioritario</span>
+                                <span class="text-xs bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded">Rápido</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-2">Encuentra un UINGO rápidamente en zona.</p>
+                            <span id="price-prioritario" class="text-sm font-bold text-blue-600">$0 MXN</span>
+                        </div>
+                    </div>
                 </div>
-                <h4 class="font-bold text-slate-900">Camioneta (1.2 Toneladas)</h4>
-                <p class="text-xs text-slate-500 mt-1">Fletes medianos, muebles, electrodomésticos.</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
-                <span class="text-xs text-slate-400">Base hasta 7km desde</span>
-                <span class="text-lg font-bold text-blue-600">$400 MXN</span>
-            </div>
-        </div>
 
-        <!-- Camión 3 Tons -->
-        <div onclick="selectVehicle('camion')" id="card-camion" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
-            <div>
-                <div class="flex justify-between items-start mb-2">
-                    <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg"><i class="fa-solid fa-truck-moving text-xl"></i></span>
-                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Pesado 3T</span>
+                <!-- Cargadores Extras (Oculto por defecto con 'hidden') -->
+                <div id="helpersContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">4</span>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">Cargadores Extras (Maniobra)</h3>
+                                <p class="text-xs text-slate-500">Disponible solo para Camioneta y Camión ($300 MXN c/u).</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <button onclick="changeHelpers(-1)" class="w-9 h-9 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center shadow-sm transition">-</button>
+                            <span id="helpersCount" class="text-lg font-extrabold text-slate-800 w-6 text-center">0</span>
+                            <button onclick="changeHelpers(1)" class="w-9 h-9 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center shadow-sm transition">+</button>
+                        </div>
+                    </div>
                 </div>
-                <h4 class="font-bold text-slate-900">Camión (3 Toneladas)</h4>
-                <p class="text-xs text-slate-500 mt-1">Mudanzas completas, mercancía pesada y tarimas.</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
-                <span class="text-xs text-slate-400">Base hasta 7km desde</span>
-                <span class="text-lg font-bold text-blue-600">$1,300 MXN</span>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Modalidad de Servicio (Oculta por defecto con 'hidden') -->
-<div id="serviceTypeContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
-    <div class="flex items-center space-x-3 mb-4">
-        <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">3</span>
-        <div>
-            <h3 class="text-lg font-bold text-slate-900">Modalidad de Servicio</h3>
-            <p class="text-xs text-slate-500">Selecciona la velocidad de asignación requerida.</p>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Opción Regular -->
-        <div onclick="selectServiceType('regular')" id="type-regular" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-blue-500 transition-all">
-            <div class="flex justify-between items-center mb-1">
-                <span class="font-bold text-slate-800">Regular</span>
-                <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded">Programado</span>
             </div>
-            <p class="text-xs text-slate-500 mb-2">Agenda con anticipación tu servicio.</p>
-            <span id="price-regular" class="text-sm font-bold text-blue-600">$0 MXN</span>
-        </div>
 
-        <!-- Opción Prioritario -->
-        <div onclick="selectServiceType('prioritario')" id="type-prioritario" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-blue-500 transition-all">
-            <div class="flex justify-between items-center mb-1">
-                <span class="font-bold text-slate-800">Prioritario</span>
-                <span class="text-xs bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded">Rápido</span>
-            </div>
-            <p class="text-xs text-slate-500 mb-2">Encuentra un UINGO rápidamente en zona.</p>
-            <span id="price-prioritario" class="text-sm font-bold text-blue-600">$0 MXN</span>
-        </div>
-    </div>
-</div>
-
-<!-- Cargadores Extras (Oculto por defecto con 'hidden') -->
-<div id="helpersContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
-    <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-            <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">4</span>
-            <div>
-                <h3 class="text-lg font-bold text-slate-900">Cargadores Extras (Maniobra)</h3>
-                <p class="text-xs text-slate-500">Disponible solo para Camioneta y Camión ($300 MXN c/u).</p>
-            </div>
-        </div>
-        
-        <div class="flex items-center space-x-3">
-            <button onclick="changeHelpers(-1)" class="w-9 h-9 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center shadow-sm transition">-</button>
-            <span id="helpersCount" class="text-lg font-extrabold text-slate-800 w-6 text-center">0</span>
-            <button onclick="changeHelpers(1)" class="w-9 h-9 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center shadow-sm transition">+</button>
-        </div>
-    </div>
-</div>
-
-<!-- Desglose Final de Precio -->
-<div id="summaryContainer" class="bg-slate-900 text-white p-6 rounded-2xl mt-6 hidden">
-    <h4 class="text-sm font-semibold text-slate-400 mb-3 border-b border-slate-800 pb-2">Resumen de Cotización</h4>
-    <div class="space-y-2 text-sm">
-        <div class="flex justify-between text-slate-300">
-            <span id="summaryVehicle">Vehículo: -</span>
-            <span id="summaryBasePrice">$0 MXN</span>
-        </div>
-        <div class="flex justify-between text-slate-300">
-            <span id="summaryServiceType">Modalidad: -</span>
-            <span id="summaryServiceFee">$0 MXN</span>
-        </div>
-        <div class="flex justify-between text-slate-300">
-            <span>Cargadores extras (<span id="summaryHelpersQty">0</span>):</span>
-            <span id="summaryHelpersPrice">$0 MXN</span>
-        </div>
-        <div class="flex justify-between font-bold text-base text-white pt-2 border-t border-slate-800 mt-2">
-            <span>Total Estimado:</span>
-            <span id="summaryTotal" class="text-blue-400 text-xl">$0 MXN</span>
-        </div>
-    </div>
-</div>
             <!-- Columna Derecha: Tarjeta de Resumen (4 Col) -->
             <div class="lg:col-span-4">
                 <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 sticky top-24">
@@ -408,43 +365,40 @@
                         <span>Resumen del Servicio</span>
                         <i class="fa-solid fa-file-invoice text-brand-600"></i>
                     </h3>
-
                     <!-- Información de Cliente -->
                     <div class="py-3 border-b border-slate-100 text-xs text-slate-600 space-y-1">
                         <p><strong class="text-slate-800">Cliente:</strong> <span id="summaryCustomerName">-</span></p>
                         <p><strong class="text-slate-800">Tipo:</strong> <span id="summaryCustomerType">-</span></p>
                     </div>
-
                     <!-- Desglose de Precios -->
                     <div class="py-4 space-y-3 text-sm">
                         <div class="flex justify-between text-slate-600">
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-truck text-xs text-slate-400"></i> Vehículo:</span>
                             <span class="font-semibold text-slate-800" id="summaryVehicleName">No elegido</span>
                         </div>
-
                         <div class="flex justify-between text-slate-600">
                             <span>Precio Base (hasta 7 km):</span>
                             <span class="font-medium text-slate-800" id="summaryBasePrice">$0.00</span>
                         </div>
-
+                        <div id="summaryServiceRow" class="flex justify-between text-slate-600 hidden">
+                            <span id="summaryServiceLabel">Modalidad:</span>
+                            <span class="font-medium text-slate-800" id="summaryServicePrice">$0.00</span>
+                        </div>
                         <div class="flex justify-between text-slate-600">
                             <span class="flex items-center gap-1">
                                 Km Extra (<span id="summaryExtraKm">0</span> km):
                             </span>
                             <span class="font-medium text-slate-800" id="summaryExtraPrice">$0.00</span>
                         </div>
-
                         <div id="summaryHelpersRow" class="flex justify-between text-slate-600 hidden">
                             <span>Cargadores (<span id="summaryHelpersQty">0</span>):</span>
                             <span class="font-medium text-slate-800" id="summaryHelpersPrice">$0.00</span>
                         </div>
-
                         <div class="pt-3 border-t border-slate-100 flex justify-between items-baseline">
                             <span class="text-base font-extrabold text-slate-900">Total Estimado:</span>
                             <span class="text-2xl font-black text-brand-600" id="summaryTotalPrice">$0.00</span>
                         </div>
                     </div>
-
                     <!-- Nota legal -->
                     <div class="p-3 bg-amber-50 rounded-xl border border-amber-200/60 mb-5">
                         <p class="text-[11px] text-amber-800 leading-tight flex gap-1.5">
@@ -452,22 +406,18 @@
                             Precio que se dice, precio que se cobra, SI SE NECESITA UNA COTIZACION ESPECIAL O FLETE FORANEO CONTACTENOS DIRECTAMENTE AL 312 241 6157.
                         </p>
                     </div>
-
                     <!-- Acciones -->
                     <button onclick="requestQuote()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-sm mb-3">
                         <i class="fa-brands fa-whatsapp text-lg"></i>
                         <span>Solicitar Servicio por WhatsApp</span>
                     </button>
-
                     <button onclick="resetCalculator()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold py-2.5 px-4 rounded-xl transition text-xs flex items-center justify-center space-x-1">
                         <i class="fa-solid fa-rotate-left"></i>
                         <span>Reiniciar Cotizador</span>
                     </button>
                 </div>
             </div>
-
         </section>
-
     </main>
 
     <!-- Modal de Notificaciones -->
@@ -491,17 +441,30 @@
         </div>
     </footer>
 
-    <!-- LÓGICA DE JAVASCRIPT INTEGRADA -->
+    <!-- LÓGICA DE JAVASCRIPT UNIFICADA Y CORREGIDA -->
     <script>
         let currentUser = null;
         let selectedVehicle = null;
+        let selectedServiceType = null;
         let extraHelpers = 0;
 
         const fleetRules = {
-            moto: { name: 'Motocicleta', basePrice: 65, baseKm: 7, extraKmRate: 5, allowsHelpers: false },
-            carro: { name: 'Automóvil', basePrice: 120, baseKm: 7, extraKmRate: 12.5, allowsHelpers: false },
-            camioneta: { name: 'Camioneta (1.2 Ton)', basePrice: 400, baseKm: 7, extraKmRate: 29, allowsHelpers: true },
-            camion: { name: 'Camión (3 Ton)', basePrice: 1300, baseKm: 7, extraKmRate: 51, allowsHelpers: true }
+            moto: { name: 'Motocicleta', basePrice: 64, baseKm: 7, extraKmRate: 5, allowsHelpers: false },
+            carro: { name: 'Automóvil', basePrice: 126.12, baseKm: 7, extraKmRate: 12.5, allowsHelpers: false },
+            camioneta: { 
+                name: 'Camioneta (1.2 Toneladas)', 
+                baseKm: 7, 
+                extraKmRate: 29, 
+                allowsHelpers: true,
+                prices: { regular: 400, prioritario: 479 }
+            },
+            camion: { 
+                name: 'Camión (3 Toneladas)', 
+                baseKm: 7, 
+                extraKmRate: 51, 
+                allowsHelpers: true,
+                prices: { regular: 1300, prioritario: 1450 }
+            }
         };
 
         window.onload = function() {
@@ -524,18 +487,17 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-       function showCalculatorView() {
-    document.getElementById('profileSection').classList.remove('active-view');
-    document.getElementById('profileSection').classList.add('hidden-view');
-    document.getElementById('calculatorSection').classList.remove('hidden-view');
-    document.getElementById('calculatorSection').classList.add('active-view');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Renderizar el mapa de Leaflet automáticamente al abrir la pantalla
-    setTimeout(() => {
-        initMap();
-    }, 200);
-}
+        function showCalculatorView() {
+            document.getElementById('profileSection').classList.remove('active-view');
+            document.getElementById('profileSection').classList.add('hidden-view');
+            document.getElementById('calculatorSection').classList.remove('hidden-view');
+            document.getElementById('calculatorSection').classList.add('active-view');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            setTimeout(() => {
+                initMap();
+            }, 200);
+        }
 
         function checkHomeNavigation() {
             if (currentUser) {
@@ -549,7 +511,6 @@
             const isParticular = document.querySelector('input[name="userType"][value="Particular"]').checked;
             const pLabel = document.getElementById('typeParticularLabel');
             const eLabel = document.getElementById('typeEmpresaLabel');
-
             if (isParticular) {
                 pLabel.classList.add('border-brand-500', 'bg-brand-50');
                 eLabel.classList.remove('border-brand-500', 'bg-brand-50');
@@ -559,95 +520,63 @@
             }
         }
 
-        // Guardar Perfil (Supabase + LocalStorage)
-async function saveProfile(event) {
-    event.preventDefault();
-
-    const btn = document.getElementById('btnSubmitProfile');
-    btn.disabled = true;
-    btn.innerHTML = '<span>Guardando en la nube...</span>';
-
-    try {
-        const name = document.getElementById('fullName').value.trim();
-        const email = document.getElementById('userEmail').value.trim();
-        const phone = document.getElementById('userPhone').value.trim();
-        const userType = document.querySelector('input[name="userType"]:checked').value;
-
-        if (!name || !email || !phone) {
-            alert('Por favor completa todos los campos obligatorios.');
-            btn.disabled = false;
-            btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
-            return;
+        async function saveProfile(event) {
+            event.preventDefault();
+            const btn = document.getElementById('btnSubmitProfile');
+            btn.disabled = true;
+            btn.innerHTML = '<span>Guardando en la nube...</span>';
+            try {
+                const name = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('userEmail').value.trim();
+                const phone = document.getElementById('userPhone').value.trim();
+                const userType = document.querySelector('input[name="userType"]:checked').value;
+                if (!name || !email || !phone) {
+                    alert('Por favor completa todos los campos obligatorios.');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
+                    return;
+                }
+                const { error } = await _supabase
+                    .from('clientes')
+                    .insert([{ nombre: name, email: email, telefono: phone, tipo: userType }]);
+                if (error) {
+                    console.error('Error al guardar en Supabase:', error.message);
+                }
+                const userData = { name, email, phone, userType };
+                localStorage.setItem('uingo_user', JSON.stringify(userData));
+                localStorage.setItem('uingo_user_profile', JSON.stringify(userData));
+                currentUser = userData;
+                
+                displayUserBadge();
+                showCalculatorView();
+                showMessage('¡Perfil Guardado!', 'Tus datos se registraron correctamente. Ya puedes cotizar tu envío.', 'success');
+            } catch (err) {
+                console.error('Excepción general o de red:', err);
+                alert('Ocurrió un error al guardar tu perfil. Inténtalo de nuevo.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
+            }
         }
 
-        // 1. Inserción directa en Supabase Cloud (Tabla 'clientes')
-        const { error } = await _supabase
-            .from('clientes')
-            .insert([{ nombre: name, email: email, telefono: phone, tipo: userType }]);
-
-        if (error) {
-            console.error('Error al guardar en Supabase:', error.message);
-        } else {
-            console.log('Cliente guardado en Supabase exitosamente.');
-        }
-
-        // 2. Guardado local de respaldo y perfil de usuario
-        const currentUser = { name, email, phone, userType };
-        localStorage.setItem('uingo_user', JSON.stringify(currentUser));
-        localStorage.setItem('uingo_user_profile', JSON.stringify(currentUser));
-
-        // 3. Ocultar sección de perfil y mostrar el cotizador
-        const profileSection = document.getElementById('profileSection');
-        if (profileSection) {
-            profileSection.classList.add('hidden');
-        }
-
-        const cotizadorSection = document.getElementById('cotizadorSection'); 
-        if (cotizadorSection) {
-            cotizadorSection.classList.remove('hidden');
-        }
-
-        // 4. Funciones complementarias de interfaz (si están definidas en tu código)
-        if (typeof displayUserBadge === 'function') displayUserBadge();
-        if (typeof showCalculatorView === 'function') showCalculatorView();
-        
-        if (typeof showMessage === 'function') {
-            showMessage('¡Perfil Guardado!', 'Tus datos se registraron correctamente. Ya puedes cotizar tu envío.', 'success');
-        }
-
-    } catch (err) {
-        console.error('Excepción general o de red:', err);
-        alert('Ocurrió un error al guardar tu perfil. Inténtalo de nuevo.');
-    } finally {
-        // Restaurar estado del botón
-        btn.disabled = false;
-        btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
-    }
-}
         function displayUserBadge() {
             if (!currentUser) return;
-
             document.getElementById('badgeName').innerText = currentUser.name;
             document.getElementById('badgeType').innerText = currentUser.userType;
             document.getElementById('avatarInitial').innerText = currentUser.name.charAt(0).toUpperCase();
-
             document.getElementById('summaryCustomerName').innerText = currentUser.name;
             document.getElementById('summaryCustomerType').innerText = currentUser.userType;
-
             document.getElementById('userBadge').classList.remove('hidden');
             document.getElementById('userBadge').classList.add('flex');
-
             document.getElementById('fullName').value = currentUser.name;
             document.getElementById('userEmail').value = currentUser.email;
             document.getElementById('userPhone').value = currentUser.phone;
-
             if (currentUser.userType === 'Particular') {
                 document.querySelector('input[name="userType"][value="Particular"]').checked = true;
             } else {
                 document.querySelector('input[name="userType"][value="Empresa"]').checked = true;
             }
             updateTypeStyle();
-            calculateQuote();
         }
 
         function logoutUser() {
@@ -662,73 +591,125 @@ async function saveProfile(event) {
         }
 
         function selectVehicle(type) {
-    // 1. Quitar estilos de selección a todas las tarjetas
-    document.querySelectorAll('.vehicle-card').forEach(card => {
-        card.classList.remove('border-blue-600', 'bg-blue-50/50');
-        card.classList.add('border-slate-200');
-    });
+            selectedVehicle = type;
+            selectedServiceType = null; // Reiniciar modalidad
+            extraHelpers = 0;
+            document.getElementById('helpersCount').innerText = '0';
 
-    // 2. Resaltar la tarjeta seleccionada
-    const selectedCard = document.getElementById(`card-${type}`);
-    if (selectedCard) {
-        selectedCard.classList.remove('border-slate-200');
-        selectedCard.classList.add('border-blue-600', 'bg-blue-50/50');
-    }
+            // Estilos de selección de tarjeta
+            document.querySelectorAll('.vehicle-card').forEach(card => {
+                card.classList.remove('border-blue-600', 'bg-blue-50/50');
+                card.classList.add('border-slate-200');
+            });
+            const selectedCard = document.getElementById(`card-${type}`);
+            if (selectedCard) {
+                selectedCard.classList.remove('border-slate-200');
+                selectedCard.classList.add('border-blue-600', 'bg-blue-50/50');
+            }
 
-    // 3. Mostrar u ocultar Modalidad de Servicio y Cargadores Extras
-    const serviceContainer = document.getElementById('serviceTypeContainer');
-    const helpersContainer = document.getElementById('helpersContainer');
+            const serviceContainer = document.getElementById('serviceTypeContainer');
+            const helpersContainer = document.getElementById('helpersContainer');
 
-    if (type === 'camioneta' || type === 'camion') {
-        serviceContainer.classList.remove('hidden');
-        helpersContainer.classList.remove('hidden');
-    } else {
-        serviceContainer.classList.add('hidden');
-        helpersContainer.classList.add('hidden');
-    }
+            // Limpiar selección visual previa de modalidades
+            ['regular', 'prioritario'].forEach(t => {
+                const el = document.getElementById(`type-${t}`);
+                if (el) {
+                    el.classList.remove('border-blue-600', 'bg-blue-50/50');
+                    el.classList.add('border-slate-200');
+                }
+            });
 
-            // 4. Recalcular el precio total de manera automática
-    if (typeof calculateQuote === 'function') {
-        calculateQuote();
-    }
+            if (type === 'camioneta' || type === 'camion') {
+                serviceContainer.classList.remove('hidden');
+                helpersContainer.classList.add('hidden'); // Oculto hasta elegir modalidad
+                
+                // Actualizar precios dinámicos en las tarjetas de modalidad
+                document.getElementById('price-regular').innerText = `$${fleetRules[type].prices.regular} MXN`;
+                document.getElementById('price-prioritario').innerText = `$${fleetRules[type].prices.prioritario} MXN`;
+            } else {
+                serviceContainer.classList.add('hidden');
+                helpersContainer.classList.add('hidden');
+            }
+
+            calculateQuote();
+        }
+
+        function selectServiceType(type) {
+            selectedServiceType = type;
+
+            ['regular', 'prioritario'].forEach(t => {
+                const el = document.getElementById(`type-${t}`);
+                if (el) {
+                    el.classList.remove('border-blue-600', 'bg-blue-50/50');
+                    el.classList.add('border-slate-200');
+                }
+            });
+
+            const selectedTypeCard = document.getElementById(`type-${type}`);
+            if (selectedTypeCard) {
+                selectedTypeCard.classList.remove('border-slate-200');
+                selectedTypeCard.classList.add('border-blue-600', 'bg-blue-50/50');
+            }
+
+            // Al elegir modalidad, ahora sí se despliega cargadores extras
+            const helpersContainer = document.getElementById('helpersContainer');
+            helpersContainer.classList.remove('hidden');
+
+            calculateQuote();
         }
 
         function changeHelpers(delta) {
             if (!selectedVehicle || !fleetRules[selectedVehicle].allowsHelpers) return;
-
             extraHelpers += delta;
             if (extraHelpers < 0) extraHelpers = 0;
             if (extraHelpers > 6) extraHelpers = 6;
-
             document.getElementById('helpersCount').innerText = extraHelpers;
             calculateQuote();
         }
 
         function calculateQuote() {
             if (!selectedVehicle) return;
-
             const rule = fleetRules[selectedVehicle];
             const distance = parseInt(document.getElementById('distanceRange').value) || 0;
             document.getElementById('distanceValue').innerText = distance;
-
             document.getElementById('summaryVehicleName').innerText = rule.name;
-            document.getElementById('summaryBasePrice').innerText = `$${rule.basePrice.toLocaleString('es-MX')} MXN`;
+
+            let basePrice = 0;
+            let serviceFee = 0;
+            const serviceRow = document.getElementById('summaryServiceRow');
+
+            if (selectedVehicle === 'moto' || selectedVehicle === 'carro') {
+                basePrice = rule.basePrice;
+                serviceRow.classList.add('hidden');
+            } else if (selectedVehicle === 'camioneta' || selectedVehicle === 'camion') {
+                if (selectedServiceType) {
+                    basePrice = rule.prices.regular; // Base regular
+                    if (selectedServiceType === 'prioritario') {
+                        serviceFee = rule.prices.prioritario - rule.prices.regular;
+                    }
+                    document.getElementById('summaryServiceLabel').innerText = `Modalidad (${selectedServiceType.toUpperCase()}):`;
+                    document.getElementById('summaryServicePrice').innerText = `$${serviceFee.toLocaleString('es-MX')} MXN`;
+                    serviceRow.classList.remove('hidden');
+                } else {
+                    basePrice = rule.prices.regular;
+                    serviceRow.classList.add('hidden');
+                }
+            }
+
+            document.getElementById('summaryBasePrice').innerText = `$${basePrice.toLocaleString('es-MX')} MXN`;
 
             let extraKm = 0;
             let extraPrice = 0;
-
             if (distance > rule.baseKm) {
                 extraKm = distance - rule.baseKm;
                 extraPrice = extraKm * rule.extraKmRate;
             }
-
             document.getElementById('summaryExtraKm').innerText = extraKm;
             document.getElementById('summaryExtraPrice').innerText = `$${extraPrice.toLocaleString('es-MX')} MXN`;
 
             let helpersPrice = 0;
             const helpersRow = document.getElementById('summaryHelpersRow');
-
-            if (rule.allowsHelpers && extraHelpers > 0) {
+            if (rule.allowsHelpers && extraHelpers > 0 && selectedServiceType) {
                 helpersPrice = extraHelpers * 300;
                 document.getElementById('summaryHelpersQty').innerText = extraHelpers;
                 document.getElementById('summaryHelpersPrice').innerText = `$${helpersPrice.toLocaleString('es-MX')} MXN`;
@@ -737,7 +718,7 @@ async function saveProfile(event) {
                 helpersRow.classList.add('hidden');
             }
 
-            const totalPrice = rule.basePrice + extraPrice + helpersPrice;
+            const totalPrice = basePrice + serviceFee + extraPrice + helpersPrice;
             document.getElementById('summaryTotalPrice').innerText = `$${totalPrice.toLocaleString('es-MX')} MXN`;
         }
 
@@ -747,9 +728,12 @@ async function saveProfile(event) {
                 showProfileView();
                 return;
             }
-
             if (!selectedVehicle) {
                 showMessage('Vehículo Requerido', 'Por favor selecciona un tipo de vehículo.', 'error');
+                return;
+            }
+            if ((selectedVehicle === 'camioneta' || selectedVehicle === 'camion') && !selectedServiceType) {
+                showMessage('Modalidad Requerida', 'Por favor selecciona la modalidad de servicio (Regular o Prioritario).', 'error');
                 return;
             }
 
@@ -758,20 +742,23 @@ async function saveProfile(event) {
             const distance = document.getElementById('distanceRange').value;
             const rule = fleetRules[selectedVehicle];
             
+            let basePrice = (selectedVehicle === 'moto' || selectedVehicle === 'carro') ? rule.basePrice : rule.prices.regular;
+            let serviceFee = (selectedVehicle === 'camioneta' || selectedVehicle === 'camion') && selectedServiceType === 'prioritario' ? (rule.prices.prioritario - rule.prices.regular) : 0;
             let extraKm = distance > rule.baseKm ? distance - rule.baseKm : 0;
             let extraPrice = extraKm * rule.extraKmRate;
             let helpersPrice = (rule.allowsHelpers && extraHelpers > 0) ? extraHelpers * 300 : 0;
-            let totalPrice = rule.basePrice + extraPrice + helpersPrice;
+            let totalPrice = basePrice + serviceFee + extraPrice + helpersPrice;
 
             const message = `¡Hola! 👋 Soy *${currentUser.name}* (${currentUser.userType}). Me gustaría solicitar un servicio con *UINGO*:%0A%0A` +
                 `🚗 *Vehículo:* ${rule.name}%0A` +
+                ((selectedVehicle === 'camioneta' || selectedVehicle === 'camion') ? `⚡ *Modalidad:* ${selectedServiceType.toUpperCase()}%0A` : '') +
                 `📍 *Origen:* ${origin}%0A` +
                 `🏁 *Destino:* ${destination}%0A` +
                 `🛣️ *Distancia:* ${distance} km%0A` +
                 (extraHelpers > 0 ? `👥 *Cargadores:* ${extraHelpers} ($${helpersPrice} MXN)%0A` : '') +
                 `💰 *Total Estimado:* $${totalPrice.toLocaleString('es-MX')} MXN%0A%0A` +
                 `📞 *Teléfono de contacto:* ${currentUser.phone}`;
-
+            
             const whatsappUrl = `https://wa.me/523122416157?text=${message}`;
             window.open(whatsappUrl, '_blank');
         }
@@ -782,6 +769,7 @@ async function saveProfile(event) {
             document.getElementById('distanceRange').value = 5;
             document.getElementById('distanceValue').innerText = '5';
             extraHelpers = 0;
+            selectedServiceType = null;
             document.getElementById('helpersCount').innerText = '0';
             selectVehicle('moto');
             calculateQuote();
@@ -794,10 +782,8 @@ async function saveProfile(event) {
             const modalIcon = document.getElementById('modalIcon');
             const modalTitle = document.getElementById('modalTitle');
             const modalMessage = document.getElementById('modalMessage');
-
             modalTitle.innerText = title;
             modalMessage.innerText = message;
-
             if (type === 'success') {
                 modalIcon.className = 'w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-xl';
                 modalIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
@@ -805,7 +791,6 @@ async function saveProfile(event) {
                 modalIcon.className = 'w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3 text-xl';
                 modalIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
             }
-
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
@@ -817,271 +802,124 @@ async function saveProfile(event) {
         function closeModal() {
             const modal = document.getElementById('messageModal');
             const modalBox = document.getElementById('modalBox');
-
             modal.classList.add('opacity-0');
             modalBox.classList.remove('scale-100');
             modalBox.classList.add('scale-95');
-
             setTimeout(() => {
                 modal.classList.add('hidden');
             }, 200);
         }
 
-        // ====================================================
-        // CÓDIGO NUEVO DEL MAPA (DENTRO DEL MISMO SCRIPT)
-        // ====================================================
         let map = null;
         let routeLayer = null;
 
         function initMap() {
-    if (map) {
-        map.invalidateSize();
-        return;
-    }
-    // Inicializar mapa centrado en Colima
-    map = L.map('uingoMap').setView([19.2433, -103.7247], 13);
-
-    // Servidor público de Esri: 100% libre, sin bloqueos 403 y sin requerir API Key
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-        maxZoom: 18,
-        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
-    }).addTo(map);
-}
-
-        async function calculateRouteFromAddresses() {
-    let originRaw = document.getElementById('originInput').value.trim().toLowerCase();
-    let destRaw = document.getElementById('destinationInput').value.trim().toLowerCase();
-
-    if (!originRaw || !destRaw) {
-        alert("Por favor ingresa tanto el punto de origen como el de destino.");
-        return;
-    }
-
-    // Diccionario instantáneo para ciudades principales de la región (Cero espera)
-    const regionalHubs = {
-        'colima': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
-        'colima centro': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
-        'manzanillo': { lat: 19.0522, lon: -104.3159, name: 'Manzanillo' },
-        'tecomán': { lat: 18.9171, lon: -103.8765, name: 'Tecomán' },
-        'tecoman': { lat: 18.9171, lon: -103.8765, name: 'Tecomán' },
-        'guadalajara': { lat: 20.6597, lon: -103.3496, name: 'Guadalajara' },
-        'gdl': { lat: 20.6597, lon: -103.3496, name: 'Guadalajara' },
-        'villa de álvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' },
-        'villa de alvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' }
-    };
-
-    const findHub = (text) => {
-        const match = Object.keys(regionalHubs).find(key => text.includes(key));
-        return match ? regionalHubs[match] : null;
-    };
-
-    const originHub = findHub(originRaw);
-    const destHub = findHub(destRaw);
-
-    // Si ambos son puntos conocidos, calcula la ruta al instante sin bloquearse
-    if (originHub && destHub) {
-        try {
-            const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${originHub.lon},${originHub.lat};${destHub.lon},${destHub.lat}?overview=full&geometries=geojson`);
-            const dataRoute = await resRoute.json();
-
-            if (dataRoute.routes && dataRoute.routes.length > 0) {
-                const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
-
-                const distanceRange = document.getElementById('distanceRange');
-                if (distanceRange) {
-                    if (distanceKm > parseInt(distanceRange.max)) distanceRange.max = Math.max(400, distanceKm);
-                    distanceRange.value = distanceKm;
-                    if (typeof calculateQuote === 'function') calculateQuote();
-                }
-
-                if (window.routeLayer) map.removeLayer(window.routeLayer);
-                if (window.markerOrigin) map.removeLayer(window.markerOrigin);
-                if (window.markerDest) map.removeLayer(window.markerDest);
-
-                window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
-                    style: { color: '#0284c7', weight: 5, opacity: 0.85 }
-                }).addTo(map);
-
-                window.markerOrigin = L.marker([originHub.lat, originHub.lon]).addTo(map).bindPopup(originHub.name).openPopup();
-                window.markerDest = L.marker([destHub.lat, destHub.lon]).addTo(map).bindPopup(destHub.name);
-                map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
-                
-                if (typeof closeModal === 'function') closeModal();
+            if (map) {
+                map.invalidateSize();
                 return;
             }
-        } catch (e) {
-            console.warn("Ruta rápida omitida, usando respaldo.");
+            map = L.map('uingoMap').setView([19.2433, -103.7247], 13);
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 18,
+                attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+            }).addTo(map);
         }
-    }
 
-    // Respaldo general con límite de 2 segundos y cierre garantizado del modal
-    if (typeof showMessage === 'function') {
-        showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
-    }
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-    try {
-        const cleanOrigin = `${originRaw}, Colima, Mexico`;
-        const cleanDest = `${destRaw}, Colima, Mexico`;
-
-        const [resOrigin, resDest] = await Promise.all([
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal }),
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal })
-        ]);
-
-        const dataOrigin = await resOrigin.json();
-        const dataDest = await resDest.json();
-
-        if (!dataOrigin.length || !dataDest.length) throw new Error("No localizado");
-
-        const lat1 = parseFloat(dataOrigin[0].lat), lon1 = parseFloat(dataOrigin[0].lon);
-        const lat2 = parseFloat(dataDest[0].lat), lon2 = parseFloat(dataDest[0].lon);
-
-        const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`, { signal: controller.signal });
-        const dataRoute = await resRoute.json();
-
-        clearTimeout(timeoutId);
-        if (typeof closeModal === 'function') closeModal();
-
-        if (dataRoute.routes && dataRoute.routes.length > 0) {
-            const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
-            const distanceRange = document.getElementById('distanceRange');
-            if (distanceRange) {
-                distanceRange.value = distanceKm;
-                if (typeof calculateQuote === 'function') calculateQuote();
+        async function calculateRouteFromAddresses() {
+            let originRaw = document.getElementById('originInput').value.trim().toLowerCase();
+            let destRaw = document.getElementById('destinationInput').value.trim().toLowerCase();
+            if (!originRaw || !destRaw) {
+                alert("Por favor ingresa tanto el punto de origen como el de destino.");
+                return;
             }
-
-            if (window.routeLayer) map.removeLayer(window.routeLayer);
-            if (window.markerOrigin) map.removeLayer(window.markerOrigin);
-            if (window.markerDest) map.removeLayer(window.markerDest);
-
-            window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, { style: { color: '#0284c7', weight: 5, opacity: 0.85 } }).addTo(map);
-            window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("Origen").openPopup();
-            window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("Destino");
-            map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
-        } else {
-            throw new Error("Ruta no trazable");
-        }
-
-    } catch (error) {
-        clearTimeout(timeoutId);
-        if (typeof closeModal === 'function') closeModal();
-        
-        // Nota solicitada en caso de cualquier demora o fallo
-        alert("Nota: Pon la distancia aproximada manualmente en la barra deslizadora de abajo.");
-    }
-}
-
-        async function getCoordinates(address) {
-            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`;
-            const res = await fetch(url, { headers: { 'User-Agent': 'UingoLogisticaApp' } });
-            const results = await res.json();
+            const regionalHubs = {
+                'colima': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
+                'colima centro': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
+                'manzanillo': { lat: 19.0522, lon: -104.3159, name: 'Manzanillo' },
+                'tecomán': { lat: 18.9171, lon: -103.8765, name: 'Tecomán' },
+                'tecoman': { lat: 18.9171, lon: -103.8765, name: 'Tecomán' },
+                'guadalajara': { lat: 20.6597, lon: -103.3496, name: 'Guadalajara' },
+                'gdl': { lat: 20.6597, lon: -103.3496, name: 'Guadalajara' },
+                'villa de álvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' },
+                'villa de alvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' }
+            };
+            const findHub = (text) => {
+                const match = Object.keys(regionalHubs).find(key => text.includes(key));
+                return match ? regionalHubs[match] : null;
+            };
+            const originHub = findHub(originRaw);
+            const destHub = findHub(destRaw);
             
-            if (results && results.length > 0) {
-                return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) };
+            if (originHub && destHub) {
+                try {
+                    const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${originHub.lon},${originHub.lat};${destHub.lon},${destHub.lat}?overview=full&geometries=geojson`);
+                    const dataRoute = await resRoute.json();
+                    if (dataRoute.routes && dataRoute.routes.length > 0) {
+                        const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
+                        const distanceRange = document.getElementById('distanceRange');
+                        if (distanceRange) {
+                            if (distanceKm > parseInt(distanceRange.max)) distanceRange.max = Math.max(400, distanceKm);
+                            distanceRange.value = distanceKm;
+                            calculateQuote();
+                        }
+                        if (window.routeLayer) map.removeLayer(window.routeLayer);
+                        if (window.markerOrigin) map.removeLayer(window.markerOrigin);
+                        if (window.markerDest) map.removeLayer(window.markerDest);
+                        window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
+                            style: { color: '#0284c7', weight: 5, opacity: 0.85 }
+                        }).addTo(map);
+                        window.markerOrigin = L.marker([originHub.lat, originHub.lon]).addTo(map).bindPopup(originHub.name).openPopup();
+                        window.markerDest = L.marker([destHub.lat, destHub.lon]).addTo(map).bindPopup(destHub.name);
+                        map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("Ruta rápida omitida, usando respaldo.");
+                }
             }
-            return null;
+
+            showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2000);
+            try {
+                const cleanOrigin = `${originRaw}, Colima, Mexico`;
+                const cleanDest = `${destRaw}, Colima, Mexico`;
+                const [resOrigin, resDest] = await Promise.all([
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal }),
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal })
+                ]);
+                const dataOrigin = await resOrigin.json();
+                const dataDest = await resDest.json();
+                if (!dataOrigin.length || !dataDest.length) throw new Error("No localizado");
+                const lat1 = parseFloat(dataOrigin[0].lat), lon1 = parseFloat(dataOrigin[0].lon);
+                const lat2 = parseFloat(dataDest[0].lat), lon2 = parseFloat(dataDest[0].lon);
+                const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`, { signal: controller.signal });
+                const dataRoute = await resRoute.json();
+                clearTimeout(timeoutId);
+                closeModal();
+                if (dataRoute.routes && dataRoute.routes.length > 0) {
+                    const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
+                    const distanceRange = document.getElementById('distanceRange');
+                    if (distanceRange) {
+                        distanceRange.value = distanceKm;
+                        calculateQuote();
+                    }
+                    if (window.routeLayer) map.removeLayer(window.routeLayer);
+                    if (window.markerOrigin) map.removeLayer(window.markerOrigin);
+                    if (window.markerDest) map.removeLayer(window.markerDest);
+                    window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, { style: { color: '#0284c7', weight: 5, opacity: 0.85 } }).addTo(map);
+                    window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("Origen").openPopup();
+                    window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("Destino");
+                    map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
+                } else {
+                    throw new Error("Ruta no trazable");
+                }
+            } catch (error) {
+                clearTimeout(timeoutId);
+                closeModal();
+                alert("Nota: Pon la distancia aproximada manualmente en la barra deslizadora de abajo.");
+            }
         }
-
-// Precios Base
-const PRICES = {
-    camioneta: { regular: 400, prioritario: 479 },
-    camion: { regular: 1300, prioritario: 1450 },
-    cargador: 300
-};
-
-let selectedService = null;
-let helpersCount = 0;
-
-function selectVehicle(type) {
-    selectedVehicle = type;
-    selectedService = null; // Reinicia la modalidad al cambiar de vehículo
-    helpersCount = 0;
-    document.getElementById('helpersCount').innerText = 0;
-
-    // Estilos de selección de tarjeta
-    document.querySelectorAll('.vehicle-card').forEach(card => card.classList.remove('border-blue-600', 'bg-blue-50/20'));
-    document.getElementById(`card-${type}`).classList.add('border-blue-600', 'bg-blue-50/20');
-
-    // Habilitar sección de Tipo de Servicio
-    const serviceContainer = document.getElementById('serviceTypeContainer');
-    serviceContainer.classList.remove('opacity-50', 'pointer-events-none');
-
-    // Deshabilitar Cargadores hasta que elijan la modalidad
-    const helpersContainer = document.getElementById('helpersContainer');
-    helpersContainer.classList.add('opacity-50', 'pointer-events-none');
-
-    // Limpiar selección previa de tipo de servicio
-    document.querySelectorAll('#serviceTypeContainer > div > div').forEach(card => {
-        card.classList.remove('border-blue-600', 'bg-blue-50/20');
-    });
-
-    // Actualizar los precios mostrados en los botones Regular / Prioritario
-    document.getElementById('price-regular').innerText = `$${PRICES[type].regular} MXN`;
-    document.getElementById('price-prioritario').innerText = `$${PRICES[type].prioritario} MXN`;
-
-    updateSummary();
-}
-
-function selectServiceType(type) {
-    if (!selectedVehicle) return;
-
-    selectedService = type;
-
-    // Resaltar opción seleccionada
-    document.querySelectorAll('#serviceTypeContainer > div > div').forEach(card => {
-        card.classList.remove('border-blue-600', 'bg-blue-50/20');
-    });
-    document.getElementById(`type-${type}`).classList.add('border-blue-600', 'bg-blue-50/20');
-
-    // Habilitar paso de cargadores
-    const helpersContainer = document.getElementById('helpersContainer');
-    helpersContainer.classList.remove('opacity-50', 'pointer-events-none');
-
-    updateSummary();
-}
-
-function changeHelpers(val) {
-    if (!selectedService) return;
-
-    helpersCount = Math.max(0, helpersCount + val);
-    document.getElementById('helpersCount').innerText = helpersCount;
-    updateSummary();
-}
-
-function updateSummary() {
-    const summaryContainer = document.getElementById('summaryContainer');
-
-    if (!selectedVehicle || !selectedService) {
-        summaryContainer.classList.add('hidden');
-        return;
-    }
-
-    summaryContainer.classList.remove('hidden');
-
-    const basePrice = PRICES[selectedVehicle][selectedService];
-    const helpersPrice = helpersCount * PRICES.cargador;
-    const total = basePrice + helpersPrice;
-
-    // Actualizar vista del desglose
-    document.getElementById('summaryVehicle').innerText = `Vehículo: ${selectedVehicle === 'camioneta' ? 'Camioneta (1.2T)' : 'Camión (3T)'}`;
-    document.getElementById('summaryBasePrice').innerText = `$${PRICES[selectedVehicle].regular} MXN`;
-    
-    const extraServiceFee = PRICES[selectedVehicle][selectedService] - PRICES[selectedVehicle].regular;
-    document.getElementById('summaryServiceType').innerText = `Modalidad: ${selectedService.toUpperCase()}`;
-    document.getElementById('summaryServiceFee').innerText = extraServiceFee > 0 ? `+$${extraServiceFee} MXN` : 'Incluido';
-
-    document.getElementById('summaryHelpersQty').innerText = helpersCount;
-    document.getElementById('summaryHelpersPrice').innerText = `$${helpersPrice} MXN`;
-
-    document.getElementById('summaryTotal').innerText = `$${total.toLocaleString('es-MX')} MXN`;
-}
-        
-    </script>
-
-                        
-                        
+    </script>                        
 </body>
 </html>
