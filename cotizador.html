@@ -565,7 +565,7 @@ async function saveProfile(event) {
 
     const btn = document.getElementById('btnSubmitProfile');
     btn.disabled = true;
-    btn.innerHTML = '<span>Guardando...</span>';
+    btn.innerHTML = '<span>Guardando en la nube...</span>';
 
     try {
         const name = document.getElementById('fullName').value.trim();
@@ -580,14 +580,23 @@ async function saveProfile(event) {
             return;
         }
 
-        // Guardado local de respaldo
-        const userData = { name, email, phone, userType };
-        localStorage.setItem('uingo_user', JSON.stringify(userData));
+        // 1. Inserción directa en Supabase Cloud (Tabla 'clientes')
+        const { error } = await _supabase
+            .from('clientes')
+            .insert([{ nombre: name, email: email, telefono: phone, tipo: userType }]);
 
-        // Si aquí adentro estás usando 'await' (por ejemplo para Supabase, como: `await supabase.from(...)`),
-        // asegúrate de que esté dentro de esta misma función 'async'.
+        if (error) {
+            console.error('Error al guardar en Supabase:', error.message);
+        } else {
+            console.log('Cliente guardado en Supabase exitosamente.');
+        }
 
-        // Ocultar sección de perfil y mostrar el cotizador
+        // 2. Guardado local de respaldo y perfil de usuario
+        const currentUser = { name, email, phone, userType };
+        localStorage.setItem('uingo_user', JSON.stringify(currentUser));
+        localStorage.setItem('uingo_user_profile', JSON.stringify(currentUser));
+
+        // 3. Ocultar sección de perfil y mostrar el cotizador
         const profileSection = document.getElementById('profileSection');
         if (profileSection) {
             profileSection.classList.add('hidden');
@@ -598,39 +607,23 @@ async function saveProfile(event) {
             cotizadorSection.classList.remove('hidden');
         }
 
-    } catch (error) {
-        console.error('Error al guardar:', error);
+        // 4. Funciones complementarias de interfaz (si están definidas en tu código)
+        if (typeof displayUserBadge === 'function') displayUserBadge();
+        if (typeof showCalculatorView === 'function') showCalculatorView();
+        
+        if (typeof showMessage === 'function') {
+            showMessage('¡Perfil Guardado!', 'Tus datos se registraron correctamente. Ya puedes cotizar tu envío.', 'success');
+        }
+
+    } catch (err) {
+        console.error('Excepción general o de red:', err);
+        alert('Ocurrió un error al guardar tu perfil. Inténtalo de nuevo.');
+    } finally {
+        // Restaurar estado del botón
         btn.disabled = false;
         btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
     }
 }
-
-            // Inserción en Supabase Cloud
-            try {
-                const { error } = await _supabase
-                    .from('clientes')
-                    .insert([{ nombre: name, email: email, telefono: phone, tipo: userType }]);
-
-                if (error) {
-                    console.error('Error al guardar en Supabase:', error.message);
-                } else {
-                    console.log('Cliente guardado en Supabase exitosamente.');
-                }
-            } catch (err) {
-                console.error('Excepción de red:', err);
-            }
-
-            currentUser = { name, email, phone, userType };
-            localStorage.setItem('uingo_user_profile', JSON.stringify(currentUser));
-
-            btn.disabled = false;
-            btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span><i class="fa-solid fa-arrow-right text-xs"></i>';
-
-            displayUserBadge();
-            showCalculatorView();
-            showMessage('¡Perfil Guardado!', 'Tus datos se registraron correctamente. Ya puedes cotizar tu envío.', 'success');
-        }
-
         function displayUserBadge() {
             if (!currentUser) return;
 
