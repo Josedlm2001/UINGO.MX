@@ -686,9 +686,11 @@ async function saveProfile(event) {
         serviceContainer.classList.add('hidden');
         helpersContainer.classList.add('hidden');
     }
-}
 
-            calculateQuote();
+            // 4. Recalcular el precio total de manera automática
+    if (typeof calculateQuote === 'function') {
+        calculateQuote();
+    }
         }
 
         function changeHelpers(delta) {
