@@ -560,24 +560,56 @@
         }
 
         // Guardar Perfil (Supabase + LocalStorage)
-        async function saveProfile(event) {
-            event.preventDefault();
-            
-            const btn = document.getElementById('btnSubmitProfile');
-            btn.disabled = true;
-            btn.innerHTML = '<span>Guardando en la nube...</span>';
+async function saveProfile(event) {
+    event.preventDefault();
+    
+    const btn = document.getElementById('btnSubmitProfile');
+    btn.disabled = true;
+    btn.innerHTML = '<span>Guardando en la nube...</span>';
 
-            const name = document.getElementById('fullName').value.trim();
-            const email = document.getElementById('userEmail').value.trim();
-            const phone = document.getElementById('userPhone').value.trim();
-            const userType = document.querySelector('input[name="userType"]:checked').value;
+    const name = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('userEmail').value.trim();
+    const phone = document.getElementById('userPhone').value.trim();
+    const userType = document.querySelector('input[name="userType"]:checked').value;
 
-            if (!name || !email || !phone) {
-                showMessage('Error', 'Por favor completa todos los campos obligatorios.', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span><i class="fa-solid fa-arrow-right text-xs"></i>';
-                return;
-            }
+    if (!name || !email || !phone) {
+        showMessage('Error', 'Por favor completa todos los campos obligatorios.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span><i class="fa-solid fa-arrow-right text-xs"></i>';
+        return;
+    }
+
+    try {
+        // 1. Guardar localmente para acceso rápido en la sesión
+        const userData = { name, email, phone, userType };
+        localStorage.setItem('uingo_user', JSON.stringify(userData));
+
+        // Opcional: Si usas Supabase aquí puedes agregar tu código de inserción:
+        // const { data, error } = await supabase.from('perfiles').insert([userData]);
+        // if (error) throw error;
+
+        // 2. Simular un pequeño respiro o esperar a Supabase y ocultar la sección de perfil
+        const profileSection = document.getElementById('profileSection');
+        if (profileSection) {
+            profileSection.classList.add('hidden');
+        }
+
+        // 3. Mostrar la siguiente sección o vista del cotizador
+        // Asegúrate de cambiar 'cotizadorSection' por el ID real de tu siguiente vista
+        const cotizadorSection = document.getElementById('cotizadorSection'); 
+        if (cotizadorSection) {
+            cotizadorSection.classList.remove('hidden');
+        }
+
+    } catch (error) {
+        console.error('Error al guardar el perfil:', error);
+        showMessage('Error', 'No se pudo guardar el perfil. Intenta de nuevo.', 'error');
+        
+        // Restaurar botón en caso de error
+        btn.disabled = false;
+        btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span><i class="fa-solid fa-arrow-right text-xs"></i>';
+    }
+}
 
             // Inserción en Supabase Cloud
             try {
