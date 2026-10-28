@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full scroll-smooth">
+<html lang="es" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +9,8 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
- 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <!-- Supabase JS Client & Configuración Directa -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -26,184 +26,209 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#eaf1ff', 100: '#d6e4ff', 400: '#0bb9fe', 500: '#0d84fe',
-                            600: '#0e58ff', 700: '#0a45cc', 800: '#08339a', 900: '#062567',
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
                         },
-                        accent: { 500: '#f59e0b', 600: '#d97706' }
+                        accent: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
                     },
-                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
                 }
             }
         }
     </script>
-    <style type="text/tailwindcss">
-        .card { @apply bg-white rounded-3xl border border-slate-200/70 p-6 sm:p-7 shadow-[0_1px_2px_rgba(15,23,42,.04),0_12px_32px_-16px_rgba(15,23,42,.10)]; }
-        .lbl { @apply block text-[11px] font-semibold text-slate-500 uppercase tracking-[0.08em] mb-1.5; }
-        .inp { @apply w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/70 text-sm text-black placeholder-[#b4b4b4] outline-none transition focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10; }
-        .inp-plain { @apply pl-4; }
-        .ico { @apply absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#b4b4b4]; }
-        .step-n { @apply w-8 h-8 shrink-0 rounded-xl bg-black text-white font-mono font-bold text-xs flex items-center justify-center; }
-        .step-t { @apply text-base font-bold text-black tracking-tight; }
-        .step-s { @apply text-xs text-slate-500 mt-0.5; }
-        .opt { @apply cursor-pointer border border-slate-200 rounded-2xl p-4 bg-white transition-all duration-200 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/5; }
-        .opt.is-selected { border-color: #0e58ff; background: linear-gradient(180deg, #eaf1ff 0%, #ffffff 100%); box-shadow: 0 0 0 4px rgba(14,88,255,.12); }
-        .btn-ghost { @apply w-full text-slate-400 hover:text-white hover:bg-white/10 font-medium py-2.5 px-4 rounded-xl transition text-xs flex items-center justify-center gap-1.5; }
-        .page-view { transition: opacity .3s ease-in-out, transform .3s ease-in-out; }
-        .page-view.hidden-view { display: none !important; opacity: 0; transform: translateY(10px); }
-        .page-view.active-view { display: block; opacity: 1; transform: translateY(0); }
-        #calculatorSection.active-view { display: grid; }
-        .vehicle-card:hover { transform: translateY(-2px); }
-        .bg-mesh { background-color: #ffffff; background-image: radial-gradient(60rem 30rem at 10% -10%, rgba(14,88,255,.12), transparent 60%), radial-gradient(50rem 28rem at 100% 0%, rgba(11,185,254,.14), transparent 55%), linear-gradient(rgba(15,23,42,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,.035) 1px, transparent 1px); background-size: auto, auto, 36px 36px, 36px 36px; background-attachment: fixed; }
-        .grad-text { background: linear-gradient(90deg, #0e58ff, #0d84fe 55%, #0bb9fe); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .grad-bg { background: linear-gradient(135deg, #0e58ff, #0d84fe); }
-        input[type=range] { accent-color: #0e58ff; }
-        #uingoMap { filter: saturate(.85) contrast(1.02); }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #b4b4b4; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #0d84fe; }
+    <style>
+        .vehicle-card {
+            transition: all 0.25s ease-in-out;
+        }
+        .vehicle-card:hover {
+            transform: translateY(-3px);
+        }
+        .page-view {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .page-view.hidden-view {
+            display: none !important;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .page-view.active-view {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
-<body class="bg-mesh font-sans text-slate-800 antialiased min-h-full flex flex-col justify-between">
- 
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-full flex flex-col justify-between">
     <!-- Header / Navbar -->
-    <header class="bg-white/75 backdrop-blur-xl border-b border-slate-200/70 sticky top-0 z-30">
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="checkHomeNavigation()">
-                <div class="grad-bg text-white w-9 h-9 rounded-xl flex items-center justify-center shadow-lg shadow-[#0e58ff]/30">
-                    <i class="fa-solid fa-bolt text-sm"></i>
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="checkHomeNavigation()">
+                <div class="bg-brand-600 text-white font-extrabold text-2xl px-3 py-1 rounded-lg tracking-wider shadow-sm">
+                    UINGO
                 </div>
-                <span class="font-black text-xl tracking-[0.12em] text-black">UINGO</span>
-                <span class="hidden sm:inline-flex text-[11px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 rounded-full px-2.5 py-1">Logística &amp; Fletes</span>
+                <span class="text-xs sm:text-sm font-medium text-slate-500 border-l border-slate-200 pl-3">Logística & Fletes</span>
             </div>
- 
-            <div id="userBadge" class="hidden items-center gap-3 bg-white py-1.5 pl-1.5 pr-3 rounded-full border border-slate-200 shadow-sm">
-                <div class="w-8 h-8 rounded-full grad-bg text-white flex items-center justify-center font-bold text-sm" id="avatarInitial">U</div>
-                <div class="text-left hidden sm:block">
-                    <p class="text-xs font-bold text-slate-800 leading-none" id="badgeName">Usuario</p>
-                    <p class="text-[10px] text-slate-500 font-medium leading-tight mt-0.5" id="badgeType">Particular</p>
+            
+            <div id="userBadge" class="hidden items-center space-x-3 bg-slate-100 py-1.5 px-3 rounded-full border border-slate-200">
+                <div class="w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm" id="avatarInitial">
+                    U
                 </div>
-                <div class="flex items-center gap-1 pl-2 border-l border-slate-200">
-                    <button onclick="showProfileView()" class="text-slate-400 hover:text-brand-600 p-1.5 rounded-lg hover:bg-slate-100 text-xs transition" title="Editar Perfil">
+                <div class="text-left hidden sm:block">
+                    <p class="text-xs font-bold text-slate-700 leading-none" id="badgeName">Usuario</p>
+                    <p class="text-[10px] text-slate-500 font-medium leading-tight" id="badgeType">Particular</p>
+                </div>
+                <div class="flex items-center space-x-1 pl-1 border-l border-slate-200">
+                    <button onclick="showProfileView()" class="text-slate-500 hover:text-brand-600 p-1.5 rounded-lg hover:bg-white text-xs transition" title="Editar Perfil">
                         <i class="fa-solid fa-pen"></i>
                     </button>
-                    <button onclick="logoutUser()" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 text-xs transition" title="Cambiar de Cuenta / Salir">
+                    <button onclick="logoutUser()" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-white text-xs transition" title="Cambiar de Cuenta / Salir">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>
             </div>
         </div>
     </header>
- 
+
     <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-grow">
- 
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
+        
         <!-- VISTA 1: REGISTRO Y PERFIL DE USUARIO -->
-        <section id="profileSection" class="page-view active-view max-w-xl mx-auto">
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-14 h-14 grad-bg text-white rounded-2xl mb-4 shadow-xl shadow-[#0e58ff]/30">
+        <section id="profileSection" class="page-view active-view max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200">
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-brand-100 text-brand-600 rounded-full mb-3">
                     <i class="fa-solid fa-user-gear text-xl"></i>
                 </div>
-                <h2 class="text-3xl sm:text-4xl font-black tracking-tight grad-text pb-1">Configuración de Perfil</h2>
-                <p class="text-slate-500 text-sm mt-2 max-w-md mx-auto leading-relaxed">Ingresa tus datos de contacto para habilitar el cotizador en tiempo real y guardar tu historial en la plataforma UINGO.</p>
+                <h2 class="text-2xl font-bold text-slate-900">Configuración de Perfil</h2>
+                <p class="text-slate-500 text-sm mt-1">Ingresa tus datos de contacto para habilitar el cotizador en tiempo real y guardar tu historial en la plataforma UINGO.</p>
             </div>
-            <div class="card">
-                <form id="profileForm" onsubmit="saveProfile(event)" class="space-y-5">
-                    <div>
-                        <label class="lbl">Tipo de Usuario *</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <label class="opt is-selected !p-3 flex items-center gap-3" id="typeParticularLabel">
-                                <input type="radio" name="userType" value="Particular" checked onclick="updateTypeStyle()" class="text-brand-600 focus:ring-brand-500">
-                                <div>
-                                    <p class="text-sm font-bold text-black">Persona Física</p>
-                                    <p class="text-[11px] text-slate-500">Particular / Personal</p>
-                                </div>
-                            </label>
-                            <label class="opt !p-3 flex items-center gap-3" id="typeEmpresaLabel">
-                                <input type="radio" name="userType" value="Empresa" onclick="updateTypeStyle()" class="text-brand-600 focus:ring-brand-500">
-                                <div>
-                                    <p class="text-sm font-bold text-black">Empresa / Negocio</p>
-                                    <p class="text-[11px] text-slate-500">Facturación &amp; Mayoreo</p>
-                                </div>
-                            </label>
-                        </div>
+            <form id="profileForm" onsubmit="saveProfile(event)" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Tipo de Usuario *</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="cursor-pointer border-2 border-slate-200 hover:border-brand-500 rounded-xl p-3 flex items-center space-x-3 transition-colors text-slate-700" id="typeParticularLabel">
+                            <input type="radio" name="userType" value="Particular" checked onclick="updateTypeStyle()" class="text-brand-600 focus:ring-brand-500">
+                            <div>
+                                <p class="text-sm font-bold">Persona Física</p>
+                                <p class="text-[11px] text-slate-500">Particular / Personal</p>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer border-2 border-slate-200 hover:border-brand-500 rounded-xl p-3 flex items-center space-x-3 transition-colors text-slate-700" id="typeEmpresaLabel">
+                            <input type="radio" name="userType" value="Empresa" onclick="updateTypeStyle()" class="text-brand-600 focus:ring-brand-500">
+                            <div>
+                                <p class="text-sm font-bold">Empresa / Negocio</p>
+                                <p class="text-[11px] text-slate-500">Facturación & Mayoreo</p>
+                            </div>
+                        </label>
                     </div>
+                </div>
+                <div>
+                    <label for="fullName" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo o Razón Social *</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                            <i class="fa-solid fa-user text-sm"></i>
+                        </span>
+                        <input type="text" id="fullName" required placeholder="Ej. María González" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm outline-none transition">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="fullName" class="lbl">Nombre Completo o Razón Social *</label>
+                        <label for="userEmail" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Correo Electrónico *</label>
                         <div class="relative">
-                            <span class="ico"><i class="fa-solid fa-user text-sm"></i></span>
-                            <input type="text" id="fullName" required placeholder="Ej. María González" class="inp">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                <i class="fa-solid fa-envelope text-sm"></i>
+                            </span>
+                            <input type="email" id="userEmail" required placeholder="contacto@ejemplo.com" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm outline-none transition">
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label for="userEmail" class="lbl">Correo Electrónico *</label>
-                            <div class="relative">
-                                <span class="ico"><i class="fa-solid fa-envelope text-sm"></i></span>
-                                <input type="email" id="userEmail" required placeholder="contacto@ejemplo.com" class="inp">
-                            </div>
-                        </div>
-                        <div>
-                            <label for="userPhone" class="lbl">Teléfono (WhatsApp) *</label>
-                            <div class="relative">
-                                <span class="ico"><i class="fa-solid fa-phone text-sm"></i></span>
-                                <input type="tel" id="userPhone" required placeholder="312 241 6157" class="inp">
-                            </div>
+                    <div>
+                        <label for="userPhone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono (WhatsApp) *</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                <i class="fa-solid fa-phone text-sm"></i>
+                            </span>
+                            <input type="tel" id="userPhone" required placeholder="312 241 6157" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm outline-none transition">
                         </div>
                     </div>
-                    <button type="submit" id="btnSubmitProfile" class="w-full grad-bg hover:brightness-110 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-[#0e58ff]/30 transition flex items-center justify-center gap-2 text-sm">
-                        <span>Guardar Perfil y Comenzar a Cotizar</span>
-                        <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </button>
-                </form>
-            </div>
+                </div>
+                <button type="submit" id="btnSubmitProfile" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-sm">
+                    <span>Guardar Perfil y Comenzar a Cotizar</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </form>
         </section>
- 
+
         <!-- VISTA 2: COTIZADOR DE FLETES (OCULTO INICIALMENTE) -->
         <section id="calculatorSection" class="page-view hidden-view grid grid-cols-1 lg:grid-cols-12 gap-8">
- 
+            
             <!-- Columna Izquierda: Entradas & Selección de Flota (8 Col) -->
-            <div class="lg:col-span-8 space-y-5">
- 
-                <!-- Paso 1: Ubicaciones y Distancia -->
-                <div class="card">
-                    <div class="flex items-center gap-3 mb-5">
-                        <span class="step-n">01</span>
-                        <h3 class="step-t">Ubicaciones y Distancia de Ruta</h3>
+            <div class="lg:col-span-8 space-y-6">
+                
+               <!-- Paso 1: Ubicaciones y Distancia -->
+               <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">1</span>
+                        <h3 class="text-lg font-bold text-slate-900">Ubicaciones y Distancia de Ruta</h3>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label for="originInput" class="lbl">Punto de Recogida (Origen)</label>
+                            <label for="originInput" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Punto de Recogida (Origen)</label>
                             <div class="relative">
-                                <span class="ico !text-[#0bb9fe]"><i class="fa-solid fa-location-dot text-sm"></i></span>
-                                <input type="text" id="originInput" placeholder="Ej. Av. Constitución #123, Colima" class="inp">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-emerald-500">
+                                    <i class="fa-solid fa-location-dot text-sm"></i>
+                                </span>
+                                <input type="text" id="originInput" placeholder="Ej. Av. Constitución #123, Colima" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
                             </div>
                         </div>
                         <div>
-                            <label for="destinationInput" class="lbl">Punto de Entrega (Destino)</label>
+                            <label for="destinationInput" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Punto de Entrega (Destino)</label>
                             <div class="relative">
-                                <span class="ico !text-[#0e58ff]"><i class="fa-solid fa-flag-checkered text-sm"></i></span>
-                                <input type="text" id="destinationInput" placeholder="Ej. Centro, Villa de Álvarez" class="inp">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-rose-500">
+                                    <i class="fa-solid fa-flag-checkered text-sm"></i>
+                                </span>
+                                <input type="text" id="destinationInput" placeholder="Ej. Centro, Villa de Álvarez" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
                             </div>
                         </div>
                     </div>
                     <!-- Botón para calcular ruta automática en el mapa -->
-                    <button type="button" onclick="calculateRouteFromAddresses()" class="w-full mb-4 bg-black hover:bg-neutral-800 text-white font-semibold py-3 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-slate-900/10">
+                    <button type="button" onclick="calculateRouteFromAddresses()" class="w-full mb-4 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-sm">
                         <i class="fa-solid fa-map-location-dot"></i>
                         <span>Calcular Ruta y Distancia en el Mapa</span>
                     </button>
                     <!-- Contenedor Visual del Mapa -->
-                    <div id="uingoMap" class="w-full h-60 rounded-2xl border border-slate-200 z-10 mb-4 overflow-hidden"></div>
+                    <div id="uingoMap" class="w-full h-56 rounded-xl border border-slate-200 z-10 mb-4"></div>
                     <!-- Slider de Distancia -->
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
-                        <div class="flex justify-between items-center mb-3">
-                            <label for="distanceRange" class="lbl !mb-0 flex items-center gap-1.5">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="distanceRange" class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
                                 <i class="fa-solid fa-route text-brand-600"></i> Distancia Estimada
                             </label>
-                            <span class="text-2xl font-black text-black tracking-tight"><span id="distanceValue">5</span> <span class="text-sm font-semibold text-slate-400">km</span></span>
+                            <span class="text-lg font-extrabold text-brand-600"><span id="distanceValue">5</span> km</span>
                         </div>
-                        <input type="range" id="distanceRange" min="1" max="300" value="5" oninput="calculateQuote()" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
-                        <div class="flex justify-between text-[11px] text-[#b4b4b4] mt-2 font-medium">
+                        <input type="range" id="distanceRange" min="1" max="300" value="5" oninput="calculateQuote()" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600">
+                        <div class="flex justify-between text-[11px] text-slate-400 mt-1 font-medium">
                             <span>1 km (Local)</span>
                             <span>7 km (Base incluida)</span>
                             <span>50 km</span>
@@ -211,237 +236,235 @@
                         </div>
                     </div>
                 </div>
- 
+
                 <!-- Paso 2: Selección de Vehículo -->
-                <div class="card">
-                    <div class="flex items-center gap-3 mb-5">
-                        <span class="step-n">02</span>
-                        <h3 class="step-t">Selecciona el Tipo de Vehículo</h3>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">2</span>
+                        <h3 class="text-lg font-bold text-slate-900">Selecciona el Tipo de Vehículo</h3>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <!-- Moto -->
-                        <div onclick="selectVehicle('moto')" id="card-moto" class="vehicle-card opt flex flex-col justify-between">
+                        <div onclick="selectVehicle('moto')" id="card-moto" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
                             <div>
-                                <div class="flex justify-between items-start mb-3">
-                                    <span class="w-11 h-11 flex items-center justify-center bg-[#0bb9fe]/15 text-[#0bb9fe] rounded-xl"><i class="fa-solid fa-motorcycle text-lg"></i></span>
-                                    <span class="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">Ligero</span>
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="p-2 bg-amber-100 text-amber-700 rounded-lg"><i class="fa-solid fa-motorcycle text-xl"></i></span>
+                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Ligero</span>
                                 </div>
-                                <h4 class="font-bold text-black">Motocicleta</h4>
-                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Paquetes pequeños, documentos y mensajería rápida.</p>
+                                <h4 class="font-bold text-slate-900">Motocicleta</h4>
+                                <p class="text-xs text-slate-500 mt-1">Paquetes pequeños, documentos y mensajería rápida.</p>
                             </div>
                             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
                                 <span class="text-xs text-slate-400">Base hasta 7km</span>
-                                <span class="text-lg font-extrabold text-black tracking-tight">$64 MXN</span>
+                                <span class="text-lg font-bold text-brand-600">$64 MXN</span>
                             </div>
                         </div>
                         <!-- Carro -->
-                        <div onclick="selectVehicle('carro')" id="card-carro" class="vehicle-card opt flex flex-col justify-between">
+                        <div onclick="selectVehicle('carro')" id="card-carro" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
                             <div>
-                                <div class="flex justify-between items-start mb-3">
-                                    <span class="w-11 h-11 flex items-center justify-center bg-[#0d84fe]/15 text-[#0d84fe] rounded-xl"><i class="fa-solid fa-car text-lg"></i></span>
-                                    <span class="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">Mediano</span>
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="p-2 bg-blue-100 text-blue-700 rounded-lg"><i class="fa-solid fa-car text-xl"></i></span>
+                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Mediano</span>
                                 </div>
-                                <h4 class="font-bold text-black">Automóvil</h4>
-                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Cajas medianas, compras y paquetería delicada.</p>
+                                <h4 class="font-bold text-slate-900">Automóvil</h4>
+                                <p class="text-xs text-slate-500 mt-1">Cajas medianas, compras y paquetería delicada.</p>
                             </div>
                             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
                                 <span class="text-xs text-slate-400">Base hasta 7km</span>
-                                <span class="text-lg font-extrabold text-black tracking-tight">$126.12 MXN</span>
+                                <span class="text-lg font-bold text-brand-600">$126.12 MXN</span>
                             </div>
                         </div>
                         <!-- Camioneta 1.2 Tons -->
-                        <div onclick="selectVehicle('camioneta')" id="card-camioneta" class="vehicle-card opt flex flex-col justify-between">
+                        <div onclick="selectVehicle('camioneta')" id="card-camioneta" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
                             <div>
-                                <div class="flex justify-between items-start mb-3">
-                                    <span class="w-11 h-11 flex items-center justify-center bg-[#0e58ff]/15 text-[#0e58ff] rounded-xl"><i class="fa-solid fa-truck-pickup text-lg"></i></span>
-                                    <span class="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">Carga 1.2T</span>
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="p-2 bg-indigo-100 text-indigo-700 rounded-lg"><i class="fa-solid fa-truck-pickup text-xl"></i></span>
+                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Carga 1.2T</span>
                                 </div>
-                                <h4 class="font-bold text-black">Camioneta (1.2 Toneladas)</h4>
-                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Fletes medianos, muebles, electrodomésticos.</p>
+                                <h4 class="font-bold text-slate-900">Camioneta (1.2 Toneladas)</h4>
+                                <p class="text-xs text-slate-500 mt-1">Fletes medianos, muebles, electrodomésticos.</p>
                             </div>
                             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
                                 <span class="text-xs text-slate-400">Base hasta 7km desde</span>
-                                <span class="text-lg font-extrabold text-black tracking-tight">$476 MXN</span>
+                                <span class="text-lg font-bold text-blue-600">$476 MXN</span>
                             </div>
                         </div>
                         <!-- Camión 3 Tons -->
-                        <div onclick="selectVehicle('camion')" id="card-camion" class="vehicle-card opt flex flex-col justify-between">
+                        <div onclick="selectVehicle('camion')" id="card-camion" class="vehicle-card cursor-pointer border-2 border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-blue-400 transition-all">
                             <div>
-                                <div class="flex justify-between items-start mb-3">
-                                    <span class="w-11 h-11 flex items-center justify-center bg-black/10 text-black rounded-xl"><i class="fa-solid fa-truck-moving text-lg"></i></span>
-                                    <span class="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">Pesado 3T</span>
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg"><i class="fa-solid fa-truck-moving text-xl"></i></span>
+                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Pesado 3T</span>
                                 </div>
-                                <h4 class="font-bold text-black">Camión (3 Toneladas)</h4>
-                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Mudanzas completas, mercancía pesada y tarimas.</p>
+                                <h4 class="font-bold text-slate-900">Camión (3 Toneladas)</h4>
+                                <p class="text-xs text-slate-500 mt-1">Mudanzas completas, mercancía pesada y tarimas.</p>
                             </div>
                             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
                                 <span class="text-xs text-slate-400">Base hasta 7km desde</span>
-                                <span class="text-lg font-extrabold text-black tracking-tight">$1,299 MXN</span>
+                                <span class="text-lg font-bold text-blue-600">$1,299 MXN</span>
                             </div>
                         </div>
                     </div>
                 </div>
- 
+
                 <!-- Modalidad de Servicio -->
-                <div id="serviceTypeContainer" class="card hidden transition-all">
-                    <div class="flex items-center gap-3 mb-5">
-                        <span class="step-n">03</span>
+                <div id="serviceTypeContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">3</span>
                         <div>
-                            <h3 class="step-t">Modalidad de Servicio</h3>
-                            <p class="step-s">Selecciona la velocidad de asignación requerida.</p>
+                            <h3 class="text-lg font-bold text-slate-900">Modalidad de Servicio</h3>
+                            <p class="text-xs text-slate-500">Selecciona la velocidad de asignación requerida.</p>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Opción Regular -->
-                        <div onclick="selectServiceType('regular')" id="type-regular" class="opt">
-                            <div class="flex justify-between items-start gap-2 mb-2">
-                                <span class="font-bold text-black text-sm">REGULAR *Ya incluye un ayudante (chofer)</span>
-                                <span class="text-[11px] bg-slate-100 text-slate-600 font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">Programado</span>
+                        <div onclick="selectServiceType('regular')" id="type-regular" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-blue-500 transition-all">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-slate-800">REGULAR *Ya incluye un ayudante (chofer)</span>
+                                <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded">Programado</span>
                             </div>
-                            <p class="text-xs text-slate-500 mb-3">Agenda con anticipación tu servicio (al menos 3 horas antes).</p>
-                            <span id="price-regular" class="text-base font-extrabold text-brand-600">$0 MXN</span>
+                            <p class="text-xs text-slate-500 mb-2">Agenda con anticipación tu servicio (al menos 3 horas antes).</p>
+                            <span id="price-regular" class="text-sm font-bold text-blue-600">$0 MXN</span>
                         </div>
                         <!-- Opción Prioritario -->
-                        <div onclick="selectServiceType('prioritario')" id="type-prioritario" class="opt">
-                            <div class="flex justify-between items-start gap-2 mb-2">
-                                <span class="font-bold text-black text-sm">PRIORITARIO *Ya incluye un ayudante (chofer)</span>
-                                <span class="text-[11px] bg-[#0bb9fe]/15 text-[#0d84fe] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap"><i class="fa-solid fa-bolt text-[9px]"></i> Rápido</span>
+                        <div onclick="selectServiceType('prioritario')" id="type-prioritario" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-blue-500 transition-all">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-slate-800">PRIORITARIO *Ya incluye un ayudante (chofer)</span>
+                                <span class="text-xs bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded">Rápido</span>
                             </div>
-                            <p class="text-xs text-slate-500 mb-3">Encuentra un UINGO rápidamente en zona.</p>
-                            <span id="price-prioritario" class="text-base font-extrabold text-brand-600">$0 MXN</span>
+                            <p class="text-xs text-slate-500 mb-2">Encuentra un UINGO rápidamente en zona.</p>
+                            <span id="price-prioritario" class="text-sm font-bold text-blue-600">$0 MXN</span>
                         </div>
                     </div>
                 </div>
- 
+
                 <!-- Selección de Día y Horario (Solo se muestra en modalidad REGULAR) -->
-                <div id="scheduleContainer" class="card hidden transition-all">
-                    <div class="flex items-center gap-3 mb-5">
-                        <span class="step-n">04</span>
+                <div id="scheduleContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">4</span>
                         <div>
-                            <h3 class="step-t">Programar Día y Horario del Servicio</h3>
-                            <p class="step-s">Los servicios regulares deben programarse con mínimo 3 horas de anticipación.</p>
+                            <h3 class="text-lg font-bold text-slate-900">Programar Día y Horario del Servicio</h3>
+                            <p class="text-xs text-slate-500">Los servicios regulares deben programarse con mínimo 3 horas de anticipación.</p>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label for="scheduleDate" class="lbl">Fecha del Servicio *</label>
-                            <input type="date" id="scheduleDate" onchange="onScheduleChange()" class="inp inp-plain">
+                            <label for="scheduleDate" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Fecha del Servicio *</label>
+                            <input type="date" id="scheduleDate" onchange="onScheduleChange()" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
                         </div>
                         <div>
-                            <label for="scheduleTime" class="lbl">Hora Estimada *</label>
-                            <input type="time" id="scheduleTime" onchange="onScheduleChange()" class="inp inp-plain">
+                            <label for="scheduleTime" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Hora Estimada *</label>
+                            <input type="time" id="scheduleTime" onchange="onScheduleChange()" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
                         </div>
                     </div>
                 </div>
- 
+
                 <!-- Cargadores Extras -->
-                <div id="helpersContainer" class="card hidden transition-all">
-                    <div class="flex items-center justify-between gap-4">
-                        <div class="flex items-center gap-3">
-                            <span id="helpersStepBadge" class="step-n">5</span>
+                <div id="helpersContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <span id="helpersStepBadge" class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">5</span>
                             <div>
-                                <h3 class="step-t">Cargadores Extras (Maniobra)</h3>
-                                <p class="step-s">Disponible solo para Camioneta y Camión ($300 MXN c/u).</p>
+                                <h3 class="text-lg font-bold text-slate-900">Cargadores Extras (Maniobra)</h3>
+                                <p class="text-xs text-slate-500">Disponible solo para Camioneta y Camión ($300 MXN c/u).</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 bg-slate-100 rounded-2xl p-1">
-                            <button onclick="changeHelpers(-1)" class="w-9 h-9 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-lg flex items-center justify-center shadow-sm transition">-</button>
-                            <span id="helpersCount" class="text-lg font-extrabold text-black w-7 text-center">0</span>
-                            <button onclick="changeHelpers(1)" class="w-9 h-9 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-lg flex items-center justify-center shadow-sm transition">+</button>
+                        <div class="flex items-center space-x-3">
+                            <button onclick="changeHelpers(-1)" class="w-9 h-9 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center shadow-sm transition">-</button>
+                            <span id="helpersCount" class="text-lg font-extrabold text-slate-800 w-6 text-center">0</span>
+                            <button onclick="changeHelpers(1)" class="w-9 h-9 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center shadow-sm transition">+</button>
                         </div>
                     </div>
                 </div>
             </div>
- 
+
             <!-- Columna Derecha: Tarjeta de Resumen (4 Col) -->
             <div class="lg:col-span-4">
-                <div class="relative overflow-hidden bg-black text-white p-6 sm:p-7 rounded-3xl shadow-2xl shadow-slate-900/25 sticky top-24">
-                    <div class="pointer-events-none absolute -top-24 -right-24 w-64 h-64 rounded-full bg-[#0e58ff]/40 blur-3xl"></div>
-                    <div class="pointer-events-none absolute -bottom-28 -left-20 w-64 h-64 rounded-full bg-[#0bb9fe]/20 blur-3xl"></div>
-                    <div class="relative">
-                        <h3 class="text-base font-bold pb-4 border-b border-white/10 flex items-center justify-between">
-                            <span>Resumen del Servicio</span>
-                            <span class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i class="fa-solid fa-file-invoice text-brand-400 text-sm"></i></span>
-                        </h3>
-                        <!-- Información de Cliente -->
-                        <div class="py-4 border-b border-white/10 text-xs text-[#b4b4b4] space-y-1.5">
-                            <p><strong class="text-white font-semibold">Cliente:</strong> <span id="summaryCustomerName">-</span></p>
-                            <p><strong class="text-white font-semibold">Tipo:</strong> <span id="summaryCustomerType">-</span></p>
-                        </div>
-                        <!-- Desglose de Precios -->
-                        <div class="py-5 space-y-3 text-sm">
-                            <div class="flex justify-between text-[#b4b4b4]">
-                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-truck text-xs text-[#b4b4b4]"></i> Vehículo:</span>
-                                <span class="font-semibold text-white" id="summaryVehicleName">No elegido</span>
-                            </div>
-                            <div class="flex justify-between text-[#b4b4b4]">
-                                <span>Precio Base (hasta 7 km):</span>
-                                <span class="font-medium text-white" id="summaryBasePrice">$0.00</span>
-                            </div>
-                            <div id="summaryServiceRow" class="flex justify-between text-[#b4b4b4] hidden">
-                                <span id="summaryServiceLabel">Modalidad:</span>
-                                <span class="font-medium text-white" id="summaryServicePrice">$0.00</span>
-                            </div>
-                            <div id="summaryScheduleRow" class="flex justify-between text-[#b4b4b4] hidden">
-                                <span>Horario:</span>
-                                <span class="font-medium text-white text-right text-xs" id="summaryScheduleText">-</span>
-                            </div>
-                            <div class="flex justify-between text-[#b4b4b4]">
-                                <span class="flex items-center gap-1">Km Extra (<span id="summaryExtraKm">0</span> km):</span>
-                                <span class="font-medium text-white" id="summaryExtraPrice">$0.00</span>
-                            </div>
-                            <div id="summaryHelpersRow" class="flex justify-between text-[#b4b4b4] hidden">
-                                <span>Cargadores (<span id="summaryHelpersQty">0</span>):</span>
-                                <span class="font-medium text-white" id="summaryHelpersPrice">$0.00</span>
-                            </div>
-                            <div class="pt-4 mt-1 border-t border-dashed border-white/15 flex justify-between items-end">
-                                <span class="text-sm font-bold text-white">Total Estimado:</span>
-                                <span class="text-3xl font-black tracking-tight bg-gradient-to-r from-white to-brand-400 bg-clip-text text-transparent" id="summaryTotalPrice">$0.00</span>
-                            </div>
-                        </div>
-                        <!-- Nota legal -->
-                        <div class="p-3.5 bg-white/10 rounded-xl border border-white/15 mb-5">
-                            <p class="text-[11px] text-white/90 leading-snug flex gap-2">
-                                <i class="fa-solid fa-circle-info text-[#0bb9fe] mt-0.5"></i>
-                                <span>Precio que se dice, precio que se cobra, SI SE NECESITA UNA COTIZACION ESPECIAL O FLETE FORANEO CONTACTENOS DIRECTAMENTE AL 312 241 6157.</span>
-                            </p>
-                        </div>
-                        <!-- Acciones -->
-                        <button onclick="requestQuote()" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:brightness-110 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2 text-sm mb-2">
-                            <i class="fa-brands fa-whatsapp text-lg"></i>
-                            <span>Solicitar Servicio por WhatsApp</span>
-                        </button>
-                        <button onclick="resetCalculator()" class="btn-ghost">
-                            <i class="fa-solid fa-rotate-left"></i>
-                            <span>Reiniciar Cotizador</span>
-                        </button>
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 sticky top-24">
+                    <h3 class="text-lg font-bold text-slate-900 pb-3 border-b border-slate-100 flex items-center justify-between">
+                        <span>Resumen del Servicio</span>
+                        <i class="fa-solid fa-file-invoice text-brand-600"></i>
+                    </h3>
+                    <!-- Información de Cliente -->
+                    <div class="py-3 border-b border-slate-100 text-xs text-slate-600 space-y-1">
+                        <p><strong class="text-slate-800">Cliente:</strong> <span id="summaryCustomerName">-</span></p>
+                        <p><strong class="text-slate-800">Tipo:</strong> <span id="summaryCustomerType">-</span></p>
                     </div>
+                    <!-- Desglose de Precios -->
+                    <div class="py-4 space-y-3 text-sm">
+                        <div class="flex justify-between text-slate-600">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-truck text-xs text-slate-400"></i> Vehículo:</span>
+                            <span class="font-semibold text-slate-800" id="summaryVehicleName">No elegido</span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Precio Base (hasta 7 km):</span>
+                            <span class="font-medium text-slate-800" id="summaryBasePrice">$0.00</span>
+                        </div>
+                        <div id="summaryServiceRow" class="flex justify-between text-slate-600 hidden">
+                            <span id="summaryServiceLabel">Modalidad:</span>
+                            <span class="font-medium text-slate-800" id="summaryServicePrice">$0.00</span>
+                        </div>
+                        <div id="summaryScheduleRow" class="flex justify-between text-slate-600 hidden">
+                            <span>Horario:</span>
+                            <span class="font-medium text-slate-800 text-right text-xs" id="summaryScheduleText">-</span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span class="flex items-center gap-1">
+                                Km Extra (<span id="summaryExtraKm">0</span> km):
+                            </span>
+                            <span class="font-medium text-slate-800" id="summaryExtraPrice">$0.00</span>
+                        </div>
+                        <div id="summaryHelpersRow" class="flex justify-between text-slate-600 hidden">
+                            <span>Cargadores (<span id="summaryHelpersQty">0</span>):</span>
+                            <span class="font-medium text-slate-800" id="summaryHelpersPrice">$0.00</span>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex justify-between items-baseline">
+                            <span class="text-base font-extrabold text-slate-900">Total Estimado:</span>
+                            <span class="text-2xl font-black text-brand-600" id="summaryTotalPrice">$0.00</span>
+                        </div>
+                    </div>
+                    <!-- Nota legal -->
+                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-200/60 mb-5">
+                        <p class="text-[11px] text-amber-800 leading-tight flex gap-1.5">
+                            <i class="fa-solid fa-circle-info text-amber-600 mt-0.5"></i>
+                            Precio que se dice, precio que se cobra, SI SE NECESITA UNA COTIZACION ESPECIAL O FLETE FORANEO CONTACTENOS DIRECTAMENTE AL 312 241 6157.
+                        </p>
+                    </div>
+                    <!-- Acciones -->
+                    <button onclick="requestQuote()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-sm mb-3">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Solicitar Servicio por WhatsApp</span>
+                    </button>
+                    <button onclick="resetCalculator()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold py-2.5 px-4 rounded-xl transition text-xs flex items-center justify-center space-x-1">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Reiniciar Cotizador</span>
+                    </button>
                 </div>
             </div>
         </section>
     </main>
- 
+
     <!-- Modal de Notificaciones -->
-    <div id="messageModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200 p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl border border-slate-100 transform scale-95 transition-transform duration-200" id="modalBox">
+    <div id="messageModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 transform scale-95 transition-transform duration-200" id="modalBox">
             <div class="text-center">
                 <div id="modalIcon" class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-xl">
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
-                <h3 id="modalTitle" class="text-lg font-bold text-black mb-1">Notificación</h3>
-                <p id="modalMessage" class="text-sm text-slate-500 mb-6">Mensaje de confirmación aquí.</p>
-                <button onclick="closeModal()" class="w-full bg-black hover:bg-neutral-800 text-white font-bold py-3 rounded-xl text-sm transition">Entendido</button>
+                <h3 id="modalTitle" class="text-lg font-bold text-slate-900 mb-1">Notificación</h3>
+                <p id="modalMessage" class="text-sm text-slate-500 mb-5">Mensaje de confirmación aquí.</p>
+                <button onclick="closeModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-xl text-sm transition">Entendido</button>
             </div>
         </div>
     </div>
- 
+
     <!-- Footer -->
-    <footer class="border-t border-slate-200/70 bg-white/60 backdrop-blur py-6 mt-12 text-center text-xs text-[#b4b4b4]">
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400">
         <div class="max-w-7xl mx-auto px-4">
             <p>© 2026 UINGO Logística. Todos los derechos reservados. Colima, México.</p>
         </div>
     </footer>
- 
+
     <!-- LÓGICA DE JAVASCRIPT UNIFICADA Y CORREGIDA -->
     <script>
         let currentUser = null;
@@ -450,6 +473,7 @@
         let extraHelpers = 0;
         let selectedDate = null;
         let selectedTime = null;
+
         const fleetRules = {
             moto: { name: 'Motocicleta', basePrice: 64, baseKm: 7, extraKmRate: 5.5, allowsHelpers: false },
             carro: { name: 'Automóvil', basePrice: 126.12, baseKm: 7, extraKmRate: 12.5, allowsHelpers: false },
@@ -468,6 +492,7 @@
                 prices: { regular: 1299, prioritario: 1642.12 }
             }
         };
+
         window.onload = function() {
             setupMinDate();
             const savedProfile = localStorage.getItem('uingo_user_profile');
@@ -480,6 +505,7 @@
             }
             selectVehicle('moto');
         };
+
         function setupMinDate() {
             const dateInput = document.getElementById('scheduleDate');
             if (dateInput) {
@@ -490,6 +516,7 @@
                 dateInput.min = `${yyyy}-${mm}-${dd}`;
             }
         }
+
         function showProfileView() {
             document.getElementById('calculatorSection').classList.remove('active-view');
             document.getElementById('calculatorSection').classList.add('hidden-view');
@@ -497,16 +524,19 @@
             document.getElementById('profileSection').classList.add('active-view');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
         function showCalculatorView() {
             document.getElementById('profileSection').classList.remove('active-view');
             document.getElementById('profileSection').classList.add('hidden-view');
             document.getElementById('calculatorSection').classList.remove('hidden-view');
             document.getElementById('calculatorSection').classList.add('active-view');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            
             setTimeout(() => {
                 initMap();
             }, 200);
         }
+
         function checkHomeNavigation() {
             if (currentUser) {
                 showCalculatorView();
@@ -514,44 +544,52 @@
                 showProfileView();
             }
         }
+
         function updateTypeStyle() {
             const isParticular = document.querySelector('input[name="userType"][value="Particular"]').checked;
             const pLabel = document.getElementById('typeParticularLabel');
             const eLabel = document.getElementById('typeEmpresaLabel');
             if (isParticular) {
-                pLabel.classList.add('is-selected');
-                eLabel.classList.remove('is-selected');
+                pLabel.classList.add('border-brand-500', 'bg-brand-50');
+                eLabel.classList.remove('border-brand-500', 'bg-brand-50');
             } else {
-                eLabel.classList.add('is-selected');
-                pLabel.classList.remove('is-selected');
+                eLabel.classList.add('border-brand-500', 'bg-brand-50');
+                pLabel.classList.remove('border-brand-500', 'bg-brand-50');
             }
         }
+
         async function saveProfile(event) {
             event.preventDefault();
             const btn = document.getElementById('btnSubmitProfile');
             btn.disabled = true;
             btn.innerHTML = '<span>Guardando en la nube...</span>';
+
             try {
                 const name = document.getElementById('fullName').value.trim();
                 const email = document.getElementById('userEmail').value.trim();
                 const phone = document.getElementById('userPhone').value.trim();
                 const userType = document.querySelector('input[name="userType"]:checked').value;
+
                 if (!name || !email || !phone) {
                     alert('Por favor completa todos los campos obligatorios.');
                     btn.disabled = false;
                     btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
                     return;
                 }
+
                 const { error } = await _supabase
                     .from('clientes')
                     .insert([{ nombre: name, email: email, telefono: phone, tipo: userType }]);
+
                 if (error) {
                     console.error('Error al guardar en Supabase:', error.message);
                 }
+
                 const userData = { name, email, phone, userType };
                 localStorage.setItem('uingo_user', JSON.stringify(userData));
                 localStorage.setItem('uingo_user_profile', JSON.stringify(userData));
                 currentUser = userData;
+                
                 displayUserBadge();
                 showCalculatorView();
                 showMessage('¡Perfil Guardado!', 'Tus datos se registraron correctamente. Ya puedes cotizar tu envío.', 'success');
@@ -563,6 +601,7 @@
                 btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
             }
         }
+
         function displayUserBadge() {
             if (!currentUser) return;
             document.getElementById('badgeName').innerText = currentUser.name;
@@ -572,9 +611,11 @@
             document.getElementById('summaryCustomerType').innerText = currentUser.userType;
             document.getElementById('userBadge').classList.remove('hidden');
             document.getElementById('userBadge').classList.add('flex');
+
             document.getElementById('fullName').value = currentUser.name;
             document.getElementById('userEmail').value = currentUser.email;
             document.getElementById('userPhone').value = currentUser.phone;
+
             if (currentUser.userType === 'Particular') {
                 document.querySelector('input[name="userType"][value="Particular"]').checked = true;
             } else {
@@ -582,6 +623,7 @@
             }
             updateTypeStyle();
         }
+
         function logoutUser() {
             localStorage.removeItem('uingo_user_profile');
             currentUser = null;
@@ -592,6 +634,7 @@
             showProfileView();
             showMessage('Sesión Cerrada', 'Puedes registrar un nuevo perfil para continuar.', 'success');
         }
+
         function selectVehicle(type) {
             selectedVehicle = type;
             selectedServiceType = null; // Reiniciar modalidad
@@ -601,31 +644,37 @@
             document.getElementById('helpersCount').innerText = '0';
             document.getElementById('scheduleDate').value = '';
             document.getElementById('scheduleTime').value = '';
+
             // Estilos de selección de tarjeta
             document.querySelectorAll('.vehicle-card').forEach(card => {
-                card.classList.remove('is-selected');
+                card.classList.remove('border-blue-600', 'bg-blue-50/50');
                 card.classList.add('border-slate-200');
             });
+
             const selectedCard = document.getElementById(`card-${type}`);
             if (selectedCard) {
                 selectedCard.classList.remove('border-slate-200');
-                selectedCard.classList.add('is-selected');
+                selectedCard.classList.add('border-blue-600', 'bg-blue-50/50');
             }
+
             const serviceContainer = document.getElementById('serviceTypeContainer');
             const scheduleContainer = document.getElementById('scheduleContainer');
             const helpersContainer = document.getElementById('helpersContainer');
+
             // Limpiar selección visual previa de modalidades
             ['regular', 'prioritario'].forEach(t => {
                 const el = document.getElementById(`type-${t}`);
                 if (el) {
-                    el.classList.remove('is-selected');
+                    el.classList.remove('border-blue-600', 'bg-blue-50/50');
                     el.classList.add('border-slate-200');
                 }
             });
+
             if (type === 'camioneta' || type === 'camion') {
                 serviceContainer.classList.remove('hidden');
                 scheduleContainer.classList.add('hidden');
                 helpersContainer.classList.add('hidden'); 
+
                 // Actualizar precios dinámicos en las tarjetas de modalidad
                 document.getElementById('price-regular').innerText = `$${fleetRules[type].prices.regular} MXN`;
                 document.getElementById('price-prioritario').innerText = `$${fleetRules[type].prices.prioritario} MXN`;
@@ -634,29 +683,35 @@
                 scheduleContainer.classList.add('hidden');
                 helpersContainer.classList.add('hidden');
             }
+
             calculateQuote();
         }
+
         function selectServiceType(type) {
             selectedServiceType = type;
             selectedDate = null;
             selectedTime = null;
             document.getElementById('scheduleDate').value = '';
             document.getElementById('scheduleTime').value = '';
+
             ['regular', 'prioritario'].forEach(t => {
                 const el = document.getElementById(`type-${t}`);
                 if (el) {
-                    el.classList.remove('is-selected');
+                    el.classList.remove('border-blue-600', 'bg-blue-50/50');
                     el.classList.add('border-slate-200');
                 }
             });
+
             const selectedTypeCard = document.getElementById(`type-${type}`);
             if (selectedTypeCard) {
                 selectedTypeCard.classList.remove('border-slate-200');
-                selectedTypeCard.classList.add('is-selected');
+                selectedTypeCard.classList.add('border-blue-600', 'bg-blue-50/50');
             }
+
             const scheduleContainer = document.getElementById('scheduleContainer');
             const helpersContainer = document.getElementById('helpersContainer');
             const helpersBadge = document.getElementById('helpersStepBadge');
+
             if (type === 'regular') {
                 // Desplegar horario y día
                 scheduleContainer.classList.remove('hidden');
@@ -668,27 +723,35 @@
                 helpersContainer.classList.remove('hidden');
                 if (helpersBadge) helpersBadge.innerText = '4';
             }
+
             calculateQuote();
         }
+
         function validateScheduleTime() {
             const dateInput = document.getElementById('scheduleDate').value;
             const timeInput = document.getElementById('scheduleTime').value;
+
             if (!dateInput || !timeInput) return false;
+
             const now = new Date();
             const chosenDateTime = new Date(`${dateInput}T${timeInput}`);
             const minAllowedTime = new Date(now.getTime() + (3 * 60 * 60 * 1000)); // +3 horas
+
             if (chosenDateTime < minAllowedTime) {
                 const formattedMinTime = minAllowedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 showMessage('Horario Inválido', `Los servicios regulares deben agendarse con al menos 3 horas de anticipación. Por favor selecciona una hora a partir de las ${formattedMinTime}.`, 'error');
                 document.getElementById('scheduleTime').value = '';
                 return false;
             }
+
             return true;
         }
+
         function onScheduleChange() {
             const dateVal = document.getElementById('scheduleDate').value;
             const timeVal = document.getElementById('scheduleTime').value;
             const helpersContainer = document.getElementById('helpersContainer');
+
             if (dateVal && timeVal) {
                 if (validateScheduleTime()) {
                     selectedDate = dateVal;
@@ -703,8 +766,10 @@
             } else {
                 helpersContainer.classList.add('hidden');
             }
+
             calculateQuote();
         }
+
         function changeHelpers(delta) {
             if (!selectedVehicle || !fleetRules[selectedVehicle].allowsHelpers) return;
             extraHelpers += delta;
@@ -713,16 +778,19 @@
             document.getElementById('helpersCount').innerText = extraHelpers;
             calculateQuote();
         }
+
         function calculateQuote() {
             if (!selectedVehicle) return;
             const rule = fleetRules[selectedVehicle];
             const distance = parseInt(document.getElementById('distanceRange').value) || 0;
             document.getElementById('distanceValue').innerText = distance;
             document.getElementById('summaryVehicleName').innerText = rule.name;
+
             let basePrice = 0;
             let serviceFee = 0;
             const serviceRow = document.getElementById('summaryServiceRow');
             const scheduleRow = document.getElementById('summaryScheduleRow');
+
             if (selectedVehicle === 'moto' || selectedVehicle === 'carro') {
                 basePrice = rule.basePrice;
                 serviceRow.classList.add('hidden');
@@ -736,6 +804,7 @@
                     document.getElementById('summaryServiceLabel').innerText = `Modalidad (${selectedServiceType.toUpperCase()}):`;
                     document.getElementById('summaryServicePrice').innerText = `$${serviceFee.toLocaleString('es-MX')} MXN`;
                     serviceRow.classList.remove('hidden');
+
                     if (selectedServiceType === 'regular' && selectedDate && selectedTime) {
                         document.getElementById('summaryScheduleText').innerText = `${selectedDate} @ ${selectedTime}`;
                         scheduleRow.classList.remove('hidden');
@@ -748,7 +817,9 @@
                     scheduleRow.classList.add('hidden');
                 }
             }
+
             document.getElementById('summaryBasePrice').innerText = `$${basePrice.toLocaleString('es-MX')} MXN`;
+
             let extraKm = 0;
             let extraPrice = 0;
             if (distance > rule.baseKm) {
@@ -757,6 +828,7 @@
             }
             document.getElementById('summaryExtraKm').innerText = extraKm;
             document.getElementById('summaryExtraPrice').innerText = `$${extraPrice.toLocaleString('es-MX')} MXN`;
+
             let helpersPrice = 0;
             const helpersRow = document.getElementById('summaryHelpersRow');
             if (rule.allowsHelpers && extraHelpers > 0 && selectedServiceType) {
@@ -767,9 +839,11 @@
             } else {
                 helpersRow.classList.add('hidden');
             }
+
             const totalPrice = basePrice + serviceFee + extraPrice + helpersPrice;
             document.getElementById('summaryTotalPrice').innerText = `$${totalPrice.toLocaleString('es-MX')} MXN`;
         }
+
         function requestQuote() {
             if (!currentUser) {
                 showMessage('Perfil Requerido', 'Por favor completa tu registro antes de solicitar un servicio.', 'error');
@@ -790,20 +864,24 @@
                     return;
                 }
             }
+
             const origin = document.getElementById('originInput').value.trim() || 'No especificado';
             const destination = document.getElementById('destinationInput').value.trim() || 'No especificado';
             const distance = document.getElementById('distanceRange').value;
             const rule = fleetRules[selectedVehicle];
+            
             let basePrice = (selectedVehicle === 'moto' || selectedVehicle === 'carro') ? rule.basePrice : rule.prices.regular;
             let serviceFee = (selectedVehicle === 'camioneta' || selectedVehicle === 'camion') && selectedServiceType === 'prioritario' ? (rule.prices.prioritario - rule.prices.regular) : 0;
             let extraKm = distance > rule.baseKm ? distance - rule.baseKm : 0;
             let extraPrice = extraKm * rule.extraKmRate;
             let helpersPrice = (rule.allowsHelpers && extraHelpers > 0) ? extraHelpers * 300 : 0;
             let totalPrice = basePrice + serviceFee + extraPrice + helpersPrice;
+
             let scheduleInfo = '';
             if (selectedServiceType === 'regular' && selectedDate && selectedTime) {
                 scheduleInfo = `📅 *Programado para:* ${selectedDate} a las ${selectedTime} hrs%0A`;
             }
+
             const message = `¡Hola! 👋 Soy *${currentUser.name}* (${currentUser.userType}). Me gustaría solicitar un servicio con *UINGO*:%0A%0A` +
                 `🚗 *Vehículo:* ${rule.name}%0A` +
                 ((selectedVehicle === 'camioneta' || selectedVehicle === 'camion') ? `⚡ *Modalidad:* ${selectedServiceType.toUpperCase()}%0A` : '') +
@@ -814,9 +892,11 @@
                 (extraHelpers > 0 ? `👥 *Cargadores:* ${extraHelpers} ($${helpersPrice} MXN)%0A` : '') +
                 `💰 *Total Estimado:* $${totalPrice.toLocaleString('es-MX')} MXN%0A%0A` +
                 `📞 *Teléfono de contacto:* ${currentUser.phone}`;
+            
             const whatsappUrl = `https://wa.me/523122416157?text=${message}`;
             window.open(whatsappUrl, '_blank');
         }
+
         function resetCalculator() {
             document.getElementById('originInput').value = '';
             document.getElementById('destinationInput').value = '';
@@ -833,14 +913,17 @@
             calculateQuote();
             showMessage('Cotizador Reiniciado', 'Los valores se han restablecido a los valores iniciales.', 'success');
         }
+
         function showMessage(title, message, type = 'success') {
             const modal = document.getElementById('messageModal');
             const modalBox = document.getElementById('modalBox');
             const modalIcon = document.getElementById('modalIcon');
             const modalTitle = document.getElementById('modalTitle');
             const modalMessage = document.getElementById('modalMessage');
+
             modalTitle.innerText = title;
             modalMessage.innerText = message;
+
             if (type === 'success') {
                 modalIcon.className = 'w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-xl';
                 modalIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
@@ -848,6 +931,7 @@
                 modalIcon.className = 'w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3 text-xl';
                 modalIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
             }
+
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
@@ -855,6 +939,7 @@
                 modalBox.classList.add('scale-100');
             }, 10);
         }
+
         function closeModal() {
             const modal = document.getElementById('messageModal');
             const modalBox = document.getElementById('modalBox');
@@ -865,8 +950,10 @@
                 modal.classList.add('hidden');
             }, 200);
         }
+
         let map = null;
         let routeLayer = null;
+
         function initMap() {
             if (map) {
                 map.invalidateSize();
@@ -878,13 +965,16 @@
                 attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
             }).addTo(map);
         }
+
         async function calculateRouteFromAddresses() {
             let originRaw = document.getElementById('originInput').value.trim().toLowerCase();
             let destRaw = document.getElementById('destinationInput').value.trim().toLowerCase();
+
             if (!originRaw || !destRaw) {
                 alert("Por favor ingresa tanto el punto de origen como el de destino.");
                 return;
             }
+
             const regionalHubs = {
                 'colima': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
                 'colima centro': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
@@ -896,12 +986,15 @@
                 'villa de álvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' },
                 'villa de alvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' }
             };
+
             const findHub = (text) => {
                 const match = Object.keys(regionalHubs).find(key => text.includes(key));
                 return match ? regionalHubs[match] : null;
             };
+
             const originHub = findHub(originRaw);
             const destHub = findHub(destRaw);
+            
             if (originHub && destHub) {
                 try {
                     const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${originHub.lon},${originHub.lat};${destHub.lon},${destHub.lat}?overview=full&geometries=geojson`);
@@ -917,9 +1010,11 @@
                         if (window.routeLayer) map.removeLayer(window.routeLayer);
                         if (window.markerOrigin) map.removeLayer(window.markerOrigin);
                         if (window.markerDest) map.removeLayer(window.markerDest);
+
                         window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
-                            style: { color: '#0e58ff', weight: 5, opacity: 0.85 }
+                            style: { color: '#0284c7', weight: 5, opacity: 0.85 }
                         }).addTo(map);
+
                         window.markerOrigin = L.marker([originHub.lat, originHub.lon]).addTo(map).bindPopup(originHub.name).openPopup();
                         window.markerDest = L.marker([destHub.lat, destHub.lon]).addTo(map).bindPopup(destHub.name);
                         map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
@@ -929,25 +1024,33 @@
                     console.warn("Ruta rápida omitida, usando respaldo.");
                 }
             }
+
             showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
+
             try {
                 const cleanOrigin = `${originRaw}, Colima, Mexico`;
                 const cleanDest = `${destRaw}, Colima, Mexico`;
+
                 const [resOrigin, resDest] = await Promise.all([
                     fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal }),
                     fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal })
                 ]);
+
                 const dataOrigin = await resOrigin.json();
                 const dataDest = await resDest.json();
+
                 if (!dataOrigin.length || !dataDest.length) throw new Error("No localizado");
+
                 const lat1 = parseFloat(dataOrigin[0].lat), lon1 = parseFloat(dataOrigin[0].lon);
                 const lat2 = parseFloat(dataDest[0].lat), lon2 = parseFloat(dataDest[0].lon);
+
                 const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`, { signal: controller.signal });
                 const dataRoute = await resRoute.json();
                 clearTimeout(timeoutId);
                 closeModal();
+
                 if (dataRoute.routes && dataRoute.routes.length > 0) {
                     const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
                     const distanceRange = document.getElementById('distanceRange');
@@ -955,12 +1058,15 @@
                         distanceRange.value = distanceKm;
                         calculateQuote();
                     }
+
                     if (window.routeLayer) map.removeLayer(window.routeLayer);
                     if (window.markerOrigin) map.removeLayer(window.markerOrigin);
                     if (window.markerDest) map.removeLayer(window.markerDest);
-                    window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, { style: { color: '#0e58ff', weight: 5, opacity: 0.85 } }).addTo(map);
+
+                    window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, { style: { color: '#0284c7', weight: 5, opacity: 0.85 } }).addTo(map);
                     window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("Origen").openPopup();
                     window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("Destino");
+
                     map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
                 } else {
                     throw new Error("Ruta no trazable");
@@ -971,7 +1077,7 @@
                 alert("Nota: Pon la distancia aproximada manualmente en la barra deslizadora de abajo.");
             }
         }
-    
-    </script>
+    </script>                        
 </body>
 </html>
+
