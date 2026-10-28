@@ -203,18 +203,101 @@
             <p class="text-slate-600 max-w-2xl mx-auto mb-12">Sin restricciones de tipo de mercancía. Desde materiales de construcción hasta plantas y muebles.</p>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Plantas</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Macetas</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Herramientas</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Muebles</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Materiales de Construcción</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Comida</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Pinturas</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Maquinaria</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Empaques</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Madera</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Carga pesada</div>
-                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm"> Carga ligera</div>
+                <!-- Plantas -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <span>Plantas</span>
+                </div>
+
+                <!-- Macetas -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11V9a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2m14 0H5m14 0v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-6m4-7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"></path></svg>
+                    </div>
+                    <span>Macetas</span>
+                </div>
+
+                <!-- Herramientas -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    </div>
+                    <span>Herramientas</span>
+                </div>
+
+                <!-- Muebles -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16m-2 4h-4M8 18H4m4-4v4m8-4v4"></path></svg>
+                    </div>
+                    <span>Muebles</span>
+                </div>
+
+                <!-- Materiales de Construcción -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2zM9 9h6m-6 4h6m-6 4h4"></path></svg>
+                    </div>
+                    <span>Materiales de Construcción</span>
+                </div>
+
+                <!-- Comida -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3m6-3v3"></path></svg>
+                    </div>
+                    <span>Comida</span>
+                </div>
+
+                <!-- Pinturas -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 0 1-4-4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a4 4 0 0 1-4 4H7zm0 0h10M7 11h10"></path></svg>
+                    </div>
+                    <span>Pinturas</span>
+                </div>
+
+                <!-- Maquinaria -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </div>
+                    <span>Maquinaria</span>
+                </div>
+
+                <!-- Empaques -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    </div>
+                    <span>Empaques</span>
+                </div>
+
+                <!-- Madera -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7m-18 0l9 5 9-5m-9 5v10"></path></svg>
+                    </div>
+                    <span>Madera</span>
+                </div>
+
+                <!-- Carga pesada -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path></svg>
+                    </div>
+                    <span>Carga pesada</span>
+                </div>
+
+                <!-- Carga ligera -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200 font-semibold text-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-300 transition-all">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <span>Carga ligera</span>
+                </div>
             </div>
         </div>
     </section>
