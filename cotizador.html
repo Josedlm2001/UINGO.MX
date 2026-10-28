@@ -286,7 +286,7 @@
                             </div>
                             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
                                 <span class="text-xs text-slate-400">Base hasta 7km desde</span>
-                                <span class="text-lg font-bold text-blue-600">$400 MXN</span>
+                                <span class="text-lg font-bold text-blue-600">$476 MXN</span>
                             </div>
                         </div>
                         <!-- Camión 3 Tons -->
@@ -301,13 +301,13 @@
                             </div>
                             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
                                 <span class="text-xs text-slate-400">Base hasta 7km desde</span>
-                                <span class="text-lg font-bold text-blue-600">$1,300 MXN</span>
+                                <span class="text-lg font-bold text-blue-600">$1,299 MXN</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Modalidad de Servicio (Oculta por defecto con 'hidden') -->
+                <!-- Modalidad de Servicio -->
                 <div id="serviceTypeContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
                     <div class="flex items-center space-x-3 mb-4">
                         <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">3</span>
@@ -323,7 +323,7 @@
                                 <span class="font-bold text-slate-800">REGULAR *Ya incluye un ayudante (chofer)</span>
                                 <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded">Programado</span>
                             </div>
-                            <p class="text-xs text-slate-500 mb-2">Agenda con anticipación tu servicio.</p>
+                            <p class="text-xs text-slate-500 mb-2">Agenda con anticipación tu servicio (al menos 3 horas antes).</p>
                             <span id="price-regular" class="text-sm font-bold text-blue-600">$0 MXN</span>
                         </div>
                         <!-- Opción Prioritario -->
@@ -338,11 +338,32 @@
                     </div>
                 </div>
 
-                <!-- Cargadores Extras (Oculto por defecto con 'hidden') -->
+                <!-- Selección de Día y Horario (Solo se muestra en modalidad REGULAR) -->
+                <div id="scheduleContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">4</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">Programar Día y Horario del Servicio</h3>
+                            <p class="text-xs text-slate-500">Los servicios regulares deben programarse con mínimo 3 horas de anticipación.</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="scheduleDate" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Fecha del Servicio *</label>
+                            <input type="date" id="scheduleDate" onchange="onScheduleChange()" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
+                        </div>
+                        <div>
+                            <label for="scheduleTime" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Hora Estimada *</label>
+                            <input type="time" id="scheduleTime" onchange="onScheduleChange()" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cargadores Extras -->
                 <div id="helpersContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
-                            <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">4</span>
+                            <span id="helpersStepBadge" class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">5</span>
                             <div>
                                 <h3 class="text-lg font-bold text-slate-900">Cargadores Extras (Maniobra)</h3>
                                 <p class="text-xs text-slate-500">Disponible solo para Camioneta y Camión ($300 MXN c/u).</p>
@@ -355,7 +376,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <!-- Columna Derecha: Tarjeta de Resumen (4 Col) -->
@@ -383,6 +403,10 @@
                         <div id="summaryServiceRow" class="flex justify-between text-slate-600 hidden">
                             <span id="summaryServiceLabel">Modalidad:</span>
                             <span class="font-medium text-slate-800" id="summaryServicePrice">$0.00</span>
+                        </div>
+                        <div id="summaryScheduleRow" class="flex justify-between text-slate-600 hidden">
+                            <span>Horario:</span>
+                            <span class="font-medium text-slate-800 text-right text-xs" id="summaryScheduleText">-</span>
                         </div>
                         <div class="flex justify-between text-slate-600">
                             <span class="flex items-center gap-1">
@@ -447,6 +471,8 @@
         let selectedVehicle = null;
         let selectedServiceType = null;
         let extraHelpers = 0;
+        let selectedDate = null;
+        let selectedTime = null;
 
         const fleetRules = {
             moto: { name: 'Motocicleta', basePrice: 64, baseKm: 7, extraKmRate: 5, allowsHelpers: false },
@@ -468,6 +494,7 @@
         };
 
         window.onload = function() {
+            setupMinDate();
             const savedProfile = localStorage.getItem('uingo_user_profile');
             if (savedProfile) {
                 currentUser = JSON.parse(savedProfile);
@@ -478,6 +505,17 @@
             }
             selectVehicle('moto');
         };
+
+        function setupMinDate() {
+            const dateInput = document.getElementById('scheduleDate');
+            if (dateInput) {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                const dd = String(today.getDate()).padStart(2, '0');
+                dateInput.min = `${yyyy}-${mm}-${dd}`;
+            }
+        }
 
         function showProfileView() {
             document.getElementById('calculatorSection').classList.remove('active-view');
@@ -525,23 +563,28 @@
             const btn = document.getElementById('btnSubmitProfile');
             btn.disabled = true;
             btn.innerHTML = '<span>Guardando en la nube...</span>';
+
             try {
                 const name = document.getElementById('fullName').value.trim();
                 const email = document.getElementById('userEmail').value.trim();
                 const phone = document.getElementById('userPhone').value.trim();
                 const userType = document.querySelector('input[name="userType"]:checked').value;
+
                 if (!name || !email || !phone) {
                     alert('Por favor completa todos los campos obligatorios.');
                     btn.disabled = false;
                     btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
                     return;
                 }
+
                 const { error } = await _supabase
                     .from('clientes')
                     .insert([{ nombre: name, email: email, telefono: phone, tipo: userType }]);
+
                 if (error) {
                     console.error('Error al guardar en Supabase:', error.message);
                 }
+
                 const userData = { name, email, phone, userType };
                 localStorage.setItem('uingo_user', JSON.stringify(userData));
                 localStorage.setItem('uingo_user_profile', JSON.stringify(userData));
@@ -568,9 +611,11 @@
             document.getElementById('summaryCustomerType').innerText = currentUser.userType;
             document.getElementById('userBadge').classList.remove('hidden');
             document.getElementById('userBadge').classList.add('flex');
+
             document.getElementById('fullName').value = currentUser.name;
             document.getElementById('userEmail').value = currentUser.email;
             document.getElementById('userPhone').value = currentUser.phone;
+
             if (currentUser.userType === 'Particular') {
                 document.querySelector('input[name="userType"][value="Particular"]').checked = true;
             } else {
@@ -594,13 +639,18 @@
             selectedVehicle = type;
             selectedServiceType = null; // Reiniciar modalidad
             extraHelpers = 0;
+            selectedDate = null;
+            selectedTime = null;
             document.getElementById('helpersCount').innerText = '0';
+            document.getElementById('scheduleDate').value = '';
+            document.getElementById('scheduleTime').value = '';
 
             // Estilos de selección de tarjeta
             document.querySelectorAll('.vehicle-card').forEach(card => {
                 card.classList.remove('border-blue-600', 'bg-blue-50/50');
                 card.classList.add('border-slate-200');
             });
+
             const selectedCard = document.getElementById(`card-${type}`);
             if (selectedCard) {
                 selectedCard.classList.remove('border-slate-200');
@@ -608,6 +658,7 @@
             }
 
             const serviceContainer = document.getElementById('serviceTypeContainer');
+            const scheduleContainer = document.getElementById('scheduleContainer');
             const helpersContainer = document.getElementById('helpersContainer');
 
             // Limpiar selección visual previa de modalidades
@@ -621,13 +672,15 @@
 
             if (type === 'camioneta' || type === 'camion') {
                 serviceContainer.classList.remove('hidden');
-                helpersContainer.classList.add('hidden'); // Oculto hasta elegir modalidad
-                
+                scheduleContainer.classList.add('hidden');
+                helpersContainer.classList.add('hidden'); 
+
                 // Actualizar precios dinámicos en las tarjetas de modalidad
                 document.getElementById('price-regular').innerText = `$${fleetRules[type].prices.regular} MXN`;
                 document.getElementById('price-prioritario').innerText = `$${fleetRules[type].prices.prioritario} MXN`;
             } else {
                 serviceContainer.classList.add('hidden');
+                scheduleContainer.classList.add('hidden');
                 helpersContainer.classList.add('hidden');
             }
 
@@ -636,6 +689,10 @@
 
         function selectServiceType(type) {
             selectedServiceType = type;
+            selectedDate = null;
+            selectedTime = null;
+            document.getElementById('scheduleDate').value = '';
+            document.getElementById('scheduleTime').value = '';
 
             ['regular', 'prioritario'].forEach(t => {
                 const el = document.getElementById(`type-${t}`);
@@ -651,9 +708,64 @@
                 selectedTypeCard.classList.add('border-blue-600', 'bg-blue-50/50');
             }
 
-            // Al elegir modalidad, ahora sí se despliega cargadores extras
+            const scheduleContainer = document.getElementById('scheduleContainer');
             const helpersContainer = document.getElementById('helpersContainer');
-            helpersContainer.classList.remove('hidden');
+            const helpersBadge = document.getElementById('helpersStepBadge');
+
+            if (type === 'regular') {
+                // Desplegar horario y día
+                scheduleContainer.classList.remove('hidden');
+                helpersContainer.classList.add('hidden'); // Oculto hasta que llene fecha y hora
+                if (helpersBadge) helpersBadge.innerText = '5';
+            } else {
+                // Prioritario: Ocultar horario y mostrar directamente cargadores
+                scheduleContainer.classList.add('hidden');
+                helpersContainer.classList.remove('hidden');
+                if (helpersBadge) helpersBadge.innerText = '4';
+            }
+
+            calculateQuote();
+        }
+
+        function validateScheduleTime() {
+            const dateInput = document.getElementById('scheduleDate').value;
+            const timeInput = document.getElementById('scheduleTime').value;
+
+            if (!dateInput || !timeInput) return false;
+
+            const now = new Date();
+            const chosenDateTime = new Date(`${dateInput}T${timeInput}`);
+            const minAllowedTime = new Date(now.getTime() + (3 * 60 * 60 * 1000)); // +3 horas
+
+            if (chosenDateTime < minAllowedTime) {
+                const formattedMinTime = minAllowedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                showMessage('Horario Inválido', `Los servicios regulares deben agendarse con al menos 3 horas de anticipación. Por favor selecciona una hora a partir de las ${formattedMinTime}.`, 'error');
+                document.getElementById('scheduleTime').value = '';
+                return false;
+            }
+
+            return true;
+        }
+
+        function onScheduleChange() {
+            const dateVal = document.getElementById('scheduleDate').value;
+            const timeVal = document.getElementById('scheduleTime').value;
+            const helpersContainer = document.getElementById('helpersContainer');
+
+            if (dateVal && timeVal) {
+                if (validateScheduleTime()) {
+                    selectedDate = dateVal;
+                    selectedTime = timeVal;
+                    // Ya que seleccionó día y hora válidos, desplegar la cantidad de cargadores extras
+                    helpersContainer.classList.remove('hidden');
+                } else {
+                    selectedDate = null;
+                    selectedTime = null;
+                    helpersContainer.classList.add('hidden');
+                }
+            } else {
+                helpersContainer.classList.add('hidden');
+            }
 
             calculateQuote();
         }
@@ -677,10 +789,12 @@
             let basePrice = 0;
             let serviceFee = 0;
             const serviceRow = document.getElementById('summaryServiceRow');
+            const scheduleRow = document.getElementById('summaryScheduleRow');
 
             if (selectedVehicle === 'moto' || selectedVehicle === 'carro') {
                 basePrice = rule.basePrice;
                 serviceRow.classList.add('hidden');
+                scheduleRow.classList.add('hidden');
             } else if (selectedVehicle === 'camioneta' || selectedVehicle === 'camion') {
                 if (selectedServiceType) {
                     basePrice = rule.prices.regular; // Base regular
@@ -690,9 +804,17 @@
                     document.getElementById('summaryServiceLabel').innerText = `Modalidad (${selectedServiceType.toUpperCase()}):`;
                     document.getElementById('summaryServicePrice').innerText = `$${serviceFee.toLocaleString('es-MX')} MXN`;
                     serviceRow.classList.remove('hidden');
+
+                    if (selectedServiceType === 'regular' && selectedDate && selectedTime) {
+                        document.getElementById('summaryScheduleText').innerText = `${selectedDate} @ ${selectedTime}`;
+                        scheduleRow.classList.remove('hidden');
+                    } else {
+                        scheduleRow.classList.add('hidden');
+                    }
                 } else {
                     basePrice = rule.prices.regular;
                     serviceRow.classList.add('hidden');
+                    scheduleRow.classList.add('hidden');
                 }
             }
 
@@ -732,9 +854,15 @@
                 showMessage('Vehículo Requerido', 'Por favor selecciona un tipo de vehículo.', 'error');
                 return;
             }
-            if ((selectedVehicle === 'camioneta' || selectedVehicle === 'camion') && !selectedServiceType) {
-                showMessage('Modalidad Requerida', 'Por favor selecciona la modalidad de servicio (Regular o Prioritario).', 'error');
-                return;
+            if ((selectedVehicle === 'camioneta' || selectedVehicle === 'camion')) {
+                if (!selectedServiceType) {
+                    showMessage('Modalidad Requerida', 'Por favor selecciona la modalidad de servicio (Regular o Prioritario).', 'error');
+                    return;
+                }
+                if (selectedServiceType === 'regular' && (!selectedDate || !selectedTime)) {
+                    showMessage('Fecha y Hora Requeridas', 'Por favor selecciona el día y la hora para agendar tu servicio regular (mínimo 3 horas de anticipación).', 'error');
+                    return;
+                }
             }
 
             const origin = document.getElementById('originInput').value.trim() || 'No especificado';
@@ -749,9 +877,15 @@
             let helpersPrice = (rule.allowsHelpers && extraHelpers > 0) ? extraHelpers * 300 : 0;
             let totalPrice = basePrice + serviceFee + extraPrice + helpersPrice;
 
+            let scheduleInfo = '';
+            if (selectedServiceType === 'regular' && selectedDate && selectedTime) {
+                scheduleInfo = `📅 *Programado para:* ${selectedDate} a las ${selectedTime} hrs%0A`;
+            }
+
             const message = `¡Hola! 👋 Soy *${currentUser.name}* (${currentUser.userType}). Me gustaría solicitar un servicio con *UINGO*:%0A%0A` +
                 `🚗 *Vehículo:* ${rule.name}%0A` +
                 ((selectedVehicle === 'camioneta' || selectedVehicle === 'camion') ? `⚡ *Modalidad:* ${selectedServiceType.toUpperCase()}%0A` : '') +
+                scheduleInfo +
                 `📍 *Origen:* ${origin}%0A` +
                 `🏁 *Destino:* ${destination}%0A` +
                 `🛣️ *Distancia:* ${distance} km%0A` +
@@ -770,7 +904,11 @@
             document.getElementById('distanceValue').innerText = '5';
             extraHelpers = 0;
             selectedServiceType = null;
+            selectedDate = null;
+            selectedTime = null;
             document.getElementById('helpersCount').innerText = '0';
+            document.getElementById('scheduleDate').value = '';
+            document.getElementById('scheduleTime').value = '';
             selectVehicle('moto');
             calculateQuote();
             showMessage('Cotizador Reiniciado', 'Los valores se han restablecido a los valores iniciales.', 'success');
@@ -782,8 +920,10 @@
             const modalIcon = document.getElementById('modalIcon');
             const modalTitle = document.getElementById('modalTitle');
             const modalMessage = document.getElementById('modalMessage');
+
             modalTitle.innerText = title;
             modalMessage.innerText = message;
+
             if (type === 'success') {
                 modalIcon.className = 'w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-xl';
                 modalIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
@@ -791,6 +931,7 @@
                 modalIcon.className = 'w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3 text-xl';
                 modalIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
             }
+
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
@@ -828,10 +969,12 @@
         async function calculateRouteFromAddresses() {
             let originRaw = document.getElementById('originInput').value.trim().toLowerCase();
             let destRaw = document.getElementById('destinationInput').value.trim().toLowerCase();
+
             if (!originRaw || !destRaw) {
                 alert("Por favor ingresa tanto el punto de origen como el de destino.");
                 return;
             }
+
             const regionalHubs = {
                 'colima': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
                 'colima centro': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
@@ -843,10 +986,12 @@
                 'villa de álvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' },
                 'villa de alvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' }
             };
+
             const findHub = (text) => {
                 const match = Object.keys(regionalHubs).find(key => text.includes(key));
                 return match ? regionalHubs[match] : null;
             };
+
             const originHub = findHub(originRaw);
             const destHub = findHub(destRaw);
             
@@ -865,9 +1010,11 @@
                         if (window.routeLayer) map.removeLayer(window.routeLayer);
                         if (window.markerOrigin) map.removeLayer(window.markerOrigin);
                         if (window.markerDest) map.removeLayer(window.markerDest);
+
                         window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
                             style: { color: '#0284c7', weight: 5, opacity: 0.85 }
                         }).addTo(map);
+
                         window.markerOrigin = L.marker([originHub.lat, originHub.lon]).addTo(map).bindPopup(originHub.name).openPopup();
                         window.markerDest = L.marker([destHub.lat, destHub.lon]).addTo(map).bindPopup(destHub.name);
                         map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
@@ -881,22 +1028,29 @@
             showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
+
             try {
                 const cleanOrigin = `${originRaw}, Colima, Mexico`;
                 const cleanDest = `${destRaw}, Colima, Mexico`;
+
                 const [resOrigin, resDest] = await Promise.all([
                     fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal }),
                     fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal })
                 ]);
+
                 const dataOrigin = await resOrigin.json();
                 const dataDest = await resDest.json();
+
                 if (!dataOrigin.length || !dataDest.length) throw new Error("No localizado");
+
                 const lat1 = parseFloat(dataOrigin[0].lat), lon1 = parseFloat(dataOrigin[0].lon);
                 const lat2 = parseFloat(dataDest[0].lat), lon2 = parseFloat(dataDest[0].lon);
+
                 const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`, { signal: controller.signal });
                 const dataRoute = await resRoute.json();
                 clearTimeout(timeoutId);
                 closeModal();
+
                 if (dataRoute.routes && dataRoute.routes.length > 0) {
                     const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
                     const distanceRange = document.getElementById('distanceRange');
@@ -904,12 +1058,15 @@
                         distanceRange.value = distanceKm;
                         calculateQuote();
                     }
+
                     if (window.routeLayer) map.removeLayer(window.routeLayer);
                     if (window.markerOrigin) map.removeLayer(window.markerOrigin);
                     if (window.markerDest) map.removeLayer(window.markerDest);
+
                     window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, { style: { color: '#0284c7', weight: 5, opacity: 0.85 } }).addTo(map);
                     window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("Origen").openPopup();
                     window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("Destino");
+
                     map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
                 } else {
                     throw new Error("Ruta no trazable");
