@@ -7,8 +7,6 @@
     <title>UINGO - Logística Inteligente para PyMEs</title>
     <!-- Tailwind CSS para diseño moderno -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .modal { transition: opacity 0.25s ease; }
     </style>
@@ -34,12 +32,13 @@
             </div>
             <!-- BOTÓN ESTRATÉGICO 1: En la barra de navegación superior -->
             <div>
-                <button type="button" onclick="interceptarCotizacion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-full shadow-md transition-all text-sm flex items-center gap-2 cursor-pointer">
+                <a href="cotizador.html" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-full shadow-md transition-all text-sm flex items-center gap-2">
                     <span>Cotizar envío</span>
-                </button>
+                </a>
             </div>
         </div>
     </nav>
+
     <!-- Hero Section -->
     <header id="inicio" class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 bg-gradient-to-b from-blue-50/50 to-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -55,9 +54,9 @@
                 </p>
                 <div class="flex flex-wrap gap-4 pt-2">
                     <!-- BOTÓN ESTRATÉGICO 2: En el banner principal (Hero) -->
-                    <button type="button" onclick="interceptarCotizacion()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2 cursor-pointer">
+                    <a href="cotizador.html" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2">
                          Cotizar envío
-                    </button>
+                    </a>
                     <a href="mailto:hello@uingo.mx" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold px-6 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2">
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
@@ -126,6 +125,7 @@
             </div>
         </div>
     </header>
+
     <!-- Propuesta de Valor -->
     <section id="propuesta" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -166,12 +166,13 @@
             </div>
             <!-- BOTÓN ESTRATÉGICO 3 -->
             <div class="mt-12">
-                <button type="button" onclick="interceptarCotizacion()" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-xl shadow-xl transition-all text-base cursor-pointer">
+                <a href="cotizador.html" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-xl shadow-xl transition-all text-base">
                      Comienza a cotizar tu envío ahora mismo
-                </button>
+                </a>
             </div>
         </div>
     </section>
+
     <!-- SECCIÓN DE DIFERENCIADOR AGREGADA IGUAL A LAS IMÁGENES -->
     <section id="diferenciador" class="py-20 bg-slate-50/60">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -183,12 +184,14 @@
                 </svg>
                 <span>Diferenciador</span>
             </div>
+
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-4">
                 Dile adiós a las limitaciones
             </h2>
             <p class="text-slate-500 text-base sm:text-lg max-w-3xl mx-auto mb-14 leading-relaxed">
                 <span class="font-bold text-slate-700">UINGO</span> nace para resolver lo que las apps tradicionales no cubren: <span class="text-slate-600 font-medium">logística local real para personas, emprendedores y PyMEs.</span>
             </p>
+
             <!-- Tabla de comparación con diseño redondeado e idéntico a la imagen -->
             <div class="overflow-x-auto pb-4">
                 <div class="min-w-[700px] bg-sky-50/40 rounded-3xl p-3 border border-sky-100/60 shadow-sm text-left">
@@ -351,6 +354,7 @@
             </div>
         </div>
     </section>
+
     <!-- Servicios -->
     <section id="servicios" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -374,6 +378,7 @@
             </div>
         </div>
     </section>
+
     <!-- Versatilidad de Cargas -->
     <section id="versatilidad" class="py-20 bg-slate-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -469,6 +474,7 @@
             </div>
         </div>
     </section>
+
     <!-- FAQ -->
     <section id="faq" class="py-20 bg-white">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -488,6 +494,7 @@
             </div>
         </div>
     </section>
+
     <!-- Seccion CTA final antes del footer -->
     <section class="py-16 bg-blue-600 text-white text-center">
         <div class="max-w-4xl mx-auto px-4 space-y-4">
@@ -495,12 +502,13 @@
             <p class="text-blue-100 text-sm max-w-xl mx-auto">Calcula tu tarifa exacta en segundos, registra tus datos y solicita tu unidad de forma inmediata.</p>
             <!-- BOTÓN ESTRATÉGICO 4: Justo antes del footer para cerrar la venta -->
             <div class="pt-4">
-                <button type="button" onclick="interceptarCotizacion()" class="inline-block bg-white text-blue-700 hover:bg-slate-100 font-bold px-8 py-4 rounded-xl shadow-lg transition-all text-base cursor-pointer">
+                <a href="cotizador.html" target="_blank" class="inline-block bg-white text-blue-700 hover:bg-slate-100 font-bold px-8 py-4 rounded-xl shadow-lg transition-all text-base">
                     Ir al Cotizador y Perfil
-                </button>
+                </a>
             </div>
         </div>
     </section>
+
     <!-- Footer -->
     <footer class="bg-slate-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
@@ -514,6 +522,7 @@
             </div>
         </div>
     </footer>
+
     <!-- Modal Términos -->
     <div id="terminosModal" class="modal opacity-0 pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
         <div class="bg-white max-w-lg w-full p-6 rounded-2xl shadow-xl max-h-[80vh] overflow-y-auto">
@@ -578,10 +587,12 @@ Lineamientos Generales
 •	Cuentas Empresariales y Convenios: Para clientes corporativos bajo esquemas de pago mensual diferido, la facturación se realizará de manera consolidada según los periodos acordados en sus respectivos contratos anexos, aplicando las mismas reglas de veracidad de datos fiscales.
 •	Plataforma Web y Soporte: El proceso se realizará de manera automatizada en la sección de "Facturación" dentro del portal de UINGO. El archivo XML y PDF correspondiente será enviado al correo electrónico registrado por el Usuario. Para cualquier aclaración o soporte técnico relacionado exclusivamente con la emisión de su comprobante fiscal, el Usuario podrá contactar al 312 241 6157.
 Al usar los servicios de UINGO, aceptas estos términos en su totalidad.
+
             </p>
-            <button onclick="aceptarTerminos()" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-xl transition-all hover:bg-blue-700 cursor-pointer">Entendido</button>
+            <button onclick="aceptarTerminos()" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-xl transition-all hover:bg-blue-700">Entendido</button>
         </div>
     </div>
+
     <!-- Cuadro flotante de confirmación -->
     <div id="alertaTerminos" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-3">
         <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white shrink-0">
@@ -594,6 +605,7 @@ Al usar los servicios de UINGO, aceptas estos términos en su totalidad.
             <p class="text-xs text-slate-300">Se aceptaron los términos y condiciones, muchas gracias por leer cuidadosamente.</p>
         </div>
     </div>
+
     <!-- Modal Privacidad -->
     <div id="privacidadModal" class="modal opacity-0 pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
         <div class="bg-white max-w-lg w-full p-6 rounded-2xl shadow-xl max-h-[80vh] overflow-y-auto">
@@ -656,7 +668,7 @@ Finalidades secundarias (no necesarias para el servicio)
 •	Plazo de Respuesta: UINGO dará respuesta dentro de un plazo máximo de 20 días hábiles contados a partir de la recepción de la solicitud, conforme a la LFPDPPP.
 7. Plazos de Conservación de Datos
 •	Solicitudes de Servicio y Facturación: Se conservan por 5 años desde la fecha del servicio, para efectos de responsabilidades civiles y fiscales.
-•	Evidencia Fotográfica: Se conserva 95 días posteriores a la conclusión del servicio, salvo que exista una reclamación pendiente de resolución.
+•	Evidencia Fotográfica: Se conserva 90 días posteriores a la conclusión del servicio, salvo que exista una reclamación pendiente de resolución.
 •	Cotizaciones No Confirmadas: Se eliminan automáticamente a los 30 días de generada la cotización.
 •	Documentos de Verificación de Socios: Se conservan mientras la cuenta del socio esté activa y hasta 5 años después de su baja, por las responsabilidades civiles y fiscales derivadas de los servicios que prestó.
 •	Ubicación de Socios: El histórico de posiciones asociado a un servicio se conserva 90 días desde su conclusión, salvo reclamación pendiente. Fuera de un servicio activo no se almacena rastro de ubicación.
@@ -674,16 +686,12 @@ Finalidades secundarias (no necesarias para el servicio)
 10. Contacto
 •	Canal de Contacto: Para cualquier duda, solicitud o ejercicio de derechos relacionados con este Aviso de Privacidad: support@uingo.mx · Teléfono 312 241 6157.
 </p>
-            <button onclick="cerrarModal('privacidadModal')" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-xl cursor-pointer">Entendido</button>
+            <button onclick="cerrarModal('privacidadModal')" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-xl">Entendido</button>
         </div>
     </div>
-    <!-- Script de Modales y Supabase -->
-    <script>
-        // Configuración con tus credenciales reales de Supabase
-        const SUPABASE_URL = 'https://tlcbhbigtxhalgebrwqk.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_bigBIqjdy-EfvKtxS349yA_RcKqFrOA';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    <!-- Script de Modales -->
+    <script>
         function abrirModal(id) {
             const m = document.getElementById(id);
             m.classList.remove('opacity-0', 'pointer-events-none');
@@ -692,52 +700,19 @@ Finalidades secundarias (no necesarias para el servicio)
             const m = document.getElementById(id);
             m.classList.add('opacity-0', 'pointer-events-none');
         }
-
-        // Función que se activa al dar clic en cualquier botón de cotizar servicio
-        function interceptarCotizacion() {
-            abrirModal('terminosModal');
-        }
-
-        // Función que guarda en Supabase al aceptar y redirige a cotizador.html
-        async function aceptarTerminos() {
-            try {
-                // Inserta el registro de aceptación con fecha y hora actual
-                // (Nota: Asegúrate de tener una tabla creada en Supabase llamada 'terminos_aceptados' con columnas id, created_at, aceptado)
-                const { data, error } = await supabaseClient
-                    .from('terminos_aceptados')
-                    .insert([
-                        { 
-                            aceptado: true, 
-                            created_at: new Date().toISOString() 
-                        }
-                    ]);
-
-                if (error) {
-                    console.error('Error al guardar en Supabase:', error.message);
-                }
-            } catch (err) {
-                console.error('Excepción al conectar con Supabase:', err);
-            }
-
-            // Cierra el modal de términos
+        function aceptarTerminos() {
             if (typeof cerrarModal === 'function') {
                 cerrarModal('terminosModal');
             }
-
-            // Muestra alerta flotante visual de confirmación breve
             const alerta = document.getElementById('alertaTerminos');
             if (alerta) {
                 alerta.classList.remove('hidden');
                 setTimeout(() => {
                     alerta.classList.add('hidden');
-                }, 3000);
+                }, 4000);
             }
-
-            // Redirige al cotizador después de aceptar
-            setTimeout(() => {
-                window.open('cotizador.html', '_blank');
-            }, 1000);
         }
     </script>
 </body>
 </html>
+
