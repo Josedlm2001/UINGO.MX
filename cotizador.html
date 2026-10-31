@@ -180,7 +180,7 @@
             </form>
         </section>
 
-        <!-- VISTA 2: COTIZADOR DE FLETES (OCULTO INICIALMENTE) -->
+        <!-- VISTA 2: COTIZADOR DE FLETES -->
         <section id="calculatorSection" class="page-view hidden-view grid grid-cols-1 lg:grid-cols-12 gap-8">
             
             <!-- Columna Izquierda: Entradas & Selección de Flota (8 Col) -->
@@ -285,8 +285,8 @@
                                 <p class="text-xs text-slate-500 mt-1">Fletes medianos, muebles, electrodomésticos.</p>
                             </div>
                             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
-                                <span class="text-xs text-slate-400">Base hasta 7km desde</span>
-                                <span class="text-lg font-bold text-blue-600">$476 MXN</span>
+                                <span class="text-xs text-slate-400">Local / Foráneo</span>
+                                <span class="text-lg font-bold text-blue-600">Desde $312 MXN</span>
                             </div>
                         </div>
                         <!-- Camión 3 Tons -->
@@ -300,17 +300,79 @@
                                 <p class="text-xs text-slate-500 mt-1">Mudanzas completas, mercancía pesada y tarimas.</p>
                             </div>
                             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
-                                <span class="text-xs text-slate-400">Base hasta 7km desde</span>
-                                <span class="text-lg font-bold text-blue-600">$1,799 MXN</span>
+                                <span class="text-xs text-slate-400">Local / Foráneo</span>
+                                <span class="text-lg font-bold text-blue-600">Desde $312 MXN</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Modalidad de Servicio -->
+                <!-- TIPO DE SERVICIO (LOCAL / FORÁNEO) - SOLO CAMIONETA Y CAMIÓN -->
+                <div id="coverageContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">3</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">Ámbito de Cobertura</h3>
+                            <p class="text-xs text-slate-500">Selecciona si tu servicio requerirá renta de unidad por tiempo (Local) o cotización por ruta (Foráneo).</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Opción Local -->
+                        <div onclick="selectCoverageType('local')" id="cov-local" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-brand-500 transition-all">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-slate-800">SERVICIO LOCAL (Por Tiempo)</span>
+                                <span class="text-xs bg-emerald-100 text-emerald-700 font-semibold px-2 py-0.5 rounded">Renta X Hora</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-2">Cobro por horas o fracciones de 30 min. Incluye chofer auxiliador.</p>
+                            <span class="text-sm font-bold text-brand-600">Desde $312 MXN (30 min)</span>
+                        </div>
+                        <!-- Opción Foráneo -->
+                        <div onclick="selectCoverageType('foraneo')" id="cov-foraneo" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-brand-500 transition-all">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-slate-800">SERVICIO FORÁNEO (Por Ruta)</span>
+                                <span class="text-xs bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded">Por Distancia</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-2">Cotización en base a kilometraje total y modalidad de entrega.</p>
+                            <span class="text-sm font-bold text-brand-600">Tarifa por KM + Modalidad</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONFIGURACIÓN DE SERVICIO LOCAL (POR TIEMPO) -->
+                <div id="localTimeContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all space-y-4">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">4</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">Tiempo Solicitado para Unidad</h3>
+                            <p class="text-xs text-slate-500">Bloques de 30 minutos ($312 MXN c/u). Incluye chofer auxiliador.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 space-y-1">
+                        <p class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-clock text-amber-600"></i> Importante sobre el tiempo:</p>
+                        <p>⏱️ El tiempo comienza a correr exactamente <strong>desde que llega la unidad a la ubicación</strong>.</p>
+                        <p>⏳ El tiempo base inicial contratado es de 30 min. Si el servicio se pasa, se cobró proporcionalmente a razón de <strong>$312 por cada 30 min ($10.40 MXN / min)</strong>. (Ejemplo: 10 min extras = $104 MXN).</p>
+                    </div>
+
+                    <div>
+                        <label for="timeBlocksSelect" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Selecciona la duración estimada:</label>
+                        <select id="timeBlocksSelect" onchange="calculateQuote()" class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-semibold outline-none bg-white">
+                            <option value="1">30 minutos — $312 MXN</option>
+                            <option value="2">1 Hora (60 min) — $624 MXN</option>
+                            <option value="3">1 Hora 30 min (90 min) — $936 MXN</option>
+                            <option value="4">2 Horas (120 min) — $1,248 MXN</option>
+                            <option value="5">2 Horas 30 min — $1,560 MXN</option>
+                            <option value="6">3 Horas — $1,872 MXN</option>
+                            <option value="8">4 Horas — $2,496 MXN</option>
+                            <option value="10">5 Horas — $3,120 MXN</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modalidad de Servicio (Solo Foráneo) -->
                 <div id="serviceTypeContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
                     <div class="flex items-center space-x-3 mb-4">
-                        <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">3</span>
+                        <span id="serviceStepBadge" class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">4</span>
                         <div>
                             <h3 class="text-lg font-bold text-slate-900">Modalidad de Servicio</h3>
                             <p class="text-xs text-slate-500">Selecciona la velocidad de asignación requerida.</p>
@@ -320,7 +382,7 @@
                         <!-- Opción Regular -->
                         <div onclick="selectServiceType('regular')" id="type-regular" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-blue-500 transition-all">
                             <div class="flex justify-between items-center mb-1">
-                                <span class="font-bold text-slate-800">REGULAR *Ya incluye un ayudante (chofer)</span>
+                                <span class="font-bold text-slate-800">REGULAR *Ya incluye chofer</span>
                                 <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded">Programado</span>
                             </div>
                             <p class="text-xs text-slate-500 mb-2">Agenda con anticipación tu servicio (al menos 3 horas antes).</p>
@@ -329,7 +391,7 @@
                         <!-- Opción Prioritario -->
                         <div onclick="selectServiceType('prioritario')" id="type-prioritario" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-blue-500 transition-all">
                             <div class="flex justify-between items-center mb-1">
-                                <span class="font-bold text-slate-800">PRIORITARIO *Ya incluye un ayudante (chofer)</span>
+                                <span class="font-bold text-slate-800">PRIORITARIO *Ya incluye chofer</span>
                                 <span class="text-xs bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded">Rápido</span>
                             </div>
                             <p class="text-xs text-slate-500 mb-2">Encuentra un UINGO rápidamente en zona.</p>
@@ -338,10 +400,10 @@
                     </div>
                 </div>
 
-                <!-- Selección de Día y Horario (Solo se muestra en modalidad REGULAR) -->
+                <!-- Selección de Día y Horario (Solo en modalidad REGULAR) -->
                 <div id="scheduleContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-4 hidden transition-all">
                     <div class="flex items-center space-x-3 mb-4">
-                        <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">4</span>
+                        <span class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">5</span>
                         <div>
                             <h3 class="text-lg font-bold text-slate-900">Programar Día y Horario del Servicio</h3>
                             <p class="text-xs text-slate-500">Los servicios regulares deben programarse con mínimo 3 horas de anticipación.</p>
@@ -366,7 +428,7 @@
                             <span id="helpersStepBadge" class="w-7 h-7 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">5</span>
                             <div>
                                 <h3 class="text-lg font-bold text-slate-900">Cargadores Extras (Maniobra)</h3>
-                                <p class="text-xs text-slate-500">Disponible solo para Camioneta y Camión ($300 MXN c/u).</p>
+                                <p class="text-xs text-slate-500" id="helpersRateNotice">Disponible solo para Camioneta y Camión.</p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-3">
@@ -376,6 +438,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <!-- Columna Derecha: Tarjeta de Resumen (4 Col) -->
@@ -396,8 +459,12 @@
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-truck text-xs text-slate-400"></i> Vehículo:</span>
                             <span class="font-semibold text-slate-800" id="summaryVehicleName">No elegido</span>
                         </div>
+                        <div id="summaryCoverageRow" class="flex justify-between text-slate-600 hidden">
+                            <span>Tipo de Servicio:</span>
+                            <span class="font-semibold text-brand-600" id="summaryCoverageText">Local</span>
+                        </div>
                         <div class="flex justify-between text-slate-600">
-                            <span>Precio Base (hasta 7 km):</span>
+                            <span id="summaryBaseLabel">Precio Base:</span>
                             <span class="font-medium text-slate-800" id="summaryBasePrice">$0.00</span>
                         </div>
                         <div id="summaryServiceRow" class="flex justify-between text-slate-600 hidden">
@@ -408,7 +475,7 @@
                             <span>Horario:</span>
                             <span class="font-medium text-slate-800 text-right text-xs" id="summaryScheduleText">-</span>
                         </div>
-                        <div class="flex justify-between text-slate-600">
+                        <div id="summaryDistanceRow" class="flex justify-between text-slate-600">
                             <span class="flex items-center gap-1">
                                 Km Extra (<span id="summaryExtraKm">0</span> km):
                             </span>
@@ -465,10 +532,11 @@
         </div>
     </footer>
 
-    <!-- LÓGICA DE JAVASCRIPT UNIFICADA Y CORREGIDA -->
+    <!-- LÓGICA DE JAVASCRIPT UNIFICADA -->
     <script>
         let currentUser = null;
         let selectedVehicle = null;
+        let selectedCoverage = null; // 'local' o 'foraneo'
         let selectedServiceType = null;
         let extraHelpers = 0;
         let selectedDate = null;
@@ -611,11 +679,9 @@
             document.getElementById('summaryCustomerType').innerText = currentUser.userType;
             document.getElementById('userBadge').classList.remove('hidden');
             document.getElementById('userBadge').classList.add('flex');
-
             document.getElementById('fullName').value = currentUser.name;
             document.getElementById('userEmail').value = currentUser.email;
             document.getElementById('userPhone').value = currentUser.phone;
-
             if (currentUser.userType === 'Particular') {
                 document.querySelector('input[name="userType"][value="Particular"]').checked = true;
             } else {
@@ -637,7 +703,8 @@
 
         function selectVehicle(type) {
             selectedVehicle = type;
-            selectedServiceType = null; // Reiniciar modalidad
+            selectedCoverage = null;
+            selectedServiceType = null;
             extraHelpers = 0;
             selectedDate = null;
             selectedTime = null;
@@ -645,43 +712,76 @@
             document.getElementById('scheduleDate').value = '';
             document.getElementById('scheduleTime').value = '';
 
-            // Estilos de selección de tarjeta
             document.querySelectorAll('.vehicle-card').forEach(card => {
                 card.classList.remove('border-blue-600', 'bg-blue-50/50');
                 card.classList.add('border-slate-200');
             });
-
             const selectedCard = document.getElementById(`card-${type}`);
             if (selectedCard) {
                 selectedCard.classList.remove('border-slate-200');
                 selectedCard.classList.add('border-blue-600', 'bg-blue-50/50');
             }
 
+            const coverageContainer = document.getElementById('coverageContainer');
+            const localTimeContainer = document.getElementById('localTimeContainer');
             const serviceContainer = document.getElementById('serviceTypeContainer');
             const scheduleContainer = document.getElementById('scheduleContainer');
             const helpersContainer = document.getElementById('helpersContainer');
 
-            // Limpiar selección visual previa de modalidades
-            ['regular', 'prioritario'].forEach(t => {
-                const el = document.getElementById(`type-${t}`);
-                if (el) {
-                    el.classList.remove('border-blue-600', 'bg-blue-50/50');
-                    el.classList.add('border-slate-200');
-                }
+            // Resetear vistas dependientes
+            coverageContainer.classList.add('hidden');
+            localTimeContainer.classList.add('hidden');
+            serviceContainer.classList.add('hidden');
+            scheduleContainer.classList.add('hidden');
+            helpersContainer.classList.add('hidden');
+
+            ['local', 'foraneo'].forEach(c => {
+                const el = document.getElementById(`cov-${c}`);
+                if (el) el.classList.remove('border-brand-500', 'bg-brand-50');
             });
 
             if (type === 'camioneta' || type === 'camion') {
-                serviceContainer.classList.remove('hidden');
-                scheduleContainer.classList.add('hidden');
-                helpersContainer.classList.add('hidden'); 
-
-                // Actualizar precios dinámicos en las tarjetas de modalidad
+                coverageContainer.classList.remove('hidden');
+                // Precios dinámicos para modalidad foránea
                 document.getElementById('price-regular').innerText = `$${fleetRules[type].prices.regular} MXN`;
                 document.getElementById('price-prioritario').innerText = `$${fleetRules[type].prices.prioritario} MXN`;
             } else {
+                // Moto y carro funcionan directo por distancia
+                calculateQuote();
+            }
+        }
+
+        function selectCoverageType(cov) {
+            selectedCoverage = cov;
+            selectedServiceType = null;
+            extraHelpers = 0;
+            document.getElementById('helpersCount').innerText = '0';
+
+            ['local', 'foraneo'].forEach(c => {
+                const el = document.getElementById(`cov-${c}`);
+                if (el) el.classList.remove('border-brand-500', 'bg-brand-50');
+            });
+            const selCov = document.getElementById(`cov-${cov}`);
+            if (selCov) selCov.classList.add('border-brand-500', 'bg-brand-50');
+
+            const localTimeContainer = document.getElementById('localTimeContainer');
+            const serviceContainer = document.getElementById('serviceTypeContainer');
+            const scheduleContainer = document.getElementById('scheduleContainer');
+            const helpersContainer = document.getElementById('helpersContainer');
+            const helpersNotice = document.getElementById('helpersRateNotice');
+
+            if (cov === 'local') {
+                localTimeContainer.classList.remove('hidden');
                 serviceContainer.classList.add('hidden');
                 scheduleContainer.classList.add('hidden');
+                helpersContainer.classList.remove('hidden');
+                if (helpersNotice) helpersNotice.innerText = 'Ayudantes adicionales ($200 MXN cada uno por hora).';
+            } else {
+                // Foráneo
+                localTimeContainer.classList.add('hidden');
+                serviceContainer.classList.remove('hidden');
                 helpersContainer.classList.add('hidden');
+                if (helpersNotice) helpersNotice.innerText = 'Ayudantes adicionales ($300 MXN cada uno por maniobra).';
             }
 
             calculateQuote();
@@ -701,7 +801,6 @@
                     el.classList.add('border-slate-200');
                 }
             });
-
             const selectedTypeCard = document.getElementById(`type-${type}`);
             if (selectedTypeCard) {
                 selectedTypeCard.classList.remove('border-slate-200');
@@ -713,29 +812,25 @@
             const helpersBadge = document.getElementById('helpersStepBadge');
 
             if (type === 'regular') {
-                // Desplegar horario y día
                 scheduleContainer.classList.remove('hidden');
-                helpersContainer.classList.add('hidden'); // Oculto hasta que llene fecha y hora
-                if (helpersBadge) helpersBadge.innerText = '5';
+                helpersContainer.classList.add('hidden');
+                if (helpersBadge) helpersBadge.innerText = '6';
             } else {
-                // Prioritario: Ocultar horario y mostrar directamente cargadores
                 scheduleContainer.classList.add('hidden');
                 helpersContainer.classList.remove('hidden');
-                if (helpersBadge) helpersBadge.innerText = '4';
+                if (helpersBadge) helpersBadge.innerText = '5';
             }
-
             calculateQuote();
         }
 
         function validateScheduleTime() {
             const dateInput = document.getElementById('scheduleDate').value;
             const timeInput = document.getElementById('scheduleTime').value;
-
             if (!dateInput || !timeInput) return false;
 
             const now = new Date();
             const chosenDateTime = new Date(`${dateInput}T${timeInput}`);
-            const minAllowedTime = new Date(now.getTime() + (3 * 60 * 60 * 1000)); // +3 horas
+            const minAllowedTime = new Date(now.getTime() + (3 * 60 * 60 * 1000));
 
             if (chosenDateTime < minAllowedTime) {
                 const formattedMinTime = minAllowedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -743,7 +838,6 @@
                 document.getElementById('scheduleTime').value = '';
                 return false;
             }
-
             return true;
         }
 
@@ -756,7 +850,6 @@
                 if (validateScheduleTime()) {
                     selectedDate = dateVal;
                     selectedTime = timeVal;
-                    // Ya que seleccionó día y hora válidos, desplegar la cantidad de cargadores extras
                     helpersContainer.classList.remove('hidden');
                 } else {
                     selectedDate = null;
@@ -766,7 +859,6 @@
             } else {
                 helpersContainer.classList.add('hidden');
             }
-
             calculateQuote();
         }
 
@@ -786,18 +878,69 @@
             document.getElementById('distanceValue').innerText = distance;
             document.getElementById('summaryVehicleName').innerText = rule.name;
 
-            let basePrice = 0;
-            let serviceFee = 0;
+            const coverageRow = document.getElementById('summaryCoverageRow');
+            const distanceRow = document.getElementById('summaryDistanceRow');
             const serviceRow = document.getElementById('summaryServiceRow');
             const scheduleRow = document.getElementById('summaryScheduleRow');
+            const helpersRow = document.getElementById('summaryHelpersRow');
 
+            let basePrice = 0;
+            let serviceFee = 0;
+            let extraPrice = 0;
+            let helpersPrice = 0;
+
+            // CASO 1: Moto o Carro (Siempre por Distancia)
             if (selectedVehicle === 'moto' || selectedVehicle === 'carro') {
-                basePrice = rule.basePrice;
+                coverageRow.classList.add('hidden');
                 serviceRow.classList.add('hidden');
                 scheduleRow.classList.add('hidden');
-            } else if (selectedVehicle === 'camioneta' || selectedVehicle === 'camion') {
+                distanceRow.classList.remove('hidden');
+
+                document.getElementById('summaryBaseLabel').innerText = 'Precio Base (hasta 7 km):';
+                basePrice = rule.basePrice;
+
+                let extraKm = 0;
+                if (distance > rule.baseKm) {
+                    extraKm = distance - rule.baseKm;
+                    extraPrice = extraKm * rule.extraKmRate;
+                }
+                document.getElementById('summaryExtraKm').innerText = extraKm;
+                document.getElementById('summaryExtraPrice').innerText = `$${extraPrice.toLocaleString('es-MX')} MXN`;
+                helpersRow.classList.add('hidden');
+            }
+            // CASO 2: Camioneta o Camión LOCAL (Por tiempo)
+            else if (selectedCoverage === 'local') {
+                coverageRow.classList.remove('hidden');
+                document.getElementById('summaryCoverageText').innerText = 'Local (Por Tiempo)';
+                distanceRow.classList.add('hidden');
+                serviceRow.classList.add('hidden');
+                scheduleRow.classList.add('hidden');
+
+                const blocks = parseInt(document.getElementById('timeBlocksSelect').value) || 1;
+                basePrice = blocks * 312;
+                document.getElementById('summaryBaseLabel').innerText = `Renta Renta x Tiempo (${blocks * 30} min):`;
+
+                if (extraHelpers > 0) {
+                    // $200 MXN por hora por ayudante ($100 por cada fracción de 30 min)
+                    const hours = blocks / 2;
+                    helpersPrice = extraHelpers * (hours * 200);
+                    document.getElementById('summaryHelpersQty').innerText = extraHelpers;
+                    document.getElementById('summaryHelpersPrice').innerText = `$${helpersPrice.toLocaleString('es-MX')} MXN`;
+                    helpersRow.classList.remove('hidden');
+                } else {
+                    helpersRow.classList.add('hidden');
+                }
+            }
+            // CASO 3: Camioneta o Camión FORÁNEO (Por distancia y modalidad)
+            else if (selectedCoverage === 'foraneo') {
+                coverageRow.classList.remove('hidden');
+                document.getElementById('summaryCoverageText').innerText = 'Foráneo (Por Ruta)';
+                distanceRow.classList.remove('hidden');
+
+                document.getElementById('summaryBaseLabel').innerText = 'Precio Base (hasta 7 km):';
+
                 if (selectedServiceType) {
-                    basePrice = rule.prices.regular; // Base regular
+                    basePrice = rule.prices.regular;
                     if (selectedServiceType === 'prioritario') {
                         serviceFee = rule.prices.prioritario - rule.prices.regular;
                     }
@@ -816,30 +959,26 @@
                     serviceRow.classList.add('hidden');
                     scheduleRow.classList.add('hidden');
                 }
+
+                let extraKm = 0;
+                if (distance > rule.baseKm) {
+                    extraKm = distance - rule.baseKm;
+                    extraPrice = extraKm * rule.extraKmRate;
+                }
+                document.getElementById('summaryExtraKm').innerText = extraKm;
+                document.getElementById('summaryExtraPrice').innerText = `$${extraPrice.toLocaleString('es-MX')} MXN`;
+
+                if (rule.allowsHelpers && extraHelpers > 0 && selectedServiceType) {
+                    helpersPrice = extraHelpers * 300;
+                    document.getElementById('summaryHelpersQty').innerText = extraHelpers;
+                    document.getElementById('summaryHelpersPrice').innerText = `$${helpersPrice.toLocaleString('es-MX')} MXN`;
+                    helpersRow.classList.remove('hidden');
+                } else {
+                    helpersRow.classList.add('hidden');
+                }
             }
 
             document.getElementById('summaryBasePrice').innerText = `$${basePrice.toLocaleString('es-MX')} MXN`;
-
-            let extraKm = 0;
-            let extraPrice = 0;
-            if (distance > rule.baseKm) {
-                extraKm = distance - rule.baseKm;
-                extraPrice = extraKm * rule.extraKmRate;
-            }
-            document.getElementById('summaryExtraKm').innerText = extraKm;
-            document.getElementById('summaryExtraPrice').innerText = `$${extraPrice.toLocaleString('es-MX')} MXN`;
-
-            let helpersPrice = 0;
-            const helpersRow = document.getElementById('summaryHelpersRow');
-            if (rule.allowsHelpers && extraHelpers > 0 && selectedServiceType) {
-                helpersPrice = extraHelpers * 300;
-                document.getElementById('summaryHelpersQty').innerText = extraHelpers;
-                document.getElementById('summaryHelpersPrice').innerText = `$${helpersPrice.toLocaleString('es-MX')} MXN`;
-                helpersRow.classList.remove('hidden');
-            } else {
-                helpersRow.classList.add('hidden');
-            }
-
             const totalPrice = basePrice + serviceFee + extraPrice + helpersPrice;
             document.getElementById('summaryTotalPrice').innerText = `$${totalPrice.toLocaleString('es-MX')} MXN`;
         }
@@ -854,14 +993,21 @@
                 showMessage('Vehículo Requerido', 'Por favor selecciona un tipo de vehículo.', 'error');
                 return;
             }
-            if ((selectedVehicle === 'camioneta' || selectedVehicle === 'camion')) {
-                if (!selectedServiceType) {
-                    showMessage('Modalidad Requerida', 'Por favor selecciona la modalidad de servicio (Regular o Prioritario).', 'error');
+
+            if (selectedVehicle === 'camioneta' || selectedVehicle === 'camion') {
+                if (!selectedCoverage) {
+                    showMessage('Ámbito Requerido', 'Por favor selecciona si tu servicio es Local o Foráneo.', 'error');
                     return;
                 }
-                if (selectedServiceType === 'regular' && (!selectedDate || !selectedTime)) {
-                    showMessage('Fecha y Hora Requeridas', 'Por favor selecciona el día y la hora para agendar tu servicio regular (mínimo 3 horas de anticipación).', 'error');
-                    return;
+                if (selectedCoverage === 'foraneo') {
+                    if (!selectedServiceType) {
+                        showMessage('Modalidad Requerida', 'Por favor selecciona la modalidad del servicio (Regular o Prioritario).', 'error');
+                        return;
+                    }
+                    if (selectedServiceType === 'regular' && (!selectedDate || !selectedTime)) {
+                        showMessage('Fecha y Hora Requeridas', 'Por favor selecciona el día y la hora para agendar tu servicio regular.', 'error');
+                        return;
+                    }
                 }
             }
 
@@ -869,30 +1015,59 @@
             const destination = document.getElementById('destinationInput').value.trim() || 'No especificado';
             const distance = document.getElementById('distanceRange').value;
             const rule = fleetRules[selectedVehicle];
-            
-            let basePrice = (selectedVehicle === 'moto' || selectedVehicle === 'carro') ? rule.basePrice : rule.prices.regular;
-            let serviceFee = (selectedVehicle === 'camioneta' || selectedVehicle === 'camion') && selectedServiceType === 'prioritario' ? (rule.prices.prioritario - rule.prices.regular) : 0;
-            let extraKm = distance > rule.baseKm ? distance - rule.baseKm : 0;
-            let extraPrice = extraKm * rule.extraKmRate;
-            let helpersPrice = (rule.allowsHelpers && extraHelpers > 0) ? extraHelpers * 300 : 0;
-            let totalPrice = basePrice + serviceFee + extraPrice + helpersPrice;
 
-            let scheduleInfo = '';
-            if (selectedServiceType === 'regular' && selectedDate && selectedTime) {
-                scheduleInfo = `📅 *Programado para:* ${selectedDate} a las ${selectedTime} hrs%0A`;
+            let message = `¡Hola! 👋 Soy *${currentUser.name}* (${currentUser.userType}). Me gustaría solicitar un servicio con *UINGO*:%0A%0A` +
+                `🚗 *Vehículo:* ${rule.name}%0A`;
+
+            if (selectedVehicle === 'camioneta' || selectedVehicle === 'camion') {
+                if (selectedCoverage === 'local') {
+                    const blocks = parseInt(document.getElementById('timeBlocksSelect').value) || 1;
+                    const mins = blocks * 30;
+                    const hours = blocks / 2;
+                    const helpersCost = extraHelpers * (hours * 200);
+                    const baseCost = blocks * 312;
+                    const totalCost = baseCost + helpersCost;
+
+                    message += `📍 *Tipo de Servicio:* LOCAL (Por Tiempo)%0A` +
+                        `⏱️ *Tiempo Solicitado:* ${mins} min (${hours} hr)%0A` +
+                        `📍 *Ubicación Origen:* ${origin}%0A` +
+                        `🏁 *Ubicación Destino:* ${destination}%0A` +
+                        (extraHelpers > 0 ? `👥 *Cargadores Extras:* ${extraHelpers} ($${helpersCost} MXN)%0A` : '') +
+                        `💰 *Total Estimado:* $${totalCost.toLocaleString('es-MX')} MXN%0A%0A` +
+                        `⚠️ *Nota:* El tiempo inicia al llegar la unidad. Minuto excedente a $10.40 MXN ($104 / 10 min).%0A%0A` +
+                        `📞 *Teléfono:* ${currentUser.phone}`;
+                } else {
+                    let basePrice = rule.prices.regular;
+                    let serviceFee = selectedServiceType === 'prioritario' ? (rule.prices.prioritario - rule.prices.regular) : 0;
+                    let extraKm = distance > rule.baseKm ? distance - rule.baseKm : 0;
+                    let extraPrice = extraKm * rule.extraKmRate;
+                    let helpersPrice = extraHelpers * 300;
+                    let totalPrice = basePrice + serviceFee + extraPrice + helpersPrice;
+                    let scheduleInfo = (selectedServiceType === 'regular' && selectedDate && selectedTime) ? `📅 *Programado:* ${selectedDate} a las ${selectedTime} hrs%0A` : '';
+
+                    message += `📍 *Tipo de Servicio:* FORÁNEO (Por Ruta)%0A` +
+                        `⚡ *Modalidad:* ${selectedServiceType.toUpperCase()}%0A` +
+                        scheduleInfo +
+                        `📍 *Origen:* ${origin}%0A` +
+                        `🏁 *Destino:* ${destination}%0A` +
+                        `🛣️ *Distancia:* ${distance} km%0A` +
+                        (extraHelpers > 0 ? `👥 *Cargadores Extras:* ${extraHelpers} ($${helpersPrice} MXN)%0A` : '') +
+                        `💰 *Total Estimado:* $${totalPrice.toLocaleString('es-MX')} MXN%0A%0A` +
+                        `📞 *Teléfono:* ${currentUser.phone}`;
+                }
+            } else {
+                let basePrice = rule.basePrice;
+                let extraKm = distance > rule.baseKm ? distance - rule.baseKm : 0;
+                let extraPrice = extraKm * rule.extraKmRate;
+                let totalPrice = basePrice + extraPrice;
+
+                message += `📍 *Origen:* ${origin}%0A` +
+                    `🏁 *Destino:* ${destination}%0A` +
+                    `🛣️ *Distancia:* ${distance} km%0A` +
+                    `💰 *Total Estimado:* $${totalPrice.toLocaleString('es-MX')} MXN%0A%0A` +
+                    `📞 *Teléfono:* ${currentUser.phone}`;
             }
 
-            const message = `¡Hola! 👋 Soy *${currentUser.name}* (${currentUser.userType}). Me gustaría solicitar un servicio con *UINGO*:%0A%0A` +
-                `🚗 *Vehículo:* ${rule.name}%0A` +
-                ((selectedVehicle === 'camioneta' || selectedVehicle === 'camion') ? `⚡ *Modalidad:* ${selectedServiceType.toUpperCase()}%0A` : '') +
-                scheduleInfo +
-                `📍 *Origen:* ${origin}%0A` +
-                `🏁 *Destino:* ${destination}%0A` +
-                `🛣️ *Distancia:* ${distance} km%0A` +
-                (extraHelpers > 0 ? `👥 *Cargadores:* ${extraHelpers} ($${helpersPrice} MXN)%0A` : '') +
-                `💰 *Total Estimado:* $${totalPrice.toLocaleString('es-MX')} MXN%0A%0A` +
-                `📞 *Teléfono de contacto:* ${currentUser.phone}`;
-            
             const whatsappUrl = `https://wa.me/523122416157?text=${message}`;
             window.open(whatsappUrl, '_blank');
         }
@@ -903,6 +1078,7 @@
             document.getElementById('distanceRange').value = 5;
             document.getElementById('distanceValue').innerText = '5';
             extraHelpers = 0;
+            selectedCoverage = null;
             selectedServiceType = null;
             selectedDate = null;
             selectedTime = null;
@@ -920,10 +1096,8 @@
             const modalIcon = document.getElementById('modalIcon');
             const modalTitle = document.getElementById('modalTitle');
             const modalMessage = document.getElementById('modalMessage');
-
             modalTitle.innerText = title;
             modalMessage.innerText = message;
-
             if (type === 'success') {
                 modalIcon.className = 'w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-xl';
                 modalIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
@@ -931,7 +1105,6 @@
                 modalIcon.className = 'w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3 text-xl';
                 modalIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
             }
-
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
@@ -969,12 +1142,10 @@
         async function calculateRouteFromAddresses() {
             let originRaw = document.getElementById('originInput').value.trim().toLowerCase();
             let destRaw = document.getElementById('destinationInput').value.trim().toLowerCase();
-
             if (!originRaw || !destRaw) {
                 alert("Por favor ingresa tanto el punto de origen como el de destino.");
                 return;
             }
-
             const regionalHubs = {
                 'colima': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
                 'colima centro': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
@@ -986,12 +1157,10 @@
                 'villa de álvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' },
                 'villa de alvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' }
             };
-
             const findHub = (text) => {
                 const match = Object.keys(regionalHubs).find(key => text.includes(key));
                 return match ? regionalHubs[match] : null;
             };
-
             const originHub = findHub(originRaw);
             const destHub = findHub(destRaw);
             
@@ -1010,11 +1179,9 @@
                         if (window.routeLayer) map.removeLayer(window.routeLayer);
                         if (window.markerOrigin) map.removeLayer(window.markerOrigin);
                         if (window.markerDest) map.removeLayer(window.markerDest);
-
                         window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
                             style: { color: '#0284c7', weight: 5, opacity: 0.85 }
                         }).addTo(map);
-
                         window.markerOrigin = L.marker([originHub.lat, originHub.lon]).addTo(map).bindPopup(originHub.name).openPopup();
                         window.markerDest = L.marker([destHub.lat, destHub.lon]).addTo(map).bindPopup(destHub.name);
                         map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
@@ -1024,33 +1191,25 @@
                     console.warn("Ruta rápida omitida, usando respaldo.");
                 }
             }
-
             showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
-
             try {
                 const cleanOrigin = `${originRaw}, Colima, Mexico`;
                 const cleanDest = `${destRaw}, Colima, Mexico`;
-
                 const [resOrigin, resDest] = await Promise.all([
                     fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal }),
                     fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal })
                 ]);
-
                 const dataOrigin = await resOrigin.json();
                 const dataDest = await resDest.json();
-
                 if (!dataOrigin.length || !dataDest.length) throw new Error("No localizado");
-
                 const lat1 = parseFloat(dataOrigin[0].lat), lon1 = parseFloat(dataOrigin[0].lon);
                 const lat2 = parseFloat(dataDest[0].lat), lon2 = parseFloat(dataDest[0].lon);
-
                 const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`, { signal: controller.signal });
                 const dataRoute = await resRoute.json();
                 clearTimeout(timeoutId);
                 closeModal();
-
                 if (dataRoute.routes && dataRoute.routes.length > 0) {
                     const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
                     const distanceRange = document.getElementById('distanceRange');
@@ -1058,15 +1217,12 @@
                         distanceRange.value = distanceKm;
                         calculateQuote();
                     }
-
                     if (window.routeLayer) map.removeLayer(window.routeLayer);
                     if (window.markerOrigin) map.removeLayer(window.markerOrigin);
                     if (window.markerDest) map.removeLayer(window.markerDest);
-
                     window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, { style: { color: '#0284c7', weight: 5, opacity: 0.85 } }).addTo(map);
                     window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("Origen").openPopup();
                     window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("Destino");
-
                     map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
                 } else {
                     throw new Error("Ruta no trazable");
