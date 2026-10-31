@@ -301,7 +301,7 @@
                             </div>
                             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-baseline">
                                 <span class="text-xs text-slate-400">Local / Foráneo</span>
-                                <span class="text-lg font-bold text-blue-600">Desde $312 MXN</span>
+                                <span class="text-lg font-bold text-blue-600">Desde $936 MXN</span>
                             </div>
                         </div>
                     </div>
@@ -324,7 +324,7 @@
                                 <span class="text-xs bg-emerald-100 text-emerald-700 font-semibold px-2 py-0.5 rounded">Renta X Hora</span>
                             </div>
                             <p class="text-xs text-slate-500 mb-2">Cobro por horas o fracciones de 30 min. Incluye chofer auxiliador.</p>
-                            <span class="text-sm font-bold text-brand-600">Desde $312 MXN (30 min)</span>
+                            <span id="localStartingPriceLabel" class="text-sm font-bold text-brand-600">Desde $312 MXN (30 min)</span>
                         </div>
                         <!-- Opción Foráneo -->
                         <div onclick="selectCoverageType('foraneo')" id="cov-foraneo" class="cursor-pointer border-2 border-slate-200 rounded-xl p-4 hover:border-brand-500 transition-all">
@@ -344,27 +344,20 @@
                         <span class="w-7 h-7 bg-brand-100 text-brand-600 font-bold rounded-full flex items-center justify-center text-xs">4</span>
                         <div>
                             <h3 class="text-lg font-bold text-slate-900">Tiempo Solicitado para Unidad</h3>
-                            <p class="text-xs text-slate-500">Bloques de 30 minutos ($312 MXN c/u). Incluye chofer auxiliador.</p>
+                            <p id="localTimeSubtitle" class="text-xs text-slate-500">Bloques de 30 minutos. Incluye chofer auxiliador.</p>
                         </div>
                     </div>
 
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 space-y-1">
                         <p class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-clock text-amber-600"></i> Importante sobre el tiempo:</p>
                         <p>⏱️ El tiempo comienza a correr exactamente <strong>desde que llega la unidad a la ubicación</strong>.</p>
-                        <p>⏳ El tiempo base inicial contratado es de 30 min. Si el servicio se pasa, se cobró proporcionalmente a razón de <strong>$312 por cada 30 min ($10.40 MXN / min)</strong>. (Ejemplo: 10 min extras = $104 MXN).</p>
+                        <p id="overtimeNotice">⏳ El tiempo base inicial contratado es de 30 min. Si el servicio se pasa, se cobra proporcionalmente (Ej. 10 min extras = proporcional a la fracción).</p>
                     </div>
 
                     <div>
                         <label for="timeBlocksSelect" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Selecciona la duración estimada:</label>
                         <select id="timeBlocksSelect" onchange="calculateQuote()" class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-semibold outline-none bg-white">
-                            <option value="1">30 minutos — $312 MXN</option>
-                            <option value="2">1 Hora (60 min) — $624 MXN</option>
-                            <option value="3">1 Hora 30 min (90 min) — $936 MXN</option>
-                            <option value="4">2 Horas (120 min) — $1,248 MXN</option>
-                            <option value="5">2 Horas 30 min — $1,560 MXN</option>
-                            <option value="6">3 Horas — $1,872 MXN</option>
-                            <option value="8">4 Horas — $2,496 MXN</option>
-                            <option value="10">5 Horas — $3,120 MXN</option>
+                            <!-- Opciones actualizadas dinámicamente o por defecto camioneta -->
                         </select>
                     </div>
                 </div>
@@ -550,6 +543,7 @@
                 baseKm: 7, 
                 extraKmRate: 29, 
                 allowsHelpers: true,
+                localRatePer30Min: 312,
                 prices: { regular: 476, prioritario: 626 }
             },
             camion: { 
@@ -557,6 +551,7 @@
                 baseKm: 7, 
                 extraKmRate: 51, 
                 allowsHelpers: true,
+                localRatePer30Min: 936, // Modificado a partir de $936 por media hora
                 prices: { regular: 1299, prioritario: 1642.12 }
             }
         };
@@ -742,6 +737,10 @@
 
             if (type === 'camioneta' || type === 'camion') {
                 coverageContainer.classList.remove('hidden');
+                // Actualizar textos informativos de la tarifa local base según el vehículo seleccionado
+                const rate = fleetRules[type].localRatePer30Min;
+                document.getElementById('localStartingPriceLabel').innerText = `Desde $${rate.toLocaleString('es-MX')} MXN (30 min)`;
+                
                 // Precios dinámicos para modalidad foránea
                 document.getElementById('price-regular').innerText = `$${fleetRules[type].prices.regular} MXN`;
                 document.getElementById('price-prioritario').innerText = `$${fleetRules[type].prices.prioritario} MXN`;
@@ -776,6 +775,9 @@
                 scheduleContainer.classList.add('hidden');
                 helpersContainer.classList.remove('hidden');
                 if (helpersNotice) helpersNotice.innerText = 'Ayudantes adicionales ($200 MXN cada uno por hora).';
+                
+                // Rellenar select de bloques de tiempo con base en la tarifa del vehículo actual
+                populateTimeBlocks();
             } else {
                 // Foráneo
                 localTimeContainer.classList.add('hidden');
@@ -785,6 +787,31 @@
             }
 
             calculateQuote();
+        }
+
+        function populateTimeBlocks() {
+            const select = document.getElementById('timeBlocksSelect');
+            if (!select || !selectedVehicle) return;
+            const rate30 = fleetRules[selectedVehicle].localRatePer30Min;
+            const perMin = rate30 / 30;
+
+            select.innerHTML = `
+                <option value="1">30 minutos — $${rate30.toLocaleString('es-MX')} MXN</option>
+                <option value="2">1 Hora (60 min) — $${(rate30 * 2).toLocaleString('es-MX')} MXN</option>
+                <option value="3">1 Hora 30 min (90 min) — $${(rate30 * 3).toLocaleString('es-MX')} MXN</option>
+                <option value="4">2 Horas (120 min) — $${(rate30 * 4).toLocaleString('es-MX')} MXN</option>
+                <option value="5">2 Horas 30 min — $${(rate30 * 5).toLocaleString('es-MX')} MXN</option>
+                <option value="6">3 Horas — $${(rate30 * 6).toLocaleString('es-MX')} MXN</option>
+                <option value="8">4 Horas — $${(rate30 * 8).toLocaleString('es-MX')} MXN</option>
+                <option value="10">5 Horas — $${(rate30 * 10).toLocaleString('es-MX')} MXN</option>
+            `;
+
+            // Actualizar nota de excedente proporcional
+            const overtimeNotice = document.getElementById('overtimeNotice');
+            if (overtimeNotice) {
+                const tenMinExtra = (perMin * 10).toFixed(2);
+                overtimeNotice.innerHTML = `⏳ El tiempo base inicial contratado es de 30 min. Si el servicio se pasa, se cobra proporcionalmente a razón de <strong>$${rate30} por cada 30 min ($${perMin.toFixed(2)} MXN / min)</strong>. (Ejemplo: 10 min extras = $${tenMinExtra} MXN).`;
+            }
         }
 
         function selectServiceType(type) {
@@ -917,8 +944,9 @@
                 scheduleRow.classList.add('hidden');
 
                 const blocks = parseInt(document.getElementById('timeBlocksSelect').value) || 1;
-                basePrice = blocks * 312;
-                document.getElementById('summaryBaseLabel').innerText = `Renta Renta x Tiempo (${blocks * 30} min):`;
+                const rate30 = rule.localRatePer30Min;
+                basePrice = blocks * rate30;
+                document.getElementById('summaryBaseLabel').innerText = `Renta x Tiempo (${blocks * 30} min):`;
 
                 if (extraHelpers > 0) {
                     // $200 MXN por hora por ayudante ($100 por cada fracción de 30 min)
@@ -1025,8 +1053,10 @@
                     const mins = blocks * 30;
                     const hours = blocks / 2;
                     const helpersCost = extraHelpers * (hours * 200);
-                    const baseCost = blocks * 312;
+                    const baseCost = blocks * rule.localRatePer30Min;
                     const totalCost = baseCost + helpersCost;
+                    const perMin = rule.localRatePer30Min / 30;
+                    const tenMinExtra = (perMin * 10).toFixed(2);
 
                     message += `📍 *Tipo de Servicio:* LOCAL (Por Tiempo)%0A` +
                         `⏱️ *Tiempo Solicitado:* ${mins} min (${hours} hr)%0A` +
@@ -1034,7 +1064,7 @@
                         `🏁 *Ubicación Destino:* ${destination}%0A` +
                         (extraHelpers > 0 ? `👥 *Cargadores Extras:* ${extraHelpers} ($${helpersCost} MXN)%0A` : '') +
                         `💰 *Total Estimado:* $${totalCost.toLocaleString('es-MX')} MXN%0A%0A` +
-                        `⚠️ *Nota:* El tiempo inicia al llegar la unidad. Minuto excedente a $10.40 MXN ($104 / 10 min).%0A%0A` +
+                        `⚠️ *Nota:* El tiempo inicia al llegar la unidad. Minuto excedente a $${perMin.toFixed(2)} MXN ($${tenMinExtra} / 10 min).%0A%0A` +
                         `📞 *Teléfono:* ${currentUser.phone}`;
                 } else {
                     let basePrice = rule.prices.regular;
