@@ -1186,5 +1186,19 @@
                     if (window.routeLayer) map.removeLayer(window.routeLayer);
                     if (window.markerOrigin) map.removeLayer(window.markerOrigin);
                     if (window.markerDest) map.removeLayer(window.markerDest);
-                    window
-
+                    window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, { style: { color: '#0bb9fe', weight: 5, opacity: 0.85 } }).addTo(map);
+                    window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("Origen").openPopup();
+                    window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("Destino");
+                    map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
+                } else {
+                    throw new Error("Ruta no trazable");
+                }
+            } catch (error) {
+                clearTimeout(timeoutId);
+                closeModal();
+                alert("Nota: Pon la distancia aproximada manualmente en la barra deslizadora de abajo.");
+            }
+        }
+    </script>                        
+</body>
+</html>
