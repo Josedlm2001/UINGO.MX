@@ -201,34 +201,34 @@
                         <h3 class="text-lg font-extrabold text-white">Ubicaciones y Distancia de Ruta</h3>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
-                        <!-- Origen optimizado sin autocorrector molesto -->
+                        <!-- Origen con Autocompletado Gratuito -->
                         <div class="relative">
                             <label for="originInput" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Punto de Recogida (Origen)</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-emerald-400">
                                     <i class="fa-solid fa-location-dot text-sm"></i>
                                 </span>
-                                <input type="text" id="originInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Negocio, calle o colonia..." class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner" oninput="searchPhotonSuggestions(this.value, 'origin')">
+                                <input type="text" id="originInput" autocomplete="off" placeholder="Ej. Av. Constitución, Colima" class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner" oninput="searchAddressSuggestions(this.value, 'origin')">
                             </div>
-                            <!-- Contenedor Flotante de Resultados -->
+                            <!-- Contenedor Flotante de Sugerencias -->
                             <div id="originSuggestions" class="absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto hidden"></div>
                         </div>
 
-                        <!-- Destino optimizado sin autocorrector molesto -->
+                        <!-- Destino con Autocompletado Gratuito -->
                         <div class="relative">
                             <label for="destinationInput" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Punto de Entrega (Destino)</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-rose-400">
                                     <i class="fa-solid fa-flag-checkered text-sm"></i>
                                 </span>
-                                <input type="text" id="destinationInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Negocio, calle o colonia..." class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner" oninput="searchPhotonSuggestions(this.value, 'destination')">
+                                <input type="text" id="destinationInput" autocomplete="off" placeholder="Ej. Centro, Villa de Álvarez" class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner" oninput="searchAddressSuggestions(this.value, 'destination')">
                             </div>
-                            <!-- Contenedor Flotante de Resultados -->
+                            <!-- Contenedor Flotante de Sugerencias -->
                             <div id="destinationSuggestions" class="absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto hidden"></div>
                         </div>
                     </div>
 
-                    <!-- Botón manual -->
+                    <!-- Botón manual por si se requiere -->
                     <button type="button" onclick="calculateRouteWithCoords()" class="w-full mb-5 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-md border border-slate-700">
                         <i class="fa-solid fa-map-location-dot text-uingo-cyan"></i>
                         <span>Actualizar Ruta y Distancia en el Mapa</span>
@@ -527,7 +527,7 @@
         </div>
     </footer>
 
-    <!-- LÓGICA CON PHOTON (API GRATUITA DE LUGARES Y ESTABLECIMIENTOS) -->
+    <!-- LÓGICA DE JAVASCRIPT UNIFICADA CON AUTOCOMPLETADO GRATUITO (NOMINATIM) -->
     <script>
         let currentUser = null;
         let selectedVehicle = null;
@@ -537,6 +537,7 @@
         let selectedDate = null;
         let selectedTime = null;
 
+        // Variables de Coordenadas Precisas
         let selectedOriginCoords = null;
         let selectedDestCoords = null;
         let searchTimeout = null;
@@ -1123,8 +1124,8 @@
             }).addTo(map);
         }
 
-        // BÚSQUEDA INTELIGENTE CON PHOTON (OPENSTREETMAP POI) - GRATIS Y SIN LÍMITES
-        function searchPhotonSuggestions(query, type) {
+        // AUTOCOMPLETADO GRATUITO USANDO NOMINATIM (OPENSTREETMAP) SIN TARJETA NI BLOQUEOS
+        function searchAddressSuggestions(query, type) {
             clearTimeout(searchTimeout);
             const containerId = type === 'origin' ? 'originSuggestions' : 'destinationSuggestions';
             const container = document.getElementById(containerId);
@@ -1137,35 +1138,25 @@
 
             searchTimeout = setTimeout(async () => {
                 try {
-                    // Photon busca comercios, nombres de lugares y direcciones priorizando Colima / México
-                    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=6&lat=19.2433&lon=-103.7247&lang=es`;
-                    const response = await fetch(url);
+                    // Busca negocios y direcciones reales enfocados en Colima y México sin costo
+                    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&addressdetails=1&q=${encodeURIComponent(query + ", Colima, Mexico")}`;
+                    const response = await fetch(url, { headers: { 'User-Agent': 'UINGO-Logistica-App' } });
                     const data = await response.json();
 
                     container.innerHTML = '';
-                    if (data.features && data.features.length > 0) {
-                        data.features.forEach(feature => {
-                            const props = feature.properties;
-                            const coords = feature.geometry.coordinates; // [lon, lat]
-                            
-                            const name = props.name || '';
-                            const street = props.street || '';
-                            const city = props.city || props.county || '';
-                            const state = props.state || '';
-                            
-                            const displayName = `${name ? name + ' — ' : ''}${street ? street : ''} ${city ? ', ' + city : ''} ${state ? ', ' + state : ''}`;
-
+                    if (data.length > 0) {
+                        data.forEach(item => {
                             const div = document.createElement('div');
-                            div.className = 'p-3 text-xs text-slate-300 hover:bg-uingo-blue/20 hover:text-white cursor-pointer border-b border-slate-800 transition';
-                            div.innerHTML = `<i class="fa-solid fa-map-pin text-uingo-cyan mr-2"></i> <strong>${name || 'Ubicación'}</strong> <span class="text-slate-400 block text-[11px]">${street}, ${city}</span>`;
+                            div.className = 'p-3 text-xs text-slate-300 hover:bg-uingo-blue/20 hover:text-white cursor-pointer border-b border-slate-800 truncate transition';
+                            div.innerHTML = `<i class="fa-solid fa-map-pin text-uingo-cyan mr-2"></i> ${item.display_name}`;
                             
                             div.onclick = () => {
-                                document.getElementById(type === 'origin' ? 'originInput' : 'destinationInput').value = name ? `${name}, ${street}` : displayName;
+                                document.getElementById(type === 'origin' ? 'originInput' : 'destinationInput').value = item.display_name;
                                 
                                 if (type === 'origin') {
-                                    selectedOriginCoords = { lat: coords[1], lon: coords[0], name: displayName };
+                                    selectedOriginCoords = { lat: parseFloat(item.lat), lon: parseFloat(item.lon), name: item.display_name };
                                 } else {
-                                    selectedDestCoords = { lat: coords[1], lon: coords[0], name: displayName };
+                                    selectedDestCoords = { lat: parseFloat(item.lat), lon: parseFloat(item.lon), name: item.display_name };
                                 }
 
                                 container.classList.add('hidden');
@@ -1181,11 +1172,12 @@
                         container.classList.add('hidden');
                     }
                 } catch (e) {
-                    console.error("Error buscando en Photon:", e);
+                    console.error("Error buscando sugerencias:", e);
                 }
             }, 300);
         }
 
+        // Cerrar listas flotantes al hacer clic fuera
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#originInput') && !e.target.closest('#originSuggestions')) {
                 document.getElementById('originSuggestions').classList.add('hidden');
@@ -1195,6 +1187,7 @@
             }
         });
 
+        // Trazar ruta exacta usando OSRM (Gratuito)
         async function calculateRouteWithCoords() {
             if (!selectedOriginCoords || !selectedDestCoords) return;
 
