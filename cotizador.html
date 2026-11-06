@@ -186,7 +186,6 @@
                 </button>
             </form>
         </section>
-
         <!-- VISTA 2: COTIZADOR DE FLETES -->
         <section id="calculatorSection" class="page-view hidden-view grid grid-cols-1 lg:grid-cols-12 gap-8">
             
@@ -194,35 +193,41 @@
             <div class="lg:col-span-8 space-y-6">
                 
                <!-- Paso 1: Ubicaciones y Distancia -->
-               <div class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800">
+               <div class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 relative">
                     <div class="flex items-center space-x-3 mb-5">
                         <span class="w-8 h-8 bg-uingo-blue/20 text-uingo-cyan font-black rounded-xl flex items-center justify-center text-xs border border-uingo-blue/30">1</span>
                         <h3 class="text-lg font-extrabold text-white">Ubicaciones y Distancia de Ruta</h3>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        <div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
+                        <!-- Origen con Autocompletado -->
+                        <div class="relative">
                             <label for="originInput" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Punto de Recogida (Origen)</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-emerald-400">
                                     <i class="fa-solid fa-location-dot text-sm"></i>
                                 </span>
-                                <input type="text" id="originInput" placeholder="Ej. Av. Constitución #123, Colima" class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner">
+                                <input type="text" id="originInput" autocomplete="off" placeholder="Ej. Av. Constitución #123, Colima" class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner" oninput="searchAddressSuggestions(this.value, 'origin')">
                             </div>
+                            <!-- Contenedor de Sugerencias Flotante -->
+                            <div id="originSuggestions" class="absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto hidden"></div>
                         </div>
-                        <div>
+                        <!-- Destino con Autocompletado -->
+                        <div class="relative">
                             <label for="destinationInput" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Punto de Entrega (Destino)</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-rose-400">
                                     <i class="fa-solid fa-flag-checkered text-sm"></i>
                                 </span>
-                                <input type="text" id="destinationInput" placeholder="Ej. Centro, Villa de Álvarez" class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner">
+                                <input type="text" id="destinationInput" autocomplete="off" placeholder="Ej. Centro, Villa de Álvarez" class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner" oninput="searchAddressSuggestions(this.value, 'destination')">
                             </div>
+                            <!-- Contenedor de Sugerencias Flotante -->
+                            <div id="destinationSuggestions" class="absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto hidden"></div>
                         </div>
                     </div>
                     <!-- Botón para calcular ruta automática en el mapa -->
                     <button type="button" onclick="calculateRouteFromAddresses()" class="w-full mb-5 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-md border border-slate-700">
                         <i class="fa-solid fa-map-location-dot text-uingo-cyan"></i>
-                        <span>Calcular Ruta y Distancia en el Mapa</span>
+                        <span>Actualizar Ruta y Distancia en el Mapa</span>
                     </button>
                     <!-- Contenedor Visual del Mapa -->
                     <div id="uingoMap" class="w-full h-64 rounded-2xl border border-slate-800 z-10 mb-5 shadow-inner"></div>
@@ -243,7 +248,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Paso 2: Selección de Vehículo -->
                 <div class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800">
                     <div class="flex items-center space-x-3 mb-5">
@@ -313,7 +317,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- TIPO DE SERVICIO (LOCAL / FORÁNEO) - SOLO CAMIONETA Y CAMIÓN -->
                 <div id="coverageContainer" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 mt-6 hidden transition-all">
                     <div class="flex items-center space-x-3 mb-5">
@@ -344,7 +347,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- CONFIGURACIÓN DE SERVICIO LOCAL (POR TIEMPO) -->
                 <div id="localTimeContainer" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 mt-6 hidden transition-all space-y-5">
                     <div class="flex items-center space-x-3 mb-2">
@@ -366,7 +368,6 @@
                         </select>
                     </div>
                 </div>
-
                 <!-- Modalidad de Servicio (Solo Foráneo) -->
                 <div id="serviceTypeContainer" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 mt-6 hidden transition-all">
                     <div class="flex items-center space-x-3 mb-5">
@@ -397,7 +398,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Selección de Día y Horario (Solo en modalidad REGULAR) -->
                 <div id="scheduleContainer" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 mt-6 hidden transition-all">
                     <div class="flex items-center space-x-3 mb-5">
@@ -418,7 +418,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Cargadores Extras -->
                 <div id="helpersContainer" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 mt-6 hidden transition-all">
                     <div class="flex items-center justify-between">
@@ -437,7 +436,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Columna Derecha: Tarjeta de Resumen (4 Col) -->
             <div class="lg:col-span-4">
                 <div class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-800 sticky top-24 space-y-5">
@@ -507,7 +505,6 @@
             </div>
         </section>
     </main>
-
     <!-- Modal de Notificaciones -->
     <div id="messageModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
         <div class="bg-slate-900 rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl border border-slate-800 transform scale-95 transition-transform duration-200" id="modalBox">
@@ -521,14 +518,12 @@
             </div>
         </div>
     </div>
-
     <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 py-6 mt-12 text-center text-xs text-slate-500">
         <div class="max-w-7xl mx-auto px-4">
             <p>© 2026 UINGO Logística. Todos los derechos reservados. Colima, México.</p>
         </div>
     </footer>
-
     <!-- LÓGICA DE JAVASCRIPT UNIFICADA -->
     <script>
         let currentUser = null;
@@ -538,6 +533,12 @@
         let extraHelpers = 0;
         let selectedDate = null;
         let selectedTime = null;
+
+        // Variables globales para coordenadas precisas de autocompletado
+        let selectedOriginCoords = null;
+        let selectedDestCoords = null;
+        let searchTimeout = null;
+
         const fleetRules = {
             moto: { name: 'Motocicleta', basePrice: 64, baseKm: 7, extraKmRate: 5.5, allowsHelpers: false },
             carro: { name: 'Automóvil', basePrice: 126.12, baseKm: 7, extraKmRate: 12.5, allowsHelpers: false },
@@ -554,10 +555,11 @@
                 baseKm: 7, 
                 extraKmRate: 51, 
                 allowsHelpers: true,
-                localRatePer30Min: 936, // Modificado a partir de $936 por media hora
+                localRatePer30Min: 936,
                 prices: { regular: 1299, prioritario: 1642.12 }
             }
         };
+
         window.onload = function() {
             setupMinDate();
             const savedProfile = localStorage.getItem('uingo_user_profile');
@@ -570,6 +572,7 @@
             }
             selectVehicle('moto');
         };
+
         function setupMinDate() {
             const dateInput = document.getElementById('scheduleDate');
             if (dateInput) {
@@ -580,6 +583,7 @@
                 dateInput.min = `${yyyy}-${mm}-${dd}`;
             }
         }
+
         function showProfileView() {
             document.getElementById('calculatorSection').classList.remove('active-view');
             document.getElementById('calculatorSection').classList.add('hidden-view');
@@ -587,6 +591,7 @@
             document.getElementById('profileSection').classList.add('active-view');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
         function showCalculatorView() {
             document.getElementById('profileSection').classList.remove('active-view');
             document.getElementById('profileSection').classList.add('hidden-view');
@@ -598,6 +603,7 @@
                 initMap();
             }, 200);
         }
+
         function checkHomeNavigation() {
             if (currentUser) {
                 showCalculatorView();
@@ -605,6 +611,7 @@
                 showProfileView();
             }
         }
+
         function updateTypeStyle() {
             const isParticular = document.querySelector('input[name="userType"][value="Particular"]').checked;
             const pLabel = document.getElementById('typeParticularLabel');
@@ -617,6 +624,7 @@
                 pLabel.classList.remove('border-uingo-blue', 'bg-uingo-blue/10');
             }
         }
+
         async function saveProfile(event) {
             event.preventDefault();
             const btn = document.getElementById('btnSubmitProfile');
@@ -655,6 +663,7 @@
                 btn.innerHTML = '<span>Guardar Perfil y Comenzar a Cotizar</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
             }
         }
+
         function displayUserBadge() {
             if (!currentUser) return;
             document.getElementById('badgeName').innerText = currentUser.name;
@@ -674,6 +683,7 @@
             }
             updateTypeStyle();
         }
+
         function logoutUser() {
             localStorage.removeItem('uingo_user_profile');
             currentUser = null;
@@ -684,6 +694,7 @@
             showProfileView();
             showMessage('Sesión Cerrada', 'Puedes registrar un nuevo perfil para continuar.', 'success');
         }
+
         function selectVehicle(type) {
             selectedVehicle = type;
             selectedCoverage = null;
@@ -708,7 +719,7 @@
             const serviceContainer = document.getElementById('serviceTypeContainer');
             const scheduleContainer = document.getElementById('scheduleContainer');
             const helpersContainer = document.getElementById('helpersContainer');
-            // Resetear vistas dependientes
+            
             coverageContainer.classList.add('hidden');
             localTimeContainer.classList.add('hidden');
             serviceContainer.classList.add('hidden');
@@ -720,18 +731,16 @@
             });
             if (type === 'camioneta' || type === 'camion') {
                 coverageContainer.classList.remove('hidden');
-                // Actualizar textos informativos de la tarifa local base según el vehículo seleccionado
                 const rate = fleetRules[type].localRatePer30Min;
                 document.getElementById('localStartingPriceLabel').innerText = `Desde $${rate.toLocaleString('es-MX')} MXN (30 min)`;
                 
-                // Precios dinámicos para modalidad foránea
                 document.getElementById('price-regular').innerText = `$${fleetRules[type].prices.regular} MXN`;
                 document.getElementById('price-prioritario').innerText = `$${fleetRules[type].prices.prioritario} MXN`;
             } else {
-                // Moto y carro funcionan directo por distancia
                 calculateQuote();
             }
         }
+
         function selectCoverageType(cov) {
             selectedCoverage = cov;
             selectedServiceType = null;
@@ -754,11 +763,8 @@
                 scheduleContainer.classList.add('hidden');
                 helpersContainer.classList.remove('hidden');
                 if (helpersNotice) helpersNotice.innerText = 'Ayudantes adicionales ($200 MXN cada uno por hora).';
-                
-                // Rellenar select de bloques de tiempo con base en la tarifa del vehículo actual
                 populateTimeBlocks();
             } else {
-                // Foráneo
                 localTimeContainer.classList.add('hidden');
                 serviceContainer.classList.remove('hidden');
                 helpersContainer.classList.add('hidden');
@@ -766,6 +772,7 @@
             }
             calculateQuote();
         }
+
         function populateTimeBlocks() {
             const select = document.getElementById('timeBlocksSelect');
             if (!select || !selectedVehicle) return;
@@ -781,13 +788,13 @@
                 <option value="8">4 Horas — $${(rate30 * 8).toLocaleString('es-MX')} MXN</option>
                 <option value="10">5 Horas — $${(rate30 * 10).toLocaleString('es-MX')} MXN</option>
             `;
-            // Actualizar nota de excedente proporcional
             const overtimeNotice = document.getElementById('overtimeNotice');
             if (overtimeNotice) {
                 const tenMinExtra = (perMin * 10).toFixed(2);
                 overtimeNotice.innerHTML = `⏳ El tiempo base inicial contratado es de 30 min. Si el servicio se pasa, se cobra proporcionalmente a razón de <strong>$${rate30} por cada 30 min ($${perMin.toFixed(2)} MXN / min)</strong>. (Ejemplo: 10 min extras = $${tenMinExtra} MXN).`;
             }
         }
+
         function selectServiceType(type) {
             selectedServiceType = type;
             selectedDate = null;
@@ -820,6 +827,7 @@
             }
             calculateQuote();
         }
+
         function validateScheduleTime() {
             const dateInput = document.getElementById('scheduleDate').value;
             const timeInput = document.getElementById('scheduleTime').value;
@@ -835,6 +843,7 @@
             }
             return true;
         }
+
         function onScheduleChange() {
             const dateVal = document.getElementById('scheduleDate').value;
             const timeVal = document.getElementById('scheduleTime').value;
@@ -854,6 +863,7 @@
             }
             calculateQuote();
         }
+
         function changeHelpers(delta) {
             if (!selectedVehicle || !fleetRules[selectedVehicle].allowsHelpers) return;
             extraHelpers += delta;
@@ -862,6 +872,7 @@
             document.getElementById('helpersCount').innerText = extraHelpers;
             calculateQuote();
         }
+
         function calculateQuote() {
             if (!selectedVehicle) return;
             const rule = fleetRules[selectedVehicle];
@@ -877,7 +888,7 @@
             let serviceFee = 0;
             let extraPrice = 0;
             let helpersPrice = 0;
-            // CASO 1: Moto o Carro (Siempre por Distancia)
+
             if (selectedVehicle === 'moto' || selectedVehicle === 'carro') {
                 coverageRow.classList.add('hidden');
                 serviceRow.classList.add('hidden');
@@ -894,7 +905,6 @@
                 document.getElementById('summaryExtraPrice').innerText = `$${extraPrice.toLocaleString('es-MX')} MXN`;
                 helpersRow.classList.add('hidden');
             }
-            // CASO 2: Camioneta o Camión LOCAL (Por tiempo)
             else if (selectedCoverage === 'local') {
                 coverageRow.classList.remove('hidden');
                 document.getElementById('summaryCoverageText').innerText = 'Local (Por Tiempo)';
@@ -906,7 +916,6 @@
                 basePrice = blocks * rate30;
                 document.getElementById('summaryBaseLabel').innerText = `Renta x Tiempo (${blocks * 30} min):`;
                 if (extraHelpers > 0) {
-                    // $200 MXN por hora por ayudante ($100 por cada fracción de 30 min)
                     const hours = blocks / 2;
                     helpersPrice = extraHelpers * (hours * 200);
                     document.getElementById('summaryHelpersQty').innerText = extraHelpers;
@@ -916,7 +925,6 @@
                     helpersRow.classList.add('hidden');
                 }
             }
-            // CASO 3: Camioneta o Camión FORÁNEO (Por distancia y modalidad)
             else if (selectedCoverage === 'foraneo') {
                 coverageRow.classList.remove('hidden');
                 document.getElementById('summaryCoverageText').innerText = 'Foráneo (Por Ruta)';
@@ -961,6 +969,7 @@
             const totalPrice = basePrice + serviceFee + extraPrice + helpersPrice;
             document.getElementById('summaryTotalPrice').innerText = `$${totalPrice.toLocaleString('es-MX')} MXN`;
         }
+
         function requestQuote() {
             if (!currentUser) {
                 showMessage('Perfil Requerido', 'Por favor completa tu registro antes de solicitar un servicio.', 'error');
@@ -1043,6 +1052,7 @@
             const whatsappUrl = `https://wa.me/523122416157?text=${message}`;
             window.open(whatsappUrl, '_blank');
         }
+
         function resetCalculator() {
             document.getElementById('originInput').value = '';
             document.getElementById('destinationInput').value = '';
@@ -1053,6 +1063,8 @@
             selectedServiceType = null;
             selectedDate = null;
             selectedTime = null;
+            selectedOriginCoords = null;
+            selectedDestCoords = null;
             document.getElementById('helpersCount').innerText = '0';
             document.getElementById('scheduleDate').value = '';
             document.getElementById('scheduleTime').value = '';
@@ -1060,6 +1072,7 @@
             calculateQuote();
             showMessage('Cotizador Reiniciado', 'Los valores se han restablecido a los valores iniciales.', 'success');
         }
+
         function showMessage(title, message, type = 'success') {
             const modal = document.getElementById('messageModal');
             const modalBox = document.getElementById('modalBox');
@@ -1082,6 +1095,7 @@
                 modalBox.classList.add('scale-100');
             }, 10);
         }
+
         function closeModal() {
             const modal = document.getElementById('messageModal');
             const modalBox = document.getElementById('modalBox');
@@ -1092,8 +1106,10 @@
                 modal.classList.add('hidden');
             }, 200);
         }
+
         let map = null;
         let routeLayer = null;
+
         function initMap() {
             if (map) {
                 map.invalidateSize();
@@ -1105,77 +1121,78 @@
                 attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
             }).addTo(map);
         }
-        async function calculateRouteFromAddresses() {
-            let originRaw = document.getElementById('originInput').value.trim().toLowerCase();
-            let destRaw = document.getElementById('destinationInput').value.trim().toLowerCase();
-            if (!originRaw || !destRaw) {
-                alert("Por favor ingresa tanto el punto de origen como el de destino.");
+
+        // LÓGICA DE AUTOCOMPLETADO INTELIGENTE
+        function searchAddressSuggestions(query, type) {
+            clearTimeout(searchTimeout);
+            const containerId = type === 'origin' ? 'originSuggestions' : 'destinationSuggestions';
+            const container = document.getElementById(containerId);
+
+            if (!query || query.length < 3) {
+                container.classList.add('hidden');
+                container.innerHTML = '';
                 return;
             }
-            const regionalHubs = {
-                'colima': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
-                'colima centro': { lat: 19.2433, lon: -103.7241, name: 'Colima Centro' },
-                'manzanillo': { lat: 19.0522, lon: -104.3159, name: 'Manzanillo' },
-                'tecomán': { lat: 18.9171, lon: -103.8765, name: 'Tecomán' },
-                'tecoman': { lat: 18.9171, lon: -103.8765, name: 'Tecomán' },
-                'guadalajara': { lat: 20.6597, lon: -103.3496, name: 'Guadalajara' },
-                'gdl': { lat: 20.6597, lon: -103.3496, name: 'Guadalajara' },
-                'villa de álvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' },
-                'villa de alvarez': { lat: 19.2672, lon: -103.7431, name: 'Villa de Álvarez' }
-            };
-            const findHub = (text) => {
-                const match = Object.keys(regionalHubs).find(key => text.includes(key));
-                return match ? regionalHubs[match] : null;
-            };
-            const originHub = findHub(originRaw);
-            const destHub = findHub(destRaw);
-            
-            if (originHub && destHub) {
+
+            searchTimeout = setTimeout(async () => {
                 try {
-                    const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${originHub.lon},${originHub.lat};${destHub.lon},${destHub.lat}?overview=full&geometries=geojson`);
-                    const dataRoute = await resRoute.json();
-                    if (dataRoute.routes && dataRoute.routes.length > 0) {
-                        const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
-                        const distanceRange = document.getElementById('distanceRange');
-                        if (distanceRange) {
-                            if (distanceKm > parseInt(distanceRange.max)) distanceRange.max = Math.max(400, distanceKm);
-                            distanceRange.value = distanceKm;
-                            calculateQuote();
-                        }
-                        if (window.routeLayer) map.removeLayer(window.routeLayer);
-                        if (window.markerOrigin) map.removeLayer(window.markerOrigin);
-                        if (window.markerDest) map.removeLayer(window.markerDest);
-                        window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
-                            style: { color: '#0bb9fe', weight: 5, opacity: 0.85 }
-                        }).addTo(map);
-                        window.markerOrigin = L.marker([originHub.lat, originHub.lon]).addTo(map).bindPopup(originHub.name).openPopup();
-                        window.markerDest = L.marker([destHub.lat, destHub.lon]).addTo(map).bindPopup(destHub.name);
-                        map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
-                        return;
+                    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(query + ", Colima, Mexico")}`;
+                    const response = await fetch(url, { headers: { 'User-Agent': 'UINGO-Logistica-App' } });
+                    const data = await response.json();
+
+                    container.innerHTML = '';
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'p-3 text-xs text-slate-300 hover:bg-uing-blue/20 hover:text-white cursor-pointer border-b border-slate-800 truncate transition';
+                            div.innerHTML = `<i class="fa-solid fa-map-pin text-uingo-cyan mr-2"></i> ${item.display_name}`;
+                            
+                            div.onclick = () => {
+                                document.getElementById(type === 'origin' ? 'originInput' : 'destinationInput').value = item.display_name;
+                                
+                                if (type === 'origin') {
+                                    selectedOriginCoords = { lat: parseFloat(item.lat), lon: parseFloat(item.lon), name: item.display_name };
+                                } else {
+                                    selectedDestCoords = { lat: parseFloat(item.lat), lon: parseFloat(item.lon), name: item.display_name };
+                                }
+
+                                container.classList.add('hidden');
+                                
+                                if (selectedOriginCoords && selectedDestCoords) {
+                                    calculateRouteWithCoords();
+                                }
+                            };
+                            container.appendChild(div);
+                        });
+                        container.classList.remove('hidden');
+                    } else {
+                        container.classList.add('hidden');
                     }
                 } catch (e) {
-                    console.warn("Ruta rápida omitida, usando respaldo.");
+                    console.error("Error buscando sugerencias:", e);
                 }
+            }, 300);
+        }
+
+        // Cerrar sugerencias al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#originInput') && !e.target.closest('#originSuggestions')) {
+                document.getElementById('originSuggestions').classList.add('hidden');
             }
-            showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 2000);
+            if (!e.target.closest('#destinationInput') && !e.target.closest('#destinationSuggestions')) {
+                document.getElementById('destinationSuggestions').classList.add('hidden');
+            }
+        });
+
+        // Trazar ruta exacta basada en coordenadas de sugerencias seleccionadas
+        async function calculateRouteWithCoords() {
+            if (!selectedOriginCoords || !selectedDestCoords) return;
+
             try {
-                const cleanOrigin = `${originRaw}, Colima, Mexico`;
-                const cleanDest = `${destRaw}, Colima, Mexico`;
-                const [resOrigin, resDest] = await Promise.all([
-                    fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal }),
-                    fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' }, signal: controller.signal })
-                ]);
-                const dataOrigin = await resOrigin.json();
-                const dataDest = await resDest.json();
-                if (!dataOrigin.length || !dataDest.length) throw new Error("No localizado");
-                const lat1 = parseFloat(dataOrigin[0].lat), lon1 = parseFloat(dataOrigin[0].lon);
-                const lat2 = parseFloat(dataDest[0].lat), lon2 = parseFloat(dataDest[0].lon);
-                const resRoute = await fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`, { signal: controller.signal });
+                const url = `https://router.project-osrm.org/route/v1/driving/${selectedOriginCoords.lon},${selectedOriginCoords.lat};${selectedDestCoords.lon},${selectedDestCoords.lat}?overview=full&geometries=geojson`;
+                const resRoute = await fetch(url);
                 const dataRoute = await resRoute.json();
-                clearTimeout(timeoutId);
-                closeModal();
+
                 if (dataRoute.routes && dataRoute.routes.length > 0) {
                     const distanceKm = Math.max(1, Math.round(dataRoute.routes[0].distance / 1000));
                     const distanceRange = document.getElementById('distanceRange');
@@ -1183,18 +1200,54 @@
                         distanceRange.value = distanceKm;
                         calculateQuote();
                     }
+
                     if (window.routeLayer) map.removeLayer(window.routeLayer);
                     if (window.markerOrigin) map.removeLayer(window.markerOrigin);
                     if (window.markerDest) map.removeLayer(window.markerDest);
-                    window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, { style: { color: '#0bb9fe', weight: 5, opacity: 0.85 } }).addTo(map);
-                    window.markerOrigin = L.marker([lat1, lon1]).addTo(map).bindPopup("Origen").openPopup();
-                    window.markerDest = L.marker([lat2, lon2]).addTo(map).bindPopup("Destino");
+
+                    window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
+                        style: { color: '#0bb9fe', weight: 5, opacity: 0.85 }
+                    }).addTo(map);
+
+                    window.markerOrigin = L.marker([selectedOriginCoords.lat, selectedOriginCoords.lon]).addTo(map).bindPopup("Origen: " + selectedOriginCoords.name).openPopup();
+                    window.markerDest = L.marker([selectedDestCoords.lat, selectedDestCoords.lon]).addTo(map).bindPopup("Destino: " + selectedDestCoords.name);
+                    
                     map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
-                } else {
-                    throw new Error("Ruta no trazable");
                 }
+            } catch (e) {
+                console.error("Error al trazar ruta con coordenadas:", e);
+            }
+        }
+
+        // Respaldo por si presionan el botón manual de cálculo
+        async function calculateRouteFromAddresses() {
+            if (selectedOriginCoords && selectedDestCoords) {
+                calculateRouteWithCoords();
+                return;
+            }
+            let originRaw = document.getElementById('originInput').value.trim().toLowerCase();
+            let destRaw = document.getElementById('destinationInput').value.trim().toLowerCase();
+            if (!originRaw || !destRaw) {
+                alert("Por favor ingresa tanto el punto de origen como el de destino.");
+                return;
+            }
+            showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
+            try {
+                const cleanOrigin = `${originRaw}, Colima, Mexico`;
+                const cleanDest = `${destRaw}, Colima, Mexico`;
+                const [resOrigin, resDest] = await Promise.all([
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' } }),
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' } })
+                ]);
+                const dataOrigin = await resOrigin.json();
+                const dataDest = await resDest.json();
+                closeModal();
+                if (!dataOrigin.length || !dataDest.length) throw new Error("No localizado");
+                
+                selectedOriginCoords = { lat: parseFloat(dataOrigin[0].lat), lon: parseFloat(dataOrigin[0].lon), name: dataOrigin[0].display_name };
+                selectedDestCoords = { lat: parseFloat(dataDest[0].lat), lon: parseFloat(dataDest[0].lon), name: dataDest[0].display_name };
+                calculateRouteWithCoords();
             } catch (error) {
-                clearTimeout(timeoutId);
                 closeModal();
                 alert("Nota: Pon la distancia aproximada manualmente en la barra deslizadora de abajo.");
             }
@@ -1202,3 +1255,4 @@
     </script>                        
 </body>
 </html>
+```[cite: 3]
