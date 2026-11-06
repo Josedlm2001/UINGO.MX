@@ -18,8 +18,14 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_bigBIqjdy-EfvKtxS349yA_RcKqFrOA';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
+
+    <!-- Leaflet JS & CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- GOOGLE PLACES API (Reemplaza TU_API_KEY por tu clave de Google Cloud) -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&libraries=places&language=es"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -87,6 +93,41 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #0bb9fe;
         }
+
+        /* Estilo personalizado para el Autocompletado nativo de Google Places */
+        .pac-container {
+            background-color: #0f172a !important; /* bg-slate-900 */
+            border: 1px solid #334155 !important; /* border-slate-700 */
+            border-radius: 0.75rem !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+            font-family: 'Inter', sans-serif !important;
+            margin-top: 5px !important;
+        }
+        .pac-item {
+            padding: 10px 14px !important;
+            color: #cbd5e1 !important; /* text-slate-300 */
+            border-top: 1px solid #1e293b !important; /* border-slate-800 */
+            cursor: pointer !important;
+        }
+        .pac-item:hover, .pac-item-selected {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+        }
+        .pac-item-query {
+            color: #0bb9fe !important; /* text-uingo-cyan */
+            font-weight: 700 !important;
+            font-size: 13px !important;
+        }
+        .pac-matched {
+            color: #0d84fe !important;
+            font-weight: 800 !important;
+        }
+        .pac-icon {
+            display: none !important;
+        }
+        .hdpi .pac-icon {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="bg-slate-950 font-sans text-slate-100 antialiased min-h-full flex flex-col justify-between selection:bg-uingo-blue selection:text-white">
@@ -119,6 +160,7 @@
             </div>
         </div>
     </header>
+
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
         
@@ -186,6 +228,7 @@
                 </button>
             </form>
         </section>
+
         <!-- VISTA 2: COTIZADOR DE FLETES -->
         <section id="calculatorSection" class="page-view hidden-view grid grid-cols-1 lg:grid-cols-12 gap-8">
             
@@ -199,38 +242,37 @@
                         <h3 class="text-lg font-extrabold text-white">Ubicaciones y Distancia de Ruta</h3>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
-                        <!-- Origen con Autocompletado -->
-                        <div class="relative">
+                        <!-- Origen -->
+                        <div>
                             <label for="originInput" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Punto de Recogida (Origen)</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-emerald-400">
                                     <i class="fa-solid fa-location-dot text-sm"></i>
                                 </span>
-                                <input type="text" id="originInput" autocomplete="off" placeholder="Ej. Av. Constitución #123, Colima" class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner" oninput="searchAddressSuggestions(this.value, 'origin')">
+                                <input type="text" id="originInput" placeholder="Buscar negocio o dirección..." class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner">
                             </div>
-                            <!-- Contenedor de Sugerencias Flotante -->
-                            <div id="originSuggestions" class="absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto hidden"></div>
                         </div>
-                        <!-- Destino con Autocompletado -->
-                        <div class="relative">
+                        <!-- Destino -->
+                        <div>
                             <label for="destinationInput" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Punto de Entrega (Destino)</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-rose-400">
                                     <i class="fa-solid fa-flag-checkered text-sm"></i>
                                 </span>
-                                <input type="text" id="destinationInput" autocomplete="off" placeholder="Ej. Centro, Villa de Álvarez" class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner" oninput="searchAddressSuggestions(this.value, 'destination')">
+                                <input type="text" id="destinationInput" placeholder="Buscar negocio o dirección..." class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white outline-none shadow-inner">
                             </div>
-                            <!-- Contenedor de Sugerencias Flotante -->
-                            <div id="destinationSuggestions" class="absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto hidden"></div>
                         </div>
                     </div>
-                    <!-- Botón para calcular ruta automática en el mapa -->
-                    <button type="button" onclick="calculateRouteFromAddresses()" class="w-full mb-5 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-md border border-slate-700">
+
+                    <!-- Botón para recálculo de ruta -->
+                    <button type="button" onclick="calculateRouteWithCoords()" class="w-full mb-5 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-md border border-slate-700">
                         <i class="fa-solid fa-map-location-dot text-uingo-cyan"></i>
                         <span>Actualizar Ruta y Distancia en el Mapa</span>
                     </button>
+
                     <!-- Contenedor Visual del Mapa -->
                     <div id="uingoMap" class="w-full h-64 rounded-2xl border border-slate-800 z-10 mb-5 shadow-inner"></div>
+
                     <!-- Slider de Distancia -->
                     <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-inner">
                         <div class="flex justify-between items-center mb-3">
@@ -248,6 +290,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Paso 2: Selección de Vehículo -->
                 <div class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800">
                     <div class="flex items-center space-x-3 mb-5">
@@ -317,6 +360,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- TIPO DE SERVICIO (LOCAL / FORÁNEO) - SOLO CAMIONETA Y CAMIÓN -->
                 <div id="coverageContainer" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 mt-6 hidden transition-all">
                     <div class="flex items-center space-x-3 mb-5">
@@ -327,7 +371,6 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Opción Local -->
                         <div onclick="selectCoverageType('local')" id="cov-local" class="cursor-pointer border-2 border-slate-800 bg-slate-950/50 rounded-2xl p-5 hover:border-uingo-blue transition-all shadow-md">
                             <div class="flex justify-between items-center mb-2">
                                 <span class="font-bold text-white text-sm">SERVICIO LOCAL (Por Tiempo)</span>
@@ -336,7 +379,6 @@
                             <p class="text-xs text-slate-400 mb-3">Cobro por horas o fracciones de 30 min. Incluye chofer auxiliador.</p>
                             <span id="localStartingPriceLabel" class="text-sm font-black text-uingo-cyan">Desde $312 MXN (30 min)</span>
                         </div>
-                        <!-- Opción Foráneo -->
                         <div onclick="selectCoverageType('foraneo')" id="cov-foraneo" class="cursor-pointer border-2 border-slate-800 bg-slate-950/50 rounded-2xl p-5 hover:border-uingo-blue transition-all shadow-md">
                             <div class="flex justify-between items-center mb-2">
                                 <span class="font-bold text-white text-sm">SERVICIO FORÁNEO (Por Ruta)</span>
@@ -347,6 +389,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- CONFIGURACIÓN DE SERVICIO LOCAL (POR TIEMPO) -->
                 <div id="localTimeContainer" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 mt-6 hidden transition-all space-y-5">
                     <div class="flex items-center space-x-3 mb-2">
@@ -364,10 +407,10 @@
                     <div>
                         <label for="timeBlocksSelect" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Selecciona la duración estimada:</label>
                         <select id="timeBlocksSelect" onchange="calculateQuote()" class="w-full p-3.5 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-sm text-white font-semibold outline-none shadow-inner">
-                            <!-- Opciones actualizadas dinámicamente -->
                         </select>
                     </div>
                 </div>
+
                 <!-- Modalidad de Servicio (Solo Foráneo) -->
                 <div id="serviceTypeContainer" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 mt-6 hidden transition-all">
                     <div class="flex items-center space-x-3 mb-5">
@@ -378,7 +421,6 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Opción Regular -->
                         <div onclick="selectServiceType('regular')" id="type-regular" class="cursor-pointer border-2 border-slate-800 bg-slate-950/50 rounded-2xl p-5 hover:border-uingo-cyan transition-all shadow-md">
                             <div class="flex justify-between items-center mb-2">
                                 <span class="font-bold text-white text-sm">REGULAR *Ya incluye chofer</span>
@@ -387,7 +429,6 @@
                             <p class="text-xs text-slate-400 mb-3">Agenda con anticipación tu servicio (al menos 3 horas antes).</p>
                             <span id="price-regular" class="text-sm font-black text-uingo-cyan">$0 MXN</span>
                         </div>
-                        <!-- Opción Prioritario -->
                         <div onclick="selectServiceType('prioritario')" id="type-prioritario" class="cursor-pointer border-2 border-slate-800 bg-slate-950/50 rounded-2xl p-5 hover:border-uingo-cyan transition-all shadow-md">
                             <div class="flex justify-between items-center mb-2">
                                 <span class="font-bold text-white text-sm">PRIORITARIO *Ya incluye chofer</span>
@@ -398,7 +439,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- Selección de Día y Horario (Solo en modalidad REGULAR) -->
+
+                <!-- Selección de Día y Horario -->
                 <div id="scheduleContainer" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 mt-6 hidden transition-all">
                     <div class="flex items-center space-x-3 mb-5">
                         <span class="w-8 h-8 bg-uingo-blue/20 text-uingo-cyan font-black rounded-xl flex items-center justify-center text-xs border border-uingo-blue/30">5</span>
@@ -418,6 +460,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Cargadores Extras -->
                 <div id="helpersContainer" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800 mt-6 hidden transition-all">
                     <div class="flex items-center justify-between">
@@ -436,6 +479,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Columna Derecha: Tarjeta de Resumen (4 Col) -->
             <div class="lg:col-span-4">
                 <div class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-800 sticky top-24 space-y-5">
@@ -443,12 +487,10 @@
                         <span>Resumen del Servicio</span>
                         <i class="fa-solid fa-file-invoice text-uingo-cyan"></i>
                     </h3>
-                    <!-- Información de Cliente -->
                     <div class="py-2.5 border-b border-slate-800 text-xs text-slate-400 space-y-1.5">
                         <p><strong class="text-slate-200">Cliente:</strong> <span id="summaryCustomerName" class="text-white">-</span></p>
                         <p><strong class="text-slate-200">Tipo:</strong> <span id="summaryCustomerType" class="text-uingo-cyan">-</span></p>
                     </div>
-                    <!-- Desglose de Precios -->
                     <div class="py-2 space-y-3 text-sm">
                         <div class="flex justify-between text-slate-400">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-truck text-xs text-slate-500"></i> Vehículo:</span>
@@ -485,14 +527,12 @@
                             <span class="text-2xl font-black text-uingo-cyan" id="summaryTotalPrice">$0.00</span>
                         </div>
                     </div>
-                    <!-- Nota legal -->
                     <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 shadow-inner">
                         <p class="text-[11px] text-slate-400 leading-relaxed flex gap-2">
                             <i class="fa-solid fa-circle-info text-uingo-cyan mt-0.5"></i>
                             Precio que se dice, precio que se cobra, SI SE NECESITA UNA COTIZACION ESPECIAL O FLETE FORANEO CONTACTENOS DIRECTAMENTE AL 312 241 6157.
                         </p>
                     </div>
-                    <!-- Acciones -->
                     <button onclick="requestQuote()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-4 px-4 rounded-2xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center space-x-2 text-sm">
                         <i class="fa-brands fa-whatsapp text-lg"></i>
                         <span>Solicitar Servicio por WhatsApp</span>
@@ -505,6 +545,7 @@
             </div>
         </section>
     </main>
+
     <!-- Modal de Notificaciones -->
     <div id="messageModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
         <div class="bg-slate-900 rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl border border-slate-800 transform scale-95 transition-transform duration-200" id="modalBox">
@@ -518,26 +559,30 @@
             </div>
         </div>
     </div>
+
     <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 py-6 mt-12 text-center text-xs text-slate-500">
         <div class="max-w-7xl mx-auto px-4">
             <p>© 2026 UINGO Logística. Todos los derechos reservados. Colima, México.</p>
         </div>
     </footer>
-    <!-- LÓGICA DE JAVASCRIPT UNIFICADA -->
+
+    <!-- LÓGICA DE JAVASCRIPT UNIFICADA Y GOOGLE PLACES INTEGRADO -->
     <script>
         let currentUser = null;
         let selectedVehicle = null;
-        let selectedCoverage = null; // 'local' o 'foraneo'
+        let selectedCoverage = null; 
         let selectedServiceType = null;
         let extraHelpers = 0;
         let selectedDate = null;
         let selectedTime = null;
 
-        // Variables globales para coordenadas precisas de autocompletado
+        // Variables de Coordenadas Precisas
         let selectedOriginCoords = null;
         let selectedDestCoords = null;
-        let searchTimeout = null;
+
+        let autocompleteOrigin = null;
+        let autocompleteDest = null;
 
         const fleetRules = {
             moto: { name: 'Motocicleta', basePrice: 64, baseKm: 7, extraKmRate: 5.5, allowsHelpers: false },
@@ -601,6 +646,7 @@
             
             setTimeout(() => {
                 initMap();
+                initGooglePlacesAutocomplete();
             }, 200);
         }
 
@@ -733,7 +779,6 @@
                 coverageContainer.classList.remove('hidden');
                 const rate = fleetRules[type].localRatePer30Min;
                 document.getElementById('localStartingPriceLabel').innerText = `Desde $${rate.toLocaleString('es-MX')} MXN (30 min)`;
-                
                 document.getElementById('price-regular').innerText = `$${fleetRules[type].prices.regular} MXN`;
                 document.getElementById('price-prioritario').innerText = `$${fleetRules[type].prices.prioritario} MXN`;
             } else {
@@ -1122,69 +1167,65 @@
             }).addTo(map);
         }
 
-        // LÓGICA DE AUTOCOMPLETADO INTELIGENTE
-        function searchAddressSuggestions(query, type) {
-            clearTimeout(searchTimeout);
-            const containerId = type === 'origin' ? 'originSuggestions' : 'destinationSuggestions';
-            const container = document.getElementById(containerId);
-
-            if (!query || query.length < 3) {
-                container.classList.add('hidden');
-                container.innerHTML = '';
+        <!-- INTEGRACIÓN NATIVA DE GOOGLE PLACES AUTOCOMPLETE -->
+        function initGooglePlacesAutocomplete() {
+            if (typeof google === 'undefined' || !google.maps || !google.maps.places) {
+                console.warn("Google Maps Places Library no cargada. Revisa tu clave de API.");
                 return;
             }
 
-            searchTimeout = setTimeout(async () => {
-                try {
-                    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(query + ", Colima, Mexico")}`;
-                    const response = await fetch(url, { headers: { 'User-Agent': 'UINGO-Logistica-App' } });
-                    const data = await response.json();
+            const originElem = document.getElementById('originInput');
+            const destElem = document.getElementById('destinationInput');
 
-                    container.innerHTML = '';
-                    if (data.length > 0) {
-                        data.forEach(item => {
-                            const div = document.createElement('div');
-                            div.className = 'p-3 text-xs text-slate-300 hover:bg-uing-blue/20 hover:text-white cursor-pointer border-b border-slate-800 truncate transition';
-                            div.innerHTML = `<i class="fa-solid fa-map-pin text-uingo-cyan mr-2"></i> ${item.display_name}`;
-                            
-                            div.onclick = () => {
-                                document.getElementById(type === 'origin' ? 'originInput' : 'destinationInput').value = item.display_name;
-                                
-                                if (type === 'origin') {
-                                    selectedOriginCoords = { lat: parseFloat(item.lat), lon: parseFloat(item.lon), name: item.display_name };
-                                } else {
-                                    selectedDestCoords = { lat: parseFloat(item.lat), lon: parseFloat(item.lon), name: item.display_name };
-                                }
+            // Delimitar preferencias de búsqueda en México (opcionalmente restringido a región de Colima/Jalisco)
+            const options = {
+                componentRestrictions: { country: "mx" },
+                fields: ["formatted_address", "geometry", "name"]
+            };
 
-                                container.classList.add('hidden');
-                                
-                                if (selectedOriginCoords && selectedDestCoords) {
-                                    calculateRouteWithCoords();
-                                }
-                            };
-                            container.appendChild(div);
-                        });
-                        container.classList.remove('hidden');
-                    } else {
-                        container.classList.add('hidden');
-                    }
-                } catch (e) {
-                    console.error("Error buscando sugerencias:", e);
+            autocompleteOrigin = new google.maps.places.Autocomplete(originElem, options);
+            autocompleteDest = new google.maps.places.Autocomplete(destElem, options);
+
+            // Al seleccionar un negocio/ubicación en Origen
+            autocompleteOrigin.addListener('place_changed', () => {
+                const place = autocompleteOrigin.getPlace();
+                if (!place.geometry || !place.geometry.location) {
+                    alert("No se pudo obtener la ubicación exacta de ese lugar.");
+                    return;
                 }
-            }, 300);
+                selectedOriginCoords = {
+                    lat: place.geometry.location.lat(),
+                    lon: place.geometry.location.lng(),
+                    name: place.name || place.formatted_address
+                };
+                originElem.value = `${place.name ? place.name + ', ' : ''}${place.formatted_address}`;
+
+                if (selectedOriginCoords && selectedDestCoords) {
+                    calculateRouteWithCoords();
+                }
+            });
+
+            // Al seleccionar un negocio/ubicación en Destino
+            autocompleteDest.addListener('place_changed', () => {
+                const place = autocompleteDest.getPlace();
+                if (!place.geometry || !place.geometry.location) {
+                    alert("No se pudo obtener la ubicación exacta de ese lugar.");
+                    return;
+                }
+                selectedDestCoords = {
+                    lat: place.geometry.location.lat(),
+                    lon: place.geometry.location.lng(),
+                    name: place.name || place.formatted_address
+                };
+                destElem.value = `${place.name ? place.name + ', ' : ''}${place.formatted_address}`;
+
+                if (selectedOriginCoords && selectedDestCoords) {
+                    calculateRouteWithCoords();
+                }
+            });
         }
 
-        // Cerrar sugerencias al hacer clic fuera
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('#originInput') && !e.target.closest('#originSuggestions')) {
-                document.getElementById('originSuggestions').classList.add('hidden');
-            }
-            if (!e.target.closest('#destinationInput') && !e.target.closest('#destinationSuggestions')) {
-                document.getElementById('destinationSuggestions').classList.add('hidden');
-            }
-        });
-
-        // Trazar ruta exacta basada en coordenadas de sugerencias seleccionadas
+        // Trazar ruta exacta con OSRM a partir de coordenadas exactas de Google Places
         async function calculateRouteWithCoords() {
             if (!selectedOriginCoords || !selectedDestCoords) return;
 
@@ -1215,44 +1256,9 @@
                     map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
                 }
             } catch (e) {
-                console.error("Error al trazar ruta con coordenadas:", e);
-            }
-        }
-
-        // Respaldo por si presionan el botón manual de cálculo
-        async function calculateRouteFromAddresses() {
-            if (selectedOriginCoords && selectedDestCoords) {
-                calculateRouteWithCoords();
-                return;
-            }
-            let originRaw = document.getElementById('originInput').value.trim().toLowerCase();
-            let destRaw = document.getElementById('destinationInput').value.trim().toLowerCase();
-            if (!originRaw || !destRaw) {
-                alert("Por favor ingresa tanto el punto de origen como el de destino.");
-                return;
-            }
-            showMessage('Calculando...', 'Buscando ruta en el mapa...', 'info');
-            try {
-                const cleanOrigin = `${originRaw}, Colima, Mexico`;
-                const cleanDest = `${destRaw}, Colima, Mexico`;
-                const [resOrigin, resDest] = await Promise.all([
-                    fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanOrigin)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' } }),
-                    fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(cleanDest)}`, { headers: { 'User-Agent': 'UINGO-Logistica-App' } })
-                ]);
-                const dataOrigin = await resOrigin.json();
-                const dataDest = await resDest.json();
-                closeModal();
-                if (!dataOrigin.length || !dataDest.length) throw new Error("No localizado");
-                
-                selectedOriginCoords = { lat: parseFloat(dataOrigin[0].lat), lon: parseFloat(dataOrigin[0].lon), name: dataOrigin[0].display_name };
-                selectedDestCoords = { lat: parseFloat(dataDest[0].lat), lon: parseFloat(dataDest[0].lon), name: dataDest[0].display_name };
-                calculateRouteWithCoords();
-            } catch (error) {
-                closeModal();
-                alert("Nota: Pon la distancia aproximada manualmente en la barra deslizadora de abajo.");
+                console.error("Error al trazar la ruta en el mapa:", e);
             }
         }
     </script>                        
 </body>
 </html>
-```[cite: 3]
