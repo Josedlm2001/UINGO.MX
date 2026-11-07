@@ -224,10 +224,10 @@
                             <div id="destinationSuggestions" class="absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto hidden"></div>
                         </div>
                     </div>
-                    <!-- Botón manual por si se requiere -->
-                    <button type="button" onclick="calculateRouteWithCoords()" class="w-full mb-5 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-md border border-slate-700">
+                    <!-- Botón para calcular ruta -->
+                    <button type="button" id="btnCalculateRoute" onclick="calculateRouteFromInputs()" class="w-full mb-5 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-md border border-slate-700">
                         <i class="fa-solid fa-map-location-dot text-uingo-cyan"></i>
-                        <span>Actualizar Ruta y Distancia en el Mapa</span>
+                        <span id="btnCalculateText">Actualizar Ruta y Distancia Real en el Mapa</span>
                     </button>
                     <!-- Contenedor Visual del Mapa -->
                     <div id="uingoMap" class="w-full h-64 rounded-2xl border border-slate-800 z-10 mb-5 shadow-inner"></div>
@@ -235,7 +235,7 @@
                     <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-inner">
                         <div class="flex justify-between items-center mb-3">
                             <label for="distanceRange" class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-route text-uingo-cyan"></i> Distancia Estimada
+                                <i class="fa-solid fa-route text-uingo-cyan"></i> Distancia Calculada
                             </label>
                             <span class="text-lg font-black text-uingo-cyan"><span id="distanceValue">5</span> km</span>
                         </div>
@@ -511,7 +511,7 @@
             <p>© 2026 UINGO Logística. Todos los derechos reservados. Colima, México.</p>
         </div>
     </footer>
-    <!-- LÓGICA DE JAVASCRIPT UNIFICADA CON AUTOCOMPLETADO GRATUITO (NOMINATIM) -->
+    <!-- LÓGICA DE JAVASCRIPT UNIFICADA CON AUTOCOMPLETADO Y GEOLOCALIZACIÓN EXACTA POR RUTA -->
     <script>
         let currentUser = null;
         let selectedVehicle = null;
@@ -520,10 +520,12 @@
         let extraHelpers = 0;
         let selectedDate = null;
         let selectedTime = null;
+        
         // Variables de Coordenadas Precisas
         let selectedOriginCoords = null;
         let selectedDestCoords = null;
         let searchTimeout = null;
+        
         const fleetRules = {
             moto: { name: 'Motocicleta', basePrice: 56, baseKm: 7, extraKmRate: 5.5, allowsHelpers: false },
             carro: { name: 'Automóvil', basePrice: 86, baseKm: 7, extraKmRate: 12.5, allowsHelpers: false },
@@ -1032,6 +1034,11 @@
             document.getElementById('helpersCount').innerText = '0';
             document.getElementById('scheduleDate').value = '';
             document.getElementById('scheduleTime').value = '';
+            
+            if (window.routeLayer) map.removeLayer(window.routeLayer);
+            if (window.markerOrigin) map.removeLayer(window.markerOrigin);
+            if (window.markerDest) map.removeLayer(window.markerDest);
+            
             selectVehicle('moto');
             calculateQuote();
             showMessage('Cotizador Reiniciado', 'Los valores se han restablecido a los valores iniciales.', 'success');
@@ -1069,7 +1076,6 @@
             }, 200);
         }
         let map = null;
-        let routeLayer = null;
         function initMap() {
             if (map) {
                 map.invalidateSize();
@@ -1081,7 +1087,27 @@
                 attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
             }).addTo(map);
         }
-        // AUTOCOMPLETADO GRATUITO USANDO NOMINATIM (OPENSTREETMAP) SIN TARJETA NI BLOQUEOS
+
+        // GEOLOCALIZAR DIRECCIÓN DE TEXTO
+        async function fetchCoords(addressText) {
+            try {
+                let query = addressText;
+                if (!query.toLowerCase().includes('mexico') && !query.toLowerCase().includes('méxico')) {
+                    query += ', Colima, Mexico';
+                }
+                const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`;
+                const res = await fetch(url, { headers: { 'User-Agent': 'UINGO-Logistica-App' } });
+                const data = await res.json();
+                if (data && data.length > 0) {
+                    return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), name: data[0].display_name };
+                }
+            } catch (err) {
+                console.error("Error geocodificando dirección:", err);
+            }
+            return null;
+        }
+
+        // AUTOCOMPLETADO GRATUITO USANDO NOMINATIM
         function searchAddressSuggestions(query, type) {
             clearTimeout(searchTimeout);
             const containerId = type === 'origin' ? 'originSuggestions' : 'destinationSuggestions';
@@ -1093,7 +1119,6 @@
             }
             searchTimeout = setTimeout(async () => {
                 try {
-                    // Busca negocios y direcciones reales enfocados en Colima y México sin costo
                     const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&addressdetails=1&q=${encodeURIComponent(query + ", Colima, Mexico")}`;
                     const response = await fetch(url, { headers: { 'User-Agent': 'UINGO-Logistica-App' } });
                     const data = await response.json();
@@ -1129,6 +1154,40 @@
                 }
             }, 300);
         }
+
+        // CÁLCULO DE RUTA DESDE BOTÓN O TEXTO MANUAL
+        async function calculateRouteFromInputs() {
+            const originText = document.getElementById('originInput').value.trim();
+            const destText = document.getElementById('destinationInput').value.trim();
+
+            if (!originText || !destText) {
+                showMessage('Campos Requeridos', 'Por favor ingresa tanto el punto de Origen como el Destino.', 'error');
+                return;
+            }
+
+            const btnText = document.getElementById('btnCalculateText');
+            const btn = document.getElementById('btnCalculateRoute');
+            btn.disabled = true;
+            btnText.innerText = 'Calculando ruta en el mapa...';
+
+            if (!selectedOriginCoords || !selectedOriginCoords.name || !originText.includes(selectedOriginCoords.name.substring(0, 10))) {
+                selectedOriginCoords = await fetchCoords(originText);
+            }
+            if (!selectedDestCoords || !selectedDestCoords.name || !destText.includes(selectedDestCoords.name.substring(0, 10))) {
+                selectedDestCoords = await fetchCoords(destText);
+            }
+
+            btn.disabled = false;
+            btnText.innerText = 'Actualizar Ruta y Distancia Real en el Mapa';
+
+            if (!selectedOriginCoords || !selectedDestCoords) {
+                showMessage('Dirección no Encontrada', 'No pudimos ubicar una de las direcciones en el mapa. Intenta seleccionar una opción del menú desplegable.', 'error');
+                return;
+            }
+
+            await calculateRouteWithCoords();
+        }
+
         // Cerrar listas flotantes al hacer clic fuera
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#originInput') && !e.target.closest('#originSuggestions')) {
@@ -1138,7 +1197,8 @@
                 document.getElementById('destinationSuggestions').classList.add('hidden');
             }
         });
-        // Trazar ruta exacta usando OSRM (Gratuito)
+
+        // Trazar ruta exacta usando OSRM (Gratuito) y actualizar distancia real
         async function calculateRouteWithCoords() {
             if (!selectedOriginCoords || !selectedDestCoords) return;
             try {
@@ -1155,16 +1215,19 @@
                     if (window.routeLayer) map.removeLayer(window.routeLayer);
                     if (window.markerOrigin) map.removeLayer(window.markerOrigin);
                     if (window.markerDest) map.removeLayer(window.markerDest);
+                    
                     window.routeLayer = L.geoJSON(dataRoute.routes[0].geometry, {
                         style: { color: '#0bb9fe', weight: 5, opacity: 0.85 }
                     }).addTo(map);
-                    window.markerOrigin = L.marker([selectedOriginCoords.lat, selectedOriginCoords.lon]).addTo(map).bindPopup("Origen: " + selectedOriginCoords.name).openPopup();
-                    window.markerDest = L.marker([selectedDestCoords.lat, selectedDestCoords.lon]).addTo(map).bindPopup("Destino: " + selectedDestCoords.name);
+                    
+                    window.markerOrigin = L.marker([selectedOriginCoords.lat, selectedOriginCoords.lon]).addTo(map).bindPopup("<b>Origen:</b><br>" + selectedOriginCoords.name).openPopup();
+                    window.markerDest = L.marker([selectedDestCoords.lat, selectedDestCoords.lon]).addTo(map).bindPopup("<b>Destino:</b><br>" + selectedDestCoords.name);
                     
                     map.fitBounds(window.routeLayer.getBounds(), { padding: [40, 40] });
                 }
             } catch (e) {
                 console.error("Error al trazar ruta:", e);
+                showMessage('Error de Ruta', 'No se pudo trazar la ruta entre los dos puntos.', 'error');
             }
         }
     </script>                        
