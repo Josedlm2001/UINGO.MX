@@ -863,12 +863,12 @@
             const rule = fleetRules[selectedVehicle];
             const totalText = document.getElementById('summaryTotalPrice').innerText;
             
-            let message = `¡Hola UINGO! 🚚 Soy *${currentUser.name}* (${currentUser.userType}). Necesito cotizar un envío:%0A%0A` +
-                `📦 *Carga:* ${cargo}%0A` +
-                `🚗 *Vehículo:* ${rule.name}%0A` +
-                `📍 *Origen:* ${origin}%0A` +
-                `🏁 *Destino:* ${destination}%0A` +
-                `🛣️ *Distancia:* ${distance} km%0A`;
+            let message = `¡Hola UINGO!  Soy *${currentUser.name}* (${currentUser.userType}). Necesito cotizar un envío:%0A%0A` +
+                ` *Carga:* ${cargo}%0A` +
+                ` *Vehículo:* ${rule.name}%0A` +
+                ` *Origen:* ${origin}%0A` +
+                ` *Destino:* ${destination}%0A` +
+                ` *Distancia:* ${distance} km%0A`;
                 
             if (selectedVehicle === 'camioneta' || selectedVehicle === 'camion') {
                 if (selectedCoverage === 'local') {
@@ -881,8 +881,8 @@
             if (extraHelpers > 0) {
                 message += `👥 *Cargadores extras:* ${extraHelpers}%0A`;
             }
-            message += `💰 *Total Estimado:* ${totalText}%0A%0A` +
-                `📞 *Teléfono:* ${currentUser.phone}`;
+            message += ` *Total Estimado:* ${totalText}%0A%0A` +
+                ` *Teléfono:* ${currentUser.phone}`;
                 
             const url = `https://wa.me/523122416157?text=${message}`;
             window.open(url, '_blank');
