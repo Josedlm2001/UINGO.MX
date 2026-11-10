@@ -22,7 +22,6 @@
     <!-- Leaflet CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <script>
         tailwind.config = {
             theme: {
@@ -75,11 +74,11 @@
         .leaflet-container {
             border-radius: 1rem;
             cursor: crosshair !important;
+            background-color: #0f172a !important; /* Fondo oscuro mientras carga */
         }
     </style>
 </head>
 <body class="bg-slate-950 font-sans text-slate-100 antialiased min-h-full flex flex-col justify-between selection:bg-uingo-blue selection:text-white">
-
     <!-- Header Navbar -->
     <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-30 shadow-lg backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -109,7 +108,6 @@
             </div>
         </div>
     </header>
-
     <!-- Stepper Nav (Pasos rápidisimos) -->
     <div id="stepperNav" class="bg-slate-900/80 border-b border-slate-800 py-2.5 sticky top-16 z-20 backdrop-blur-sm hidden">
         <div class="max-w-3xl mx-auto px-4 flex justify-between items-center text-xs">
@@ -134,7 +132,6 @@
             </button>
         </div>
     </div>
-
     <!-- Container Principal -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow">
         
@@ -162,12 +159,10 @@
                         </label>
                     </div>
                 </div>
-
                 <div>
                     <label for="fullName" class="block text-xs font-bold text-slate-400 uppercase mb-1">Nombre Completo *</label>
                     <input type="text" id="fullName" required placeholder="Ej. Juan Pérez" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-xs text-white outline-none">
                 </div>
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label for="userEmail" class="block text-xs font-bold text-slate-400 uppercase mb-1">Correo (Opcional)</label>
@@ -178,14 +173,12 @@
                         <input type="tel" id="userPhone" required placeholder="312 241 6157" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-xs text-white outline-none">
                     </div>
                 </div>
-
                 <button type="submit" id="btnSaveProfile" class="w-full bg-uingo-blue hover:bg-uingo-bright text-white font-extrabold py-3.5 px-4 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-xs mt-2">
                     <span>Guardar y Cotizar</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </form>
         </section>
-
         <!-- LAYOUT DE COTIZACIÓN (PASOS 2, 3 Y 4 EN GRID) -->
         <div id="quoteMainGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-6 hidden">
             
@@ -201,7 +194,6 @@
                             <p class="text-xs text-slate-400">Describe tu carga para sugerir o confirmar la unidad perfecta.</p>
                         </div>
                     </div>
-
                     <!-- CAMPO OBLIGATORIO: DETALLE DE LO QUE SE LLEVA -->
                     <div>
                         <label for="cargoDetails" class="block text-xs font-bold text-uingo-cyan uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
@@ -209,7 +201,6 @@
                         </label>
                         <textarea id="cargoDetails" rows="2" placeholder="Ej. Una lavadora, 3 cajas de libros y 1 refrigerador..." oninput="calculateQuote()" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 focus:ring-2 focus:ring-uingo-cyan text-xs text-white outline-none shadow-inner resize-none"></textarea>
                     </div>
-
                     <!-- SELECCIÓN DE VEHÍCULOS -->
                     <div>
                         <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">Selecciona el tipo de Vehículo *</label>
@@ -228,7 +219,6 @@
                                     <span class="text-sm font-black text-uingo-cyan">$56 MXN</span>
                                 </div>
                             </div>
-
                             <div onclick="selectVehicle('carro')" id="card-carro" class="vehicle-card cursor-pointer border-2 border-slate-800 bg-slate-950/40 rounded-2xl p-4 flex flex-col justify-between hover:border-uingo-cyan">
                                 <div>
                                     <div class="flex justify-between items-center mb-1.5">
@@ -243,7 +233,6 @@
                                     <span class="text-sm font-black text-uingo-cyan">$86 MXN</span>
                                 </div>
                             </div>
-
                             <div onclick="selectVehicle('camioneta')" id="card-camioneta" class="vehicle-card cursor-pointer border-2 border-slate-800 bg-slate-950/40 rounded-2xl p-4 flex flex-col justify-between hover:border-uingo-cyan">
                                 <div>
                                     <div class="flex justify-between items-center mb-1.5">
@@ -258,7 +247,6 @@
                                     <span class="text-sm font-black text-uingo-bright">Desde $312 MXN</span>
                                 </div>
                             </div>
-
                             <div onclick="selectVehicle('camion')" id="card-camion" class="vehicle-card cursor-pointer border-2 border-slate-800 bg-slate-950/40 rounded-2xl p-4 flex flex-col justify-between hover:border-uingo-cyan">
                                 <div>
                                     <div class="flex justify-between items-center mb-1.5">
@@ -275,7 +263,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- MODALIDADES CONDICIONALES PARA CAMIONETA/CAMIÓN -->
                     <div id="truckOptionsBlock" class="hidden space-y-4 pt-3 border-t border-slate-800">
                         <label class="block text-xs font-bold text-slate-300 uppercase">Modalidad del Servicio *</label>
@@ -289,14 +276,12 @@
                                 <span class="block text-[10px] text-slate-400">Por kilometraje total</span>
                             </button>
                         </div>
-
                         <!-- Tiempo Local -->
                         <div id="localTimeBlock" class="hidden bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
                             <label for="timeBlocksSelect" class="block text-xs font-bold text-slate-400">Duración solicitada:</label>
                             <select id="timeBlocksSelect" onchange="calculateQuote()" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white outline-none">
                             </select>
                         </div>
-
                         <!-- Foráneo Modalidad -->
                         <div id="foraneoOptionsBlock" class="hidden space-y-3">
                             <div class="grid grid-cols-2 gap-3">
@@ -322,7 +307,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Cargadores -->
                         <div id="helpersBlock" class="hidden bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
                             <div>
@@ -336,7 +320,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="flex justify-end pt-2">
                         <button type="button" onclick="switchStep(3)" class="bg-uingo-blue hover:bg-uingo-bright text-white font-extrabold py-3 px-5 rounded-xl shadow-md transition text-xs flex items-center gap-1.5">
                             <span>Siguiente: Indicar Direcciones</span>
@@ -344,7 +327,6 @@
                         </button>
                     </div>
                 </section>
-
                 <!-- PASO 3: UBICACIONES Y MAPA MULTIMODAL -->
                 <section id="step3" class="step-section bg-slate-900 p-5 sm:p-7 rounded-3xl shadow-xl border border-slate-800 space-y-4">
                     <div class="flex justify-between items-center pb-3 border-b border-slate-800">
@@ -359,7 +341,6 @@
                             <i class="fa-solid fa-arrow-left"></i> Volver
                         </button>
                     </div>
-
                     <!-- Inputs de Dirección con autocompletado y botones GPS -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="relative">
@@ -375,7 +356,6 @@
                             </div>
                             <div id="originSuggestions" class="absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-h-48 overflow-y-auto hidden"></div>
                         </div>
-
                         <div class="relative">
                             <div class="flex justify-between items-center mb-1">
                                 <label for="destinationInput" class="text-[11px] font-bold text-slate-300 uppercase">Destino (Punto B)</label>
@@ -390,7 +370,6 @@
                             <div id="destinationSuggestions" class="absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-h-48 overflow-y-auto hidden"></div>
                         </div>
                     </div>
-
                     <!-- Instrucción para marcar en mapa -->
                     <div class="bg-uingo-blue/10 border border-uingo-blue/20 p-2.5 rounded-xl text-[11px] text-uingo-cyan flex items-center justify-between">
                         <span><i class="fa-solid fa-hand-pointer mr-1"></i> Tip: También puedes dar un clic en el mapa para poner los puntos.</span>
@@ -399,12 +378,10 @@
                             <button type="button" onclick="setPinMode('destination')" id="btnPinDest" class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40 text-[10px]">Poner Destino</button>
                         </div>
                     </div>
-
-                    <!-- Mapa Leaflet -->
+                    <!-- Mapa Leaflet CORREGIDO -->
                     <div class="relative">
-                        <div id="uingoMap" class="w-full h-60 rounded-2xl border border-slate-800 shadow-inner"></div>
+                        <div id="uingoMap" class="w-full h-64 rounded-2xl border border-slate-800 shadow-inner"></div>
                     </div>
-
                     <!-- Control de Distancia manual de respaldo -->
                     <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center">
                         <div>
@@ -418,7 +395,6 @@
                             <span class="text-sm font-black text-uingo-cyan w-12 text-right"><span id="distanceValue">5</span> km</span>
                         </div>
                     </div>
-
                     <div class="flex justify-between pt-2">
                         <button type="button" onclick="switchStep(2)" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs">
                             Atrás
@@ -430,7 +406,6 @@
                     </div>
                 </section>
             </div>
-
             <!-- TICKET RESUMEN DERECHA (4 COLS) -->
             <div class="lg:col-span-4">
                 <div class="bg-slate-900 p-5 rounded-3xl shadow-2xl border border-slate-800 sticky top-24 space-y-4">
@@ -443,14 +418,12 @@
                             <i class="fa-solid fa-receipt"></i>
                         </div>
                     </div>
-
                     <!-- Datos cliente -->
                     <div class="text-[11px] text-slate-400 space-y-1 bg-slate-950 p-3 rounded-xl border border-slate-800">
                         <p><strong class="text-slate-300">Cliente:</strong> <span id="summaryCustomerName" class="text-white">-</span></p>
                         <p><strong class="text-slate-300">Tipo:</strong> <span id="summaryCustomerType" class="text-uingo-cyan">-</span></p>
                         <p><strong class="text-slate-300">Carga:</strong> <span id="summaryCargoText" class="text-amber-300 italic">Sin especificar</span></p>
                     </div>
-
                     <!-- Desglose Precios -->
                     <div class="py-1 space-y-2 text-xs">
                         <div class="flex justify-between text-slate-400">
@@ -477,19 +450,16 @@
                             <span>Cargadores (<span id="summaryHelpersQty">0</span>):</span>
                             <span class="font-semibold text-white" id="summaryHelpersPrice">$0.00</span>
                         </div>
-
                         <div class="pt-3 border-t border-slate-800 flex justify-between items-baseline">
                             <span class="text-xs font-black text-white uppercase">Total Estimado:</span>
                             <span class="text-xl font-black text-uingo-cyan" id="summaryTotalPrice">$56.00 MXN</span>
                         </div>
                     </div>
-
                     <!-- Botón directo WhatsApp -->
                     <button type="button" onclick="requestQuote()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-xs">
                         <i class="fa-brands fa-whatsapp text-base"></i>
                         <span>Pedir Servicio por WhatsApp</span>
                     </button>
-
                     <button type="button" onclick="resetCalculator()" class="w-full bg-slate-950 hover:bg-slate-800 text-slate-400 font-bold py-2 px-3 rounded-lg border border-slate-800 transition text-[10px] flex items-center justify-center gap-1">
                         <i class="fa-solid fa-rotate-left"></i>
                         <span>Reiniciar Formulario</span>
@@ -497,9 +467,7 @@
                 </div>
             </div>
         </div>
-
     </main>
-
     <!-- Modal de Alerta Sencillo -->
     <div id="messageModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
         <div class="bg-slate-900 rounded-2xl max-w-xs w-full p-5 shadow-2xl border border-slate-800 text-center" id="modalBox">
@@ -511,14 +479,12 @@
             <button onclick="closeModal()" class="w-full bg-uingo-blue hover:bg-uingo-bright text-white font-bold py-2 rounded-xl text-xs">Entendido</button>
         </div>
     </div>
-
     <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 py-4 mt-6 text-center text-[10px] text-slate-500">
         <div class="max-w-7xl mx-auto px-4">
             <p>© 2026 UINGO Logística & Fletes. Colima, México.</p>
         </div>
     </footer>
-
     <!-- LÓGICA JAVASCRIPT REESTRUCTURADA Y ROBUSTA -->
     <script>
         // ESTADO GLOBAL DE LA APP
@@ -529,7 +495,6 @@
         let extraHelpers = 0;
         let selectedDate = null;
         let selectedTime = null;
-
         // Geolocalización y Pines de Mapa
         let selectedOriginCoords = null;
         let selectedDestCoords = null;
@@ -591,12 +556,10 @@
                 showMessage('Datos Requeridos', 'Guarda tus datos de perfil para continuar.', 'error');
                 return;
             }
-
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('quoteMainGrid').classList.add('hidden');
             document.getElementById('stepperNav').classList.remove('hidden');
 
-            // Actualizar botones visuales del Stepper
             for(let i=1; i<=4; i++) {
                 const btn = document.getElementById(`stepBtn${i}`);
                 if (btn) {
@@ -618,8 +581,14 @@
                 document.getElementById('step2').classList.toggle('hidden', stepNum !== 2);
                 document.getElementById('step3').classList.toggle('hidden', stepNum !== 3);
                 
+                // REDIBUJAR MAPA CORRECTAMENTE AL ENTRAR AL PASO 3
                 if (stepNum === 3) {
-                    setTimeout(() => initMap(), 150);
+                    setTimeout(() => {
+                        initMap();
+                        if (map) {
+                            map.invalidateSize();
+                        }
+                    }, 200);
                 }
             }
         }
@@ -630,30 +599,25 @@
             document.getElementById('typeEmpresaLabel').classList.toggle('border-uingo-blue', !isParticular);
         }
 
-        // GUARDAR DATOS EN SUPABASE
         async function saveProfile(e) {
             e.preventDefault();
             const btn = document.getElementById('btnSaveProfile');
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
-
             try {
                 const name = document.getElementById('fullName').value.trim();
                 const email = document.getElementById('userEmail').value.trim();
                 const phone = document.getElementById('userPhone').value.trim();
                 const userType = document.querySelector('input[name="userType"]:checked').value;
-
-                // Insert a la BD Supabase
+                
                 const { error } = await _supabase
                     .from('clientes')
                     .insert([{ nombre: name, email: email || null, telefono: phone, tipo: userType }]);
-
                 if (error) console.log('Supabase sync info:', error.message);
-
+                
                 const userData = { name, email: email || 'No especificado', phone, userType };
                 localStorage.setItem('uingo_user_profile', JSON.stringify(userData));
                 currentUser = userData;
-
                 displayUserBadge();
                 switchStep(2);
                 showMessage('¡Bienvenido!', 'Perfil listo. Ya puedes cotizar.', 'success');
@@ -675,7 +639,6 @@
             document.getElementById('summaryCustomerType').innerText = currentUser.userType;
             document.getElementById('userBadge').classList.remove('hidden');
             document.getElementById('userBadge').classList.add('flex');
-
             document.getElementById('fullName').value = currentUser.name;
             document.getElementById('userEmail').value = currentUser.email !== 'No especificado' ? currentUser.email : '';
             document.getElementById('userPhone').value = currentUser.phone;
@@ -690,23 +653,21 @@
             switchStep(1);
         }
 
-        // SELECCIÓN DE VEHÍCULO
         function selectVehicle(type) {
             selectedVehicle = type;
             selectedCoverage = null;
             selectedServiceType = null;
             extraHelpers = 0;
             document.getElementById('helpersCount').innerText = '0';
-
             document.querySelectorAll('.vehicle-card').forEach(c => c.classList.remove('selected-card'));
             const selCard = document.getElementById(`card-${type}`);
             if (selCard) selCard.classList.add('selected-card');
-
+            
             const truckBlock = document.getElementById('truckOptionsBlock');
             const localBlock = document.getElementById('localTimeBlock');
             const foraneoBlock = document.getElementById('foraneoOptionsBlock');
             const helpersBlock = document.getElementById('helpersBlock');
-
+            
             if (type === 'camioneta' || type === 'camion') {
                 truckBlock.classList.remove('hidden');
                 localBlock.classList.add('hidden');
@@ -715,7 +676,6 @@
             } else {
                 truckBlock.classList.add('hidden');
             }
-
             calculateQuote();
         }
 
@@ -724,15 +684,14 @@
             selectedServiceType = null;
             extraHelpers = 0;
             document.getElementById('helpersCount').innerText = '0';
-
             document.getElementById('cov-local').classList.toggle('border-uingo-blue', cov === 'local');
             document.getElementById('cov-foraneo').classList.toggle('border-uingo-blue', cov === 'foraneo');
-
+            
             const localBlock = document.getElementById('localTimeBlock');
             const foraneoBlock = document.getElementById('foraneoOptionsBlock');
             const helpersBlock = document.getElementById('helpersBlock');
             const helpersNotice = document.getElementById('helpersPriceNotice');
-
+            
             if (cov === 'local') {
                 localBlock.classList.remove('hidden');
                 foraneoBlock.classList.add('hidden');
@@ -766,10 +725,9 @@
             selectedServiceType = type;
             document.getElementById('type-regular').classList.toggle('border-uingo-cyan', type === 'regular');
             document.getElementById('type-prioritario').classList.toggle('border-uingo-cyan', type === 'prioritario');
-
+            
             const scheduleInputs = document.getElementById('scheduleInputsBlock');
             const helpersBlock = document.getElementById('helpersBlock');
-
             if (type === 'regular') {
                 scheduleInputs.classList.remove('hidden');
                 helpersBlock.classList.add('hidden');
@@ -806,22 +764,20 @@
             calculateQuote();
         }
 
-        // CÁLCULO DE COTIZACIÓN
         function calculateQuote() {
             if (!selectedVehicle) return;
             const rule = fleetRules[selectedVehicle];
             const distance = parseInt(document.getElementById('distanceRange').value) || 0;
             const cargo = document.getElementById('cargoDetails').value.trim();
-
             document.getElementById('distanceValue').innerText = distance;
             document.getElementById('summaryVehicleName').innerText = rule.name;
             document.getElementById('summaryCargoText').innerText = cargo || 'Sin especificar';
-
+            
             const covRow = document.getElementById('summaryCoverageRow');
             const distRow = document.getElementById('summaryDistanceRow');
             const servRow = document.getElementById('summaryServiceRow');
             const helpRow = document.getElementById('summaryHelpersRow');
-
+            
             let basePrice = 0;
             let serviceFee = 0;
             let extraPrice = 0;
@@ -832,12 +788,10 @@
                 servRow.classList.add('hidden');
                 distRow.classList.remove('hidden');
                 helpRow.classList.add('hidden');
-
                 document.getElementById('summaryBaseLabel').innerText = 'Precio Base (hasta 7km):';
                 basePrice = rule.basePrice;
                 let extraKm = Math.max(0, distance - rule.baseKm);
                 extraPrice = extraKm * rule.extraKmRate;
-
                 document.getElementById('summaryExtraKm').innerText = extraKm;
                 document.getElementById('summaryExtraPrice').innerText = `$${extraPrice.toFixed(2)} MXN`;
             } 
@@ -846,11 +800,9 @@
                 document.getElementById('summaryCoverageText').innerText = 'Local (Tiempo)';
                 distRow.classList.add('hidden');
                 servRow.classList.add('hidden');
-
                 const blocks = parseInt(document.getElementById('timeBlocksSelect').value) || 1;
                 basePrice = blocks * rule.localRatePer30Min;
                 document.getElementById('summaryBaseLabel').innerText = `Renta (${blocks * 30} min):`;
-
                 if (extraHelpers > 0) {
                     helpersPrice = extraHelpers * ((blocks / 2) * 200);
                     document.getElementById('summaryHelpersQty').innerText = extraHelpers;
@@ -864,10 +816,8 @@
                 covRow.classList.remove('hidden');
                 document.getElementById('summaryCoverageText').innerText = 'Foráneo (Distancia)';
                 distRow.classList.remove('hidden');
-
                 basePrice = rule.prices.regular;
                 document.getElementById('summaryBaseLabel').innerText = 'Precio Base (hasta 7km):';
-
                 if (selectedServiceType === 'prioritario') {
                     serviceFee = rule.prices.prioritario - rule.prices.regular;
                     document.getElementById('summaryServiceLabel').innerText = 'Prioritario Fee:';
@@ -876,12 +826,10 @@
                 } else {
                     servRow.classList.add('hidden');
                 }
-
                 let extraKm = Math.max(0, distance - rule.baseKm);
                 extraPrice = extraKm * rule.extraKmRate;
                 document.getElementById('summaryExtraKm').innerText = extraKm;
                 document.getElementById('summaryExtraPrice').innerText = `$${extraPrice.toFixed(2)} MXN`;
-
                 if (extraHelpers > 0 && selectedServiceType) {
                     helpersPrice = extraHelpers * 300;
                     document.getElementById('summaryHelpersQty').innerText = extraHelpers;
@@ -891,20 +839,17 @@
                     helpRow.classList.add('hidden');
                 }
             }
-
             document.getElementById('summaryBasePrice').innerText = `$${basePrice.toFixed(2)} MXN`;
             const total = basePrice + serviceFee + extraPrice + helpersPrice;
             document.getElementById('summaryTotalPrice').innerText = `$${total.toFixed(2)} MXN`;
         }
 
-        // SOLICITUD DIRECTA POR WHATSAPP
         function requestQuote() {
             if (!currentUser) {
                 showMessage('Requerido', 'Registra tus datos primero.', 'error');
                 switchStep(1);
                 return;
             }
-
             const cargo = document.getElementById('cargoDetails').value.trim();
             if (!cargo) {
                 showMessage('Detalla tu Carga', 'Escribe qué vas a llevar antes de continuar.', 'error');
@@ -912,20 +857,19 @@
                 document.getElementById('cargoDetails').focus();
                 return;
             }
-
             const origin = document.getElementById('originInput').value.trim() || 'No especificado (vía mapa)';
             const destination = document.getElementById('destinationInput').value.trim() || 'No especificado (vía mapa)';
             const distance = document.getElementById('distanceRange').value;
             const rule = fleetRules[selectedVehicle];
             const totalText = document.getElementById('summaryTotalPrice').innerText;
-
+            
             let message = `¡Hola UINGO! 🚚 Soy *${currentUser.name}* (${currentUser.userType}). Necesito cotizar un envío:%0A%0A` +
                 `📦 *Carga:* ${cargo}%0A` +
                 `🚗 *Vehículo:* ${rule.name}%0A` +
                 `📍 *Origen:* ${origin}%0A` +
                 `🏁 *Destino:* ${destination}%0A` +
                 `🛣️ *Distancia:* ${distance} km%0A`;
-
+                
             if (selectedVehicle === 'camioneta' || selectedVehicle === 'camion') {
                 if (selectedCoverage === 'local') {
                     const blocks = parseInt(document.getElementById('timeBlocksSelect').value) || 1;
@@ -934,14 +878,12 @@
                     message += `⚡ *Modalidad:* Foráneo (${selectedServiceType.toUpperCase()})%0A`;
                 }
             }
-
             if (extraHelpers > 0) {
                 message += `👥 *Cargadores extras:* ${extraHelpers}%0A`;
             }
-
             message += `💰 *Total Estimado:* ${totalText}%0A%0A` +
                 `📞 *Teléfono:* ${currentUser.phone}`;
-
+                
             const url = `https://wa.me/523122416157?text=${message}`;
             window.open(url, '_blank');
         }
@@ -953,39 +895,54 @@
             document.getElementById('distanceRange').value = 5;
             selectedOriginCoords = null;
             selectedDestCoords = null;
-
             if (routeLayer) map.removeLayer(routeLayer);
             if (markerOrigin) map.removeLayer(markerOrigin);
             if (markerDest) map.removeLayer(markerDest);
-
             selectVehicle('moto');
             calculateQuote();
             showMessage('Cotizador Limpio', 'Se han borrado los datos anteriores.', 'success');
         }
 
-        // MOTOR DE MAPA INTERACTIVO ROBUSTO (CON FALLBACK HAVERSINE)
+        // MOTOR DE MAPA MEJORADO Y CON SERVIDOR ULTRA ESTABLE
         function initMap() {
             if (map) {
                 map.invalidateSize();
                 return;
             }
-            // Coordenadas por defecto (Centro de Colima, México)
-            map = L.map('uingoMap').setView([19.2433, -103.7247], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', {
+
+            // Coordenadas iniciales: Colima, México
+            const colimaLat = 19.2433;
+            const colimaLon = -103.7247;
+
+            map = L.map('uingoMap').setView([colimaLat, colimaLon], 13);
+
+            // SERVIDOR DE MAPAS ESTÁNDAR 100% FIABLE
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap & UINGO'
             }).addTo(map);
+
+            // Arreglo de los íconos por defecto de Leaflet para que no salgan rotos
+            const defaultIcon = L.icon({
+                iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+                iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+            L.Marker.prototype.options.icon = defaultIcon;
 
             // Clic directo en el mapa para fijar pines
             map.on('click', function(e) {
                 const lat = e.latlng.lat;
                 const lon = e.latlng.lng;
-
                 if (pinMode === 'origin' || (!selectedOriginCoords && !selectedDestCoords)) {
-                    setOriginCoords(lat, lon, `Pin en Mapa (${lat.toFixed(4)}, ${lon.toFixed(4)})`);
+                    setOriginCoords(lat, lon, `Pin Origen (${lat.toFixed(4)}, ${lon.toFixed(4)})`);
                     if (!selectedDestCoords) pinMode = 'destination';
                 } else {
-                    setDestCoords(lat, lon, `Pin en Mapa (${lat.toFixed(4)}, ${lon.toFixed(4)})`);
+                    setDestCoords(lat, lon, `Pin Destino (${lat.toFixed(4)}, ${lon.toFixed(4)})`);
                     pinMode = null;
                 }
                 updatePinButtonsUI();
@@ -1022,7 +979,6 @@
             markerDest = L.marker([lat, lon]).addTo(map).bindPopup("<b>Destino</b>");
         }
 
-        // GEOLOCALIZACIÓN GPS DEL DISPOSITIVO
         function useDeviceGPS(type) {
             if (!navigator.geolocation) {
                 showMessage('Sin soporte GPS', 'Tu navegador no soporta geolocalización.', 'error');
@@ -1044,7 +1000,6 @@
             );
         }
 
-        // AUTOCOMPLETADO BUSCADOR HÍBRIDO
         function searchAddressSuggestions(query, type) {
             clearTimeout(searchTimeout);
             const container = document.getElementById(type === 'origin' ? 'originSuggestions' : 'destinationSuggestions');
@@ -1052,14 +1007,12 @@
                 container.classList.add('hidden');
                 return;
             }
-
             searchTimeout = setTimeout(async () => {
                 try {
                     const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(query + ", Colima, Mexico")}`;
                     const res = await fetch(searchUrl, { headers: { 'User-Agent': 'UINGO-App' } });
                     const data = await res.json();
                     container.innerHTML = '';
-
                     if (data && data.length > 0) {
                         data.forEach(item => {
                             const div = document.createElement('div');
@@ -1085,17 +1038,13 @@
             }, 300);
         }
 
-        // RUTEADOR OSRM CON FALLBACK A HAVERSINE (Garantiza que NUNCA falle)
         async function autoCalculateRoute() {
             if (!selectedOriginCoords || !selectedDestCoords) return;
-
             let distanceKm = 0;
             try {
-                // Intento 1: API OSRM
                 const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${selectedOriginCoords.lon},${selectedOriginCoords.lat};${selectedDestCoords.lon},${selectedDestCoords.lat}?overview=full&geometries=geojson`;
                 const res = await fetch(osrmUrl);
                 const data = await res.json();
-
                 if (data.routes && data.routes.length > 0) {
                     distanceKm = Math.max(1, Math.round(data.routes[0].distance / 1000));
                     if (routeLayer) map.removeLayer(routeLayer);
@@ -1105,14 +1054,10 @@
                     throw new Error("No OSRM route found");
                 }
             } catch (err) {
-                // Intento 2: Fórmula Haversine + 25% factor curvatura urbana
-                console.log("OSRM fallback to Haversine formula...");
                 distanceKm = calculateHaversineDistance(
                     selectedOriginCoords.lat, selectedOriginCoords.lon,
                     selectedDestCoords.lat, selectedDestCoords.lon
                 );
-                
-                // Trazar línea recta en el mapa si OSRM no dio geometría
                 if (routeLayer) map.removeLayer(routeLayer);
                 routeLayer = L.polyline([
                     [selectedOriginCoords.lat, selectedOriginCoords.lon],
@@ -1120,22 +1065,19 @@
                 ], { color: '#0bb9fe', weight: 4, dashArray: '5, 10' }).addTo(map);
                 map.fitBounds(routeLayer.getBounds(), { padding: [30, 30] });
             }
-
             document.getElementById('distanceRange').value = distanceKm;
             calculateQuote();
         }
 
-        // Fórmula Haversine para distancia en km con +25% de factor vial
         function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Radio de la Tierra en km
+            const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
             const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                 Math.sin(dLon / 2) * Math.sin(dLon / 2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            const straightDistance = R * c;
-            return Math.max(1, Math.round(straightDistance * 1.25)); // +25% por curva de calles
+            return Math.max(1, Math.round(R * c * 1.25));
         }
 
         function showMessage(title, message, type = 'success') {
