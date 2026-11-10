@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/sociostiempos",
+      "destination": "https://socio-cotizador-mx.vercel.app"
+    },
+    {
+      "source": "/sociostiempos/:path*",
+      "destination": "https://socio-cotizador-mx.vercel.app/:path*"
+    }
+  ]
+}
