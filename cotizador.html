@@ -613,20 +613,24 @@
                 const { error } = await _supabase
                     .from('clientes')
                     .insert([{ nombre: name, email: email || null, telefono: phone, tipo: userType }]);
-                if (error) {console.error('Error detallado de Supabase:', error);
-                        alert('Error al guardar en Supabase: ' + error.message);
-                        return; // Evita avanzar si falló la base de datos
-                    }
+                    
+                if (error) {
+                    console.error('Error detallado de Supabase:', error);
+                    showMessage('Error de Base de Datos', error.message, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Guardar y Cotizar</span> <i class="fa-solid fa-arrow-right"></i>';
+                    return; // Detiene el flujo para que no avance si falló
+                }
                 
                 const userData = { name, email: email || 'No especificado', phone, userType };
                 localStorage.setItem('uingo_user_profile', JSON.stringify(userData));
                 currentUser = userData;
                 displayUserBadge();
                 switchStep(2);
-                showMessage('¡Bienvenido!', 'Perfil listo. Ya puedes cotizar.', 'success');
+                showMessage('¡Bienvenido!', 'Perfil guardado en Supabase con éxito.', 'success');
             } catch (err) {
                 console.error('Save profile error:', err);
-                switchStep(2);
+                showMessage('Error', 'Ocurrió un error inesperado al conectar con Supabase.', 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<span>Guardar y Cotizar</span> <i class="fa-solid fa-arrow-right"></i>';
