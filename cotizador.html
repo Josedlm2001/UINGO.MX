@@ -613,7 +613,10 @@
                 const { error } = await _supabase
                     .from('clientes')
                     .insert([{ nombre: name, email: email || null, telefono: phone, tipo: userType }]);
-                if (error) console.log('Supabase sync info:', error.message);
+                if (error) {console.error('Error detallado de Supabase:', error);
+                        alert('Error al guardar en Supabase: ' + error.message);
+                        return; // Evita avanzar si falló la base de datos
+                    }
                 
                 const userData = { name, email: email || 'No especificado', phone, userType };
                 localStorage.setItem('uingo_user_profile', JSON.stringify(userData));
