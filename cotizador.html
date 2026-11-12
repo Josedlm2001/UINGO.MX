@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UINGO - Cotizador de Envíos y Fletes</title>
-    <!-- Favicon / Isotipo -->
-    <link rel="icon" type="image/png" href="Isotipo.png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -506,6 +504,7 @@
         let markerDest = null;
         let routeLayer = null;
         let searchTimeout = null;
+
         // TARIFAS OFICIALES DE UINGO
         const fleetRules = {
             moto: { name: 'Motocicleta', basePrice: 56, baseKm: 7, extraKmRate: 5.5, allowsHelpers: false },
@@ -527,6 +526,7 @@
                 prices: { regular: 1299, prioritario: 1642.12 }
             }
         };
+
         window.onload = function() {
             setupMinDate();
             const savedProfile = localStorage.getItem('uingo_user_profile');
@@ -539,6 +539,7 @@
             }
             selectVehicle('moto');
         };
+
         function setupMinDate() {
             const dateInput = document.getElementById('scheduleDate');
             if (dateInput) {
@@ -549,6 +550,7 @@
                 dateInput.min = `${yyyy}-${mm}-${dd}`;
             }
         }
+
         function switchStep(stepNum) {
             if (stepNum > 1 && !currentUser) {
                 showMessage('Datos Requeridos', 'Guarda tus datos de perfil para continuar.', 'error');
@@ -557,6 +559,7 @@
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('quoteMainGrid').classList.add('hidden');
             document.getElementById('stepperNav').classList.remove('hidden');
+
             for(let i=1; i<=4; i++) {
                 const btn = document.getElementById(`stepBtn${i}`);
                 if (btn) {
@@ -569,6 +572,7 @@
                     }
                 }
             }
+
             if (stepNum === 1) {
                 document.getElementById('stepperNav').classList.add('hidden');
                 document.getElementById('step1').classList.remove('hidden');
@@ -588,11 +592,13 @@
                 }
             }
         }
+
         function updateTypeStyle() {
             const isParticular = document.querySelector('input[name="userType"][value="Particular"]').checked;
             document.getElementById('typeParticularLabel').classList.toggle('border-uingo-blue', isParticular);
             document.getElementById('typeEmpresaLabel').classList.toggle('border-uingo-blue', !isParticular);
         }
+
         async function saveProfile(e) {
             e.preventDefault();
             const btn = document.getElementById('btnSaveProfile');
@@ -604,17 +610,10 @@
                 const phone = document.getElementById('userPhone').value.trim();
                 const userType = document.querySelector('input[name="userType"]:checked').value;
                 
-                // Inserción directa en la tabla 'clientes' de Supabase
                 const { error } = await _supabase
                     .from('clientes')
                     .insert([{ nombre: name, email: email || null, telefono: phone, tipo: userType }]);
-                
-                if (error) {
-                    console.error('Error detallado de Supabase:', error.message);
-                    showMessage('Aviso de Base de Datos', 'No se pudo guardar en Supabase: ' + error.message, 'error');
-                } else {
-                    console.log('Cliente guardado exitosamente en Supabase');
-                }
+                if (error) console.log('Supabase sync info:', error.message);
                 
                 const userData = { name, email: email || 'No especificado', phone, userType };
                 localStorage.setItem('uingo_user_profile', JSON.stringify(userData));
@@ -624,12 +623,13 @@
                 showMessage('¡Bienvenido!', 'Perfil listo. Ya puedes cotizar.', 'success');
             } catch (err) {
                 console.error('Save profile error:', err);
-                showMessage('Error de Conexión', 'Ocurrió un error al conectar con Supabase.', 'error');
+                switchStep(2);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<span>Guardar y Cotizar</span> <i class="fa-solid fa-arrow-right"></i>';
             }
         }
+
         function displayUserBadge() {
             if (!currentUser) return;
             document.getElementById('badgeName').innerText = currentUser.name;
@@ -644,6 +644,7 @@
             document.getElementById('userPhone').value = currentUser.phone;
             updateTypeStyle();
         }
+
         function logoutUser() {
             localStorage.removeItem('uingo_user_profile');
             currentUser = null;
@@ -651,6 +652,7 @@
             document.getElementById('profileForm').reset();
             switchStep(1);
         }
+
         function selectVehicle(type) {
             selectedVehicle = type;
             selectedCoverage = null;
@@ -676,6 +678,7 @@
             }
             calculateQuote();
         }
+
         function selectCoverageType(cov) {
             selectedCoverage = cov;
             selectedServiceType = null;
@@ -703,6 +706,7 @@
             }
             calculateQuote();
         }
+
         function populateTimeBlocks() {
             const select = document.getElementById('timeBlocksSelect');
             if (!select || !selectedVehicle) return;
@@ -716,6 +720,7 @@
                 <option value="8">4 Horas — $${rate30 * 8} MXN</option>
             `;
         }
+
         function selectServiceType(type) {
             selectedServiceType = type;
             document.getElementById('type-regular').classList.toggle('border-uingo-cyan', type === 'regular');
@@ -732,6 +737,7 @@
             }
             calculateQuote();
         }
+
         function onScheduleChange() {
             const d = document.getElementById('scheduleDate').value;
             const t = document.getElementById('scheduleTime').value;
@@ -749,6 +755,7 @@
             }
             calculateQuote();
         }
+
         function changeHelpers(delta) {
             extraHelpers += delta;
             if (extraHelpers < 0) extraHelpers = 0;
@@ -756,6 +763,7 @@
             document.getElementById('helpersCount').innerText = extraHelpers;
             calculateQuote();
         }
+
         function calculateQuote() {
             if (!selectedVehicle) return;
             const rule = fleetRules[selectedVehicle];
@@ -774,6 +782,7 @@
             let serviceFee = 0;
             let extraPrice = 0;
             let helpersPrice = 0;
+
             if (selectedVehicle === 'moto' || selectedVehicle === 'carro') {
                 covRow.classList.add('hidden');
                 servRow.classList.add('hidden');
@@ -834,6 +843,7 @@
             const total = basePrice + serviceFee + extraPrice + helpersPrice;
             document.getElementById('summaryTotalPrice').innerText = `$${total.toFixed(2)} MXN`;
         }
+
         function requestQuote() {
             if (!currentUser) {
                 showMessage('Requerido', 'Registra tus datos primero.', 'error');
@@ -877,6 +887,7 @@
             const url = `https://wa.me/523122416157?text=${message}`;
             window.open(url, '_blank');
         }
+
         function resetCalculator() {
             document.getElementById('originInput').value = '';
             document.getElementById('destinationInput').value = '';
@@ -891,21 +902,26 @@
             calculateQuote();
             showMessage('Cotizador Limpio', 'Se han borrado los datos anteriores.', 'success');
         }
+
         // MOTOR DE MAPA MEJORADO Y CON SERVIDOR ULTRA ESTABLE
         function initMap() {
             if (map) {
                 map.invalidateSize();
                 return;
             }
+
             // Coordenadas iniciales: Colima, México
             const colimaLat = 19.2433;
             const colimaLon = -103.7247;
+
             map = L.map('uingoMap').setView([colimaLat, colimaLon], 13);
+
             // SERVIDOR DE MAPAS ESTÁNDAR 100% FIABLE
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap & UINGO'
             }).addTo(map);
+
             // Arreglo de los íconos por defecto de Leaflet para que no salgan rotos
             const defaultIcon = L.icon({
                 iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -917,6 +933,7 @@
                 shadowSize: [41, 41]
             });
             L.Marker.prototype.options.icon = defaultIcon;
+
             // Clic directo en el mapa para fijar pines
             map.on('click', function(e) {
                 const lat = e.latlng.lat;
@@ -932,11 +949,13 @@
                 autoCalculateRoute();
             });
         }
+
         function setPinMode(mode) {
             pinMode = mode;
             updatePinButtonsUI();
             showMessage('Modo Pin Activo', `Haz clic sobre el mapa para colocar la ubicación de ${mode === 'origin' ? 'Origen' : 'Destino'}.`, 'success');
         }
+
         function updatePinButtonsUI() {
             const btnO = document.getElementById('btnPinOrigin');
             const btnD = document.getElementById('btnPinDest');
@@ -945,18 +964,21 @@
                 btnD.classList.toggle('ring-2', pinMode === 'destination');
             }
         }
+
         function setOriginCoords(lat, lon, label) {
             selectedOriginCoords = { lat, lon, label };
             document.getElementById('originInput').value = label;
             if (markerOrigin) map.removeLayer(markerOrigin);
             markerOrigin = L.marker([lat, lon]).addTo(map).bindPopup("<b>Origen</b>").openPopup();
         }
+
         function setDestCoords(lat, lon, label) {
             selectedDestCoords = { lat, lon, label };
             document.getElementById('destinationInput').value = label;
             if (markerDest) map.removeLayer(markerDest);
             markerDest = L.marker([lat, lon]).addTo(map).bindPopup("<b>Destino</b>");
         }
+
         function useDeviceGPS(type) {
             if (!navigator.geolocation) {
                 showMessage('Sin soporte GPS', 'Tu navegador no soporta geolocalización.', 'error');
@@ -977,6 +999,7 @@
                 () => showMessage('Error GPS', 'No se pudo obtener tu posición.', 'error')
             );
         }
+
         function searchAddressSuggestions(query, type) {
             clearTimeout(searchTimeout);
             const container = document.getElementById(type === 'origin' ? 'originSuggestions' : 'destinationSuggestions');
@@ -1014,6 +1037,7 @@
                 }
             }, 300);
         }
+
         async function autoCalculateRoute() {
             if (!selectedOriginCoords || !selectedDestCoords) return;
             let distanceKm = 0;
@@ -1044,6 +1068,7 @@
             document.getElementById('distanceRange').value = distanceKm;
             calculateQuote();
         }
+
         function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -1054,6 +1079,7 @@
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             return Math.max(1, Math.round(R * c * 1.25));
         }
+
         function showMessage(title, message, type = 'success') {
             const modal = document.getElementById('messageModal');
             const modalBox = document.getElementById('modalBox');
@@ -1066,6 +1092,7 @@
                 modalBox.classList.remove('scale-95');
             }, 10);
         }
+
         function closeModal() {
             const modal = document.getElementById('messageModal');
             modal.classList.add('opacity-0');
@@ -1074,5 +1101,5 @@
     </script>
 </body>
 </html>
-```[cite: 6]
+
 
